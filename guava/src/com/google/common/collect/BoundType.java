@@ -35,6 +35,11 @@ public enum BoundType {
     BoundType flip() {
       return CLOSED;
     }
+
+    @Override
+    boolean isInclusive() {
+      return false;
+    }
   },
   /**
    * The endpoint value <i>is</i> considered part of the set ("inclusive").
@@ -43,6 +48,11 @@ public enum BoundType {
     @Override
     BoundType flip() {
       return OPEN;
+    }
+
+    @Override
+    boolean isInclusive() {
+      return true;
     }
   };
 
@@ -54,4 +64,6 @@ public enum BoundType {
   }
 
   abstract BoundType flip();
+  
+  abstract boolean isInclusive();
 }

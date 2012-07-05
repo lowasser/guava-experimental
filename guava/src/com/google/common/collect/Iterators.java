@@ -965,6 +965,20 @@ public final class Iterators {
   public static <T> T getNext(Iterator<? extends T> iterator, @Nullable T defaultValue) {
     return iterator.hasNext() ? iterator.next() : defaultValue;
   }
+  
+  /**
+   * Returns and deletes the next element from the iterator, or returns the
+   * default value if there is no next element.
+   */
+  static <T> T pollNext(Iterator<? extends T> iterator, @Nullable T defaultValue) {
+    if (iterator.hasNext()) {
+      T result = iterator.next();
+      iterator.remove();
+      return result;
+    } else {
+      return defaultValue;
+    }
+  }
 
   /**
    * Advances {@code iterator} to the end, returning the last element.
