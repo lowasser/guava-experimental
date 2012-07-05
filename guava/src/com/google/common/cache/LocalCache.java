@@ -3186,6 +3186,11 @@ class LocalCache<K, V> extends AbstractMap<K, V> implements ConcurrentMap<K, V> 
               setValue(e, key, newValue, now);
               this.count = newCount; // write-volatile
               evictEntries();
+              
+              if (newCount > threshold) {
+                expand();
+              }
+              
               return true;
             }
 
@@ -3201,6 +3206,11 @@ class LocalCache<K, V> extends AbstractMap<K, V> implements ConcurrentMap<K, V> 
         setValue(newEntry, key, newValue, now);
         table.set(index, newEntry);
         this.count = newCount; // write-volatile
+        
+        if (newCount > threshold) {
+          expand();
+        }
+        
         evictEntries();
         return true;
       } finally {

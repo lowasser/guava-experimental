@@ -1420,6 +1420,43 @@ public class LocalCacheTest extends TestCase {
       assertEquals(originalMap, map);
     }
   }
+  
+  public void testGetCausesExpansion() throws ExecutionException {
+    LocalCache<Object, Object> map =
+        makeLocalCache(createCacheBuilder().concurrencyLevel(1).initialCapacity(1));
+    Segment<Object, Object> segment = map.segments[0];
+    assertEquals(1, segment.table.length());
+
+    int originalCount = 1024;
+    for (int i = 0; i < originalCount; i++) {
+      Object key = new Object();
+      final Object value = new Object();
+      segment.get(key, key.hashCode(), new CacheLoader<Object, Object>() {
+        @Override
+        public Object load(Object key) {
+          return value;
+        }
+      });
+    }
+    assertEquals(originalCount, segment.count);
+    assertTrue(segment.count <= segment.threshold);
+  }
+  
+  public void testPutCausesExpansion() throws ExecutionException {
+    LocalCache<Object, Object> map =
+        makeLocalCache(createCacheBuilder().concurrencyLevel(1).initialCapacity(1));
+    Segment<Object, Object> segment = map.segments[0];
+    assertEquals(1, segment.table.length());
+
+    int originalCount = 1024;
+    for (int i = 0; i < originalCount; i++) {
+      Object key = new Object();
+      Object value = new Object();
+      segment.put(key, key.hashCode(), value, true);
+    }
+    assertEquals(originalCount, segment.count);
+    assertTrue(segment.count <= segment.threshold);
+  }
 
   public void testReclaimKey() {
     CountingRemovalListener<Object, Object> listener = countingRemovalListener();
