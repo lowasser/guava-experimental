@@ -22,42 +22,46 @@ import com.google.common.annotations.GwtIncompatible;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.LinkedHashMap;
+import java.io.Serializable;
+import java.util.ConcurrentModificationException;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+
+import javax.annotation.Nullable;
 
 /**
- * A {@code Multiset} implementation with predictable iteration order. Its
- * iterator orders elements according to when the first occurrence of the
- * element was added. When the multiset contains multiple instances of an
- * element, those instances are consecutive in the iteration order. If all
- * occurrences of an element are removed, after which that element is added to
- * the multiset, the element will appear at the end of the iteration.
+ * A {@code Multiset} implementation with predictable iteration order. Its iterator orders elements
+ * according to when the first occurrence of the element was added. When the multiset contains
+ * multiple instances of an element, those instances are consecutive in the iteration order. If all
+ * occurrences of an element are removed, after which that element is added to the multiset, the
+ * element will appear at the end of the iteration.
  * 
- * <p>See the Guava User Guide article on <a href=
+ * <p>
+ * See the Guava User Guide article on <a href=
  * "http://code.google.com/p/guava-libraries/wiki/NewCollectionTypesExplained#Multiset">
  * {@code Multiset}</a>.
- *
+ * 
  * @author Kevin Bourrillion
  * @author Jared Levy
  * @since 2.0 (imported from Google Collections Library)
  */
 @GwtCompatible(serializable = true, emulated = true)
-@SuppressWarnings("serial") // we're overriding default serialization
-public final class LinkedHashMultiset<E> extends AbstractMapBasedMultiset<E> {
-
+public final class LinkedHashMultiset<E> extends HashBasedMultiset<E> implements Serializable {
   /**
-   * Creates a new, empty {@code LinkedHashMultiset} using the default initial
-   * capacity.
+   * Creates a new, empty {@code LinkedHashMultiset} using the default initial capacity.
    */
   public static <E> LinkedHashMultiset<E> create() {
-    return new LinkedHashMultiset<E>();
+    return new LinkedHashMultiset<E>(8);
   }
 
   /**
-   * Creates a new, empty {@code LinkedHashMultiset} with the specified expected
-   * number of distinct elements.
-   *
-   * @param distinctElements the expected number of distinct elements
-   * @throws IllegalArgumentException if {@code distinctElements} is negative
+   * Creates a new, empty {@code LinkedHashMultiset} with the specified expected number of distinct
+   * elements.
+   * 
+   * @param distinctElements
+   *          the expected number of distinct elements
+   * @throws IllegalArgumentException
+   *           if {@code distinctElements} is negative
    */
   public static <E> LinkedHashMultiset<E> create(int distinctElements) {
     return new LinkedHashMultiset<E>(distinctElements);
@@ -65,11 +69,12 @@ public final class LinkedHashMultiset<E> extends AbstractMapBasedMultiset<E> {
 
   /**
    * Creates a new {@code LinkedHashMultiset} containing the specified elements.
-   *
-   * <p>This implementation is highly efficient when {@code elements} is itself
-   * a {@link Multiset}.
-   *
-   * @param elements the elements that the multiset should contain
+   * 
+   * <p>
+   * This implementation is highly efficient when {@code elements} is itself a {@link Multiset}.
+   * 
+   * @param elements
+   *          the elements that the multiset should contain
    */
   public static <E> LinkedHashMultiset<E> create(
       Iterable<? extends E> elements) {
@@ -79,18 +84,96 @@ public final class LinkedHashMultiset<E> extends AbstractMapBasedMultiset<E> {
     return multiset;
   }
 
-  private LinkedHashMultiset() {
-    super(new LinkedHashMap<E, Count>());
+  private transient LinkedEntry<E> headerEntry;
+
+  LinkedHashMultiset(int expectedElements) {
+    super(expectedElements);
+    headerEntry = new LinkedEntry<E>(null, 0, 0, null);
   }
 
-  private LinkedHashMultiset(int distinctElements) {
-    // Could use newLinkedHashMapWithExpectedSize() if it existed
-    super(new LinkedHashMap<E, Count>(Maps.capacity(distinctElements)));
+  private static final class LinkedEntry<E> extends HashEntry<E> {
+    LinkedEntry<E> successor;
+    LinkedEntry<E> predecessor;
+
+    LinkedEntry(E elem, int smearedHash, int count, @Nullable HashEntry<E> nextInBucket) {
+      super(elem, smearedHash, count, nextInBucket);
+      this.successor = this;
+      this.predecessor = this;
+    }
   }
+
+  @Override
+  LinkedEntry<E> createEntry(
+      @Nullable E element,
+      int smearedHash,
+      int count,
+      HashEntry<E> nextInBucket) {
+    LinkedEntry<E> result = new LinkedEntry<E>(element, smearedHash, count, nextInBucket);
+    succeeds(headerEntry.predecessor, result);
+    succeeds(result, headerEntry);
+    return result;
+  }
+
+  private static <E> void succeeds(LinkedEntry<E> pred, LinkedEntry<E> succ) {
+    pred.successor = succ;
+    succ.predecessor = pred;
+  }
+
+  @Override
+  void deleteEntry(HashEntry<E> entry, HashEntry<E> prev) {
+    super.deleteEntry(entry, prev);
+    LinkedEntry<E> toDelete = (LinkedEntry<E>) entry;
+    succeeds(toDelete.predecessor, toDelete.successor);
+  }
+
+  @Override
+  Iterator<Entry<E>> entryIterator() {
+    return new Iterator<Entry<E>>() {
+      LinkedEntry<E> next = headerEntry.successor;
+      LinkedEntry<E> toRemove = null;
+      int expectedModCount = modCount;
+      
+      private void checkForComodification() {
+        if (modCount != expectedModCount) {
+          throw new ConcurrentModificationException();
+        }
+      }
+
+      @Override
+      public boolean hasNext() {
+        checkForComodification();
+        return next != headerEntry;
+      }
+
+      @Override
+      public Entry<E> next() {
+        if (!hasNext()) {
+          throw new NoSuchElementException();
+        }
+        try {
+          toRemove = next;
+          return wrapEntry(next);
+        } finally {
+          next = next.successor;
+        }
+      }
+
+      @Override
+      public void remove() {
+        checkForComodification();
+        Iterators.checkRemove(toRemove != null);
+        setCount(toRemove.getElement(), 0);
+        toRemove = null;
+        expectedModCount = modCount;
+      }
+    };
+  }
+
+
 
   /**
-   * @serialData the number of distinct elements, the first element, its count,
-   *     the second element, its count, and so on
+   * @serialData the number of distinct elements, the first element, its count, the second element,
+   *             its count, and so on
    */
   @GwtIncompatible("java.io.ObjectOutputStream")
   private void writeObject(ObjectOutputStream stream) throws IOException {
@@ -102,12 +185,11 @@ public final class LinkedHashMultiset<E> extends AbstractMapBasedMultiset<E> {
   private void readObject(ObjectInputStream stream)
       throws IOException, ClassNotFoundException {
     stream.defaultReadObject();
+    this.headerEntry = new LinkedEntry<E>(null, 0, 0, null);
     int distinctElements = Serialization.readCount(stream);
-    setBackingMap(new LinkedHashMap<E, Count>(
-        Maps.capacity(distinctElements)));
+    initHashTable(distinctElements);
     Serialization.populateMultiset(this, stream, distinctElements);
   }
 
-  @GwtIncompatible("not needed in emulated source")
-  private static final long serialVersionUID = 0;
+  @GwtIncompatible("not needed in emulated source") private static final long serialVersionUID = 0;
 }

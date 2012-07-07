@@ -22,6 +22,7 @@ import com.google.common.annotations.GwtIncompatible;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.HashMap;
 
 /**
@@ -32,7 +33,8 @@ import java.util.HashMap;
  * @since 2.0 (imported from Google Collections Library)
  */
 @GwtCompatible(serializable = true, emulated = true)
-public final class HashMultiset<E> extends AbstractMapBasedMultiset<E> {
+public final class HashMultiset<E> extends HashBasedMultiset<E>
+    implements Serializable {
 
   /**
    * Creates a new, empty {@code HashMultiset} using the default initial
@@ -67,18 +69,18 @@ public final class HashMultiset<E> extends AbstractMapBasedMultiset<E> {
     Iterables.addAll(multiset, elements);
     return multiset;
   }
-
-  private HashMultiset() {
-    super(new HashMap<E, Count>());
+  
+  HashMultiset() {
+    this(8);
   }
 
-  private HashMultiset(int distinctElements) {
-    super(Maps.<E, Count>newHashMapWithExpectedSize(distinctElements));
+  HashMultiset(int expectedElements) {
+    super(expectedElements);
   }
 
   /**
-   * @serialData the number of distinct elements, the first element, its count,
-   *     the second element, its count, and so on
+   * @serialData the number of distinct elements, the first element, its count, the second element,
+   *             its count, and so on
    */
   @GwtIncompatible("java.io.ObjectOutputStream")
   private void writeObject(ObjectOutputStream stream) throws IOException {
@@ -91,8 +93,7 @@ public final class HashMultiset<E> extends AbstractMapBasedMultiset<E> {
       throws IOException, ClassNotFoundException {
     stream.defaultReadObject();
     int distinctElements = Serialization.readCount(stream);
-    setBackingMap(
-        Maps.<E, Count>newHashMapWithExpectedSize(distinctElements));
+    initHashTable(distinctElements);
     Serialization.populateMultiset(this, stream, distinctElements);
   }
 
