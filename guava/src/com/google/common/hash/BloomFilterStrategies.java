@@ -39,7 +39,7 @@ enum BloomFilterStrategies implements BloomFilter.Strategy {
    * performance of a Bloom filter (yet only needs two 32bit hash functions).
    */
   MURMUR128_MITZ_32() {
-    @Override public <T> boolean put(T object, Funnel<? super T> funnel,
+    public <T> boolean put(T object, Funnel<? super T> funnel,
         int numHashFunctions, BitArray bits) {
       // TODO(user): when the murmur's shortcuts are implemented, update this code
       long hash64 = Hashing.murmur3_128().newHasher().putObject(object, funnel).hash().asLong();
@@ -56,7 +56,7 @@ enum BloomFilterStrategies implements BloomFilter.Strategy {
       return bitsChanged;
     }
 
-    @Override public <T> boolean mightContain(T object, Funnel<? super T> funnel,
+    public <T> boolean mightContain(T object, Funnel<? super T> funnel,
         int numHashFunctions, BitArray bits) {
       long hash64 = Hashing.murmur3_128().newHasher().putObject(object, funnel).hash().asLong();
       int hash1 = (int) hash64;
@@ -108,7 +108,8 @@ enum BloomFilterStrategies implements BloomFilter.Strategy {
       return new BitArray(data.clone());
     }
 
-    @Override public boolean equals(Object o) {
+    @Override
+    public boolean equals(Object o) {
       if (o instanceof BitArray) {
         BitArray bitArray = (BitArray) o;
         return Arrays.equals(data, bitArray.data);
@@ -117,7 +118,8 @@ enum BloomFilterStrategies implements BloomFilter.Strategy {
       return false;
     }
 
-    @Override public int hashCode() {
+    @Override
+    public int hashCode() {
       return Arrays.hashCode(data);
     }
   }

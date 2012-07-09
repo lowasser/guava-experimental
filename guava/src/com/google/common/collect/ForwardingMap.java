@@ -63,73 +63,64 @@ public abstract class ForwardingMap<K, V> extends ForwardingObject
   /** Constructor for use by subclasses. */
   protected ForwardingMap() {}
 
-  @Override protected abstract Map<K, V> delegate();
-
   @Override
+  protected abstract Map<K, V> delegate();
+
   public int size() {
     return delegate().size();
   }
 
-  @Override
   public boolean isEmpty() {
     return delegate().isEmpty();
   }
 
-  @Override
   public V remove(Object object) {
     return delegate().remove(object);
   }
 
-  @Override
   public void clear() {
     delegate().clear();
   }
 
-  @Override
   public boolean containsKey(Object key) {
     return delegate().containsKey(key);
   }
 
-  @Override
   public boolean containsValue(Object value) {
     return delegate().containsValue(value);
   }
 
-  @Override
   public V get(Object key) {
     return delegate().get(key);
   }
 
-  @Override
   public V put(K key, V value) {
     return delegate().put(key, value);
   }
 
-  @Override
   public void putAll(Map<? extends K, ? extends V> map) {
     delegate().putAll(map);
   }
 
-  @Override
   public Set<K> keySet() {
     return delegate().keySet();
   }
 
-  @Override
   public Collection<V> values() {
     return delegate().values();
   }
 
-  @Override
   public Set<Entry<K, V>> entrySet() {
     return delegate().entrySet();
   }
 
-  @Override public boolean equals(@Nullable Object object) {
+  @Override
+  public boolean equals(@Nullable Object object) {
     return object == this || delegate().equals(object);
   }
 
-  @Override public int hashCode() {
+  @Override
+  public int hashCode() {
     return delegate().hashCode();
   }
 

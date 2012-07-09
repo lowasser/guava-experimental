@@ -210,7 +210,7 @@ public final class Range<C extends Comparable> implements Predicate<C>, Serializ
    * Equivalent to {@link #contains}; provided only to satisfy the {@link Predicate} interface. When
    * using a reference of type {@code Range}, always invoke {@link #contains} directly instead.
    */
-  @Override public boolean apply(C input) {
+  public boolean apply(C input) {
     return contains(input);
   }
 
@@ -413,7 +413,8 @@ public final class Range<C extends Comparable> implements Predicate<C>, Serializ
    * Similarly, empty ranges are not equal unless they have exactly the same representation, so
    * {@code [3..3)}, {@code (3..3]}, {@code (4..4]} are all unequal.
    */
-  @Override public boolean equals(@Nullable Object object) {
+  @Override
+  public boolean equals(@Nullable Object object) {
     if (object instanceof Range) {
       Range<?> other = (Range<?>) object;
       return lowerBound.equals(other.lowerBound)
@@ -423,7 +424,8 @@ public final class Range<C extends Comparable> implements Predicate<C>, Serializ
   }
 
   /** Returns a hash code for this range. */
-  @Override public int hashCode() {
+  @Override
+  public int hashCode() {
     return lowerBound.hashCode() * 31 + upperBound.hashCode();
   }
 
@@ -431,7 +433,8 @@ public final class Range<C extends Comparable> implements Predicate<C>, Serializ
    * Returns a string representation of this range, such as {@code "[3..5)"} (other examples are
    * listed in the class documentation).
    */
-  @Override public String toString() {
+  @Override
+  public String toString() {
     return toString(lowerBound, upperBound);
   }
 

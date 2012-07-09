@@ -174,36 +174,6 @@ public class SetsTest extends TestCase {
             CollectionFeature.ALLOWS_NULL_QUERIES)
         .createTestSuite());
 
-    suite.addTest(NavigableSetTestSuiteBuilder.using(new TestStringSetGenerator() {
-          @Override protected Set<String> create(String[] elements) {
-            SafeTreeSet<String> set = new SafeTreeSet<String>(Arrays.asList(elements));
-            return Sets.unmodifiableNavigableSet(set);
-          }
-
-          @Override
-          public List<String> order(List<String> insertionOrder) {
-            return Ordering.natural().sortedCopy(insertionOrder);
-          }
-        })
-        .named("Sets.unmodifiableNavigableSet[TreeSet]")
-        .withFeatures(CollectionSize.ANY, CollectionFeature.KNOWN_ORDER)
-        .createTestSuite());
-
-    suite.addTest(NavigableSetTestSuiteBuilder.using(new TestStringSetGenerator() {
-          @Override protected Set<String> create(String[] elements) {
-            SafeTreeSet<String> set = new SafeTreeSet<String>(Arrays.asList(elements));
-            return SerializableTester.reserialize(Sets.unmodifiableNavigableSet(set));
-          }
-
-          @Override
-          public List<String> order(List<String> insertionOrder) {
-            return Ordering.natural().sortedCopy(insertionOrder);
-          }
-        })
-        .named("Sets.unmodifiableNavigableSet[TreeSet], reserialized")
-        .withFeatures(CollectionSize.ANY, CollectionFeature.KNOWN_ORDER)
-        .createTestSuite());
-
     suite.addTest(testsForFilter());
     suite.addTest(testsForFilterNoNulls());
     suite.addTest(testsForFilterFiltered());

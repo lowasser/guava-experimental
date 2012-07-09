@@ -89,7 +89,6 @@ public class AsyncEventBus extends EventBus {
   @Override
   protected void dispatch(final Object event, final EventHandler handler) {
     executor.execute(new Runnable() {
-          @Override
           @SuppressWarnings("synthetic-access")
           public void run() {
             AsyncEventBus.super.dispatch(event, handler);

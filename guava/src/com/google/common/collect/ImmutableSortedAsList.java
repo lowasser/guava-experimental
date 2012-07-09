@@ -35,17 +35,19 @@ final class ImmutableSortedAsList<E> extends ImmutableList<E> implements SortedI
     this.backingList = backingList;
   }
 
-  @Override public Comparator<? super E> comparator() {
+  public Comparator<? super E> comparator() {
     return backingSet.comparator();
   }
 
   // Override indexOf() and lastIndexOf() to be O(log N) instead of O(N).
 
-  @Override public int indexOf(@Nullable Object target) {
+  @Override
+  public int indexOf(@Nullable Object target) {
     return backingSet.indexOf(target);
   }
 
-  @Override public int lastIndexOf(@Nullable Object target) {
+  @Override
+  public int lastIndexOf(@Nullable Object target) {
     return backingSet.indexOf(target);
   }
 
@@ -57,39 +59,46 @@ final class ImmutableSortedAsList<E> extends ImmutableList<E> implements SortedI
   }
 
   // The ImmutableAsList serialized form has the correct behavior.
-  @Override Object writeReplace() {
+  @Override
+  Object writeReplace() {
     return new ImmutableAsList.SerializedForm(backingSet);
   }
 
-  @Override public UnmodifiableIterator<E> iterator() {
+  @Override
+  public UnmodifiableIterator<E> iterator() {
     return backingList.iterator();
   }
 
-  @Override public E get(int index) {
+  public E get(int index) {
     return backingList.get(index);
   }
 
-  @Override public UnmodifiableListIterator<E> listIterator() {
+  @Override
+  public UnmodifiableListIterator<E> listIterator() {
     return backingList.listIterator();
   }
 
-  @Override public UnmodifiableListIterator<E> listIterator(int index) {
+  @Override
+  public UnmodifiableListIterator<E> listIterator(int index) {
     return backingList.listIterator(index);
   }
 
-  @Override public int size() {
+  public int size() {
     return backingList.size();
   }
 
-  @Override public boolean equals(@Nullable Object obj) {
+  @Override
+  public boolean equals(@Nullable Object obj) {
     return backingList.equals(obj);
   }
 
-  @Override public int hashCode() {
+  @Override
+  public int hashCode() {
     return backingList.hashCode();
   }
 
-  @Override boolean isPartialView() {
+  @Override
+  boolean isPartialView() {
     return backingList.isPartialView();
   }
 }

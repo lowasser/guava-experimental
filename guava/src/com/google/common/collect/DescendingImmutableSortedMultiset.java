@@ -30,22 +30,18 @@ final class DescendingImmutableSortedMultiset<E> extends ImmutableSortedMultiset
     this.forward = forward;
   }
 
-  @Override
   public int count(@Nullable Object element) {
     return forward.count(element);
   }
 
-  @Override
   public Entry<E> firstEntry() {
     return forward.lastEntry();
   }
 
-  @Override
   public Entry<E> lastEntry() {
     return forward.firstEntry();
   }
 
-  @Override
   public int size() {
     return forward.size();
   }
@@ -64,7 +60,6 @@ final class DescendingImmutableSortedMultiset<E> extends ImmutableSortedMultiset
   ImmutableSet<Entry<E>> createEntrySet() {
     final ImmutableSet<Entry<E>> forwardEntrySet = forward.entrySet();
     return new EntrySet() {
-      @Override
       public int size() {
         return forwardEntrySet.size();
       }

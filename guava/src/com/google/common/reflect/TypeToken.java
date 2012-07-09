@@ -459,7 +459,8 @@ public abstract class TypeToken<T> extends TypeCapture<T> implements Serializabl
       return new ClassSet();
     }
 
-    @Override protected Set<TypeToken<? super T>> delegate() {
+    @Override
+    protected Set<TypeToken<? super T>> delegate() {
       ImmutableSet<TypeToken<? super T>> filteredTypes = types;
       if (filteredTypes == null) {
         return (types = ImmutableSet.copyOf(
@@ -489,15 +490,18 @@ public abstract class TypeToken<T> extends TypeCapture<T> implements Serializabl
       this.interfaces = ImmutableSet.copyOf(Iterables.filter(allTypes, TypeFilter.INTERFACE_ONLY));
     }
 
-    @Override protected Set<TypeToken<? super T>> delegate() {
+    @Override
+    protected Set<TypeToken<? super T>> delegate() {
       return interfaces;
     }
 
-    @Override public TypeSet interfaces() {
+    @Override
+    public TypeSet interfaces() {
       return this;
     }
 
-    @Override public TypeSet classes() {
+    @Override
+    public TypeSet classes() {
       throw new UnsupportedOperationException("interfaces().classes() not supported.");
     }
 
@@ -513,20 +517,24 @@ public abstract class TypeToken<T> extends TypeCapture<T> implements Serializabl
     private transient final ImmutableSet<TypeToken<? super T>> classes = ImmutableSet.copyOf(
         Iterators.filter(new AbstractSequentialIterator<TypeToken<? super T>>(
             getRawType().isInterface() ? null : TypeToken.this) {
-          @Override protected TypeToken<? super T> computeNext(TypeToken<? super T> previous) {
+          @Override
+          protected TypeToken<? super T> computeNext(TypeToken<? super T> previous) {
             return previous.getGenericSuperclass();
           }
         }, TypeFilter.IGNORE_TYPE_VARIABLE_OR_WILDCARD));
 
-    @Override protected Set<TypeToken<? super T>> delegate() {
+    @Override
+    protected Set<TypeToken<? super T>> delegate() {
       return classes;
     }
 
-    @Override public TypeSet classes() {
+    @Override
+    public TypeSet classes() {
       return this;
     }
 
-    @Override public TypeSet interfaces() {
+    @Override
+    public TypeSet interfaces() {
       throw new UnsupportedOperationException("classes().interfaces() not supported.");
     }
 
@@ -570,13 +578,13 @@ public abstract class TypeToken<T> extends TypeCapture<T> implements Serializabl
   private enum TypeFilter implements Predicate<TypeToken<?>> {
 
     IGNORE_TYPE_VARIABLE_OR_WILDCARD {
-      @Override public boolean apply(TypeToken<?> type) {
+      public boolean apply(TypeToken<?> type) {
         return !(type.runtimeType instanceof TypeVariable
             || type.runtimeType instanceof WildcardType);
       }
     },
     INTERFACE_ONLY {
-      @Override public boolean apply(TypeToken<?> type) {
+      public boolean apply(TypeToken<?> type) {
         return type.getRawType().isInterface();
       }
     }
@@ -585,7 +593,8 @@ public abstract class TypeToken<T> extends TypeCapture<T> implements Serializabl
   /**
    * Returns true if {@code o} is another {@code TypeToken} that represents the same {@link Type}.
    */
-  @Override public boolean equals(@Nullable Object o) {
+  @Override
+  public boolean equals(@Nullable Object o) {
     if (o instanceof TypeToken) {
       TypeToken<?> that = (TypeToken<?>) o;
       return runtimeType.equals(that.runtimeType);
@@ -593,11 +602,13 @@ public abstract class TypeToken<T> extends TypeCapture<T> implements Serializabl
     return false;
   }
 
-  @Override public int hashCode() {
+  @Override
+  public int hashCode() {
     return runtimeType.hashCode();
   }
 
-  @Override public String toString() {
+  @Override
+  public String toString() {
     return Types.toString(runtimeType);
   }
 
@@ -910,7 +921,7 @@ public abstract class TypeToken<T> extends TypeCapture<T> implements Serializabl
   private static <K, V> ImmutableSortedSet<K> sortKeysByValue(
       final Map<K, V> map, final Comparator<? super V> valueComparator) {
     Comparator<K> keyComparator = new Comparator<K>() {
-      @Override public int compare(K left, K right) {
+      public int compare(K left, K right) {
         return valueComparator.compare(map.get(left), map.get(right));
       }
     };

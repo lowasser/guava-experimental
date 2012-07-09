@@ -22,18 +22,14 @@ import com.google.common.annotations.GwtCompatible;
 import com.google.common.annotations.GwtIncompatible;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableSortedMap.Builder;
-import com.google.common.collect.testing.NavigableMapTestSuiteBuilder;
 import com.google.common.collect.testing.SortedMapInterfaceTest;
+import com.google.common.collect.testing.SortedMapTestSuiteBuilder;
 import com.google.common.collect.testing.features.CollectionFeature;
 import com.google.common.collect.testing.features.CollectionSize;
 import com.google.common.collect.testing.features.MapFeature;
 import com.google.common.collect.testing.google.SortedMapGenerators.ImmutableSortedMapGenerator;
 import com.google.common.testing.NullPointerTester;
 import com.google.common.testing.SerializableTester;
-
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
 import java.io.Serializable;
 import java.util.Collections;
@@ -42,6 +38,10 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.SortedMap;
+
+import junit.framework.Test;
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
 
 /**
  * Tests for {@link ImmutableSortedMap}.
@@ -58,7 +58,7 @@ public class ImmutableSortedMapTest extends TestCase {
   public static Test suite() {
     TestSuite suite = new TestSuite();
     suite.addTestSuite(ImmutableSortedMapTest.class);
-    suite.addTest(NavigableMapTestSuiteBuilder.using(
+    suite.addTest(SortedMapTestSuiteBuilder.using(
         new ImmutableSortedMapGenerator())
         .withFeatures(
             CollectionSize.ANY,

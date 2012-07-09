@@ -56,7 +56,7 @@ public final class PatternFilenameFilter implements FilenameFilter {
     this.pattern = Preconditions.checkNotNull(pattern);
   }
 
-  @Override public boolean accept(@Nullable File dir, String fileName) {
+  public boolean accept(@Nullable File dir, String fileName) {
     return pattern.matcher(fileName).matches();
   }
 }

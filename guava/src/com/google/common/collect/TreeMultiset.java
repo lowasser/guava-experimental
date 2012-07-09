@@ -291,19 +291,16 @@ public final class TreeMultiset<E> extends AbstractSortedMultiset<E>
     return new Iterator<Entry<E>>() {
       final ToRemove<E> toRemove = new ToRemove<E>();
 
-      @Override
       public boolean hasNext() {
         return pathIterator.hasNext();
       }
 
-      @Override
       public Entry<E> next() {
         BstInOrderPath<Node<E>> path = pathIterator.next();
         return new LiveEntry(
             toRemove.setAndGet(path.getTip().getKey()), path.getTip().elemCount());
       }
 
-      @Override
       public void remove() {
         setCount(toRemove.getAndClear(), 0);
       }
@@ -338,12 +335,10 @@ public final class TreeMultiset<E> extends AbstractSortedMultiset<E>
       this.count = count;
     }
 
-    @Override
     public E getElement() {
       return element;
     }
 
-    @Override
     public int getCount() {
       if (rootReference.get() == expectedRoot) {
         return count;
@@ -366,14 +361,12 @@ public final class TreeMultiset<E> extends AbstractSortedMultiset<E>
     }
   }
 
-  @Override
   public SortedMultiset<E> headMultiset(E upperBound, BoundType boundType) {
     checkNotNull(upperBound);
     return new TreeMultiset<E>(
         range.intersect(GeneralRange.upTo(comparator, upperBound, boundType)), rootReference);
   }
 
-  @Override
   public SortedMultiset<E> tailMultiset(E lowerBound, BoundType boundType) {
     checkNotNull(lowerBound);
     return new TreeMultiset<E>(
@@ -434,12 +427,10 @@ public final class TreeMultiset<E> extends AbstractSortedMultiset<E>
 
   private static final BstAggregate<Node<Object>> DISTINCT_AGGREGATE =
       new BstAggregate<Node<Object>>() {
-    @Override
     public int entryValue(Node<Object> entry) {
       return 1;
     }
 
-    @Override
     public long treeValue(@Nullable Node<Object> tree) {
       return distinctOrZero(tree);
     }
@@ -452,12 +443,10 @@ public final class TreeMultiset<E> extends AbstractSortedMultiset<E>
 
   private static final BstAggregate<Node<Object>> SIZE_AGGREGATE =
       new BstAggregate<Node<Object>>() {
-        @Override
         public int entryValue(Node<Object> entry) {
           return entry.elemCount();
         }
 
-        @Override
         public long treeValue(@Nullable Node<Object> tree) {
           return sizeOrZero(tree);
         }
@@ -481,7 +470,6 @@ public final class TreeMultiset<E> extends AbstractSortedMultiset<E>
     abstract int newCount(int oldCount);
 
     @Nullable
-    @Override
     public BstModificationResult<Node<E>> modify(E key, @Nullable Node<E> originalEntry) {
       int oldCount = countOrZero(originalEntry);
       int newCount = newCount(oldCount);

@@ -312,7 +312,7 @@ public final class MediaType {
   private Map<String, ImmutableMultiset<String>> parametersAsMap() {
     return Maps.transformValues(parameters.asMap(),
         new Function<Collection<String>, ImmutableMultiset<String>>() {
-          @Override public ImmutableMultiset<String> apply(Collection<String> input) {
+          public ImmutableMultiset<String> apply(Collection<String> input) {
             return ImmutableMultiset.copyOf(input);
           }
         });
@@ -604,7 +604,8 @@ public final class MediaType {
     }
   }
 
-  @Override public boolean equals(@Nullable Object obj) {
+  @Override
+  public boolean equals(@Nullable Object obj) {
     if (obj == this) {
       return true;
     } else if (obj instanceof MediaType) {
@@ -618,7 +619,8 @@ public final class MediaType {
     }
   }
 
-  @Override public int hashCode() {
+  @Override
+  public int hashCode() {
     return Objects.hashCode(type, subtype, parametersAsMap());
   }
 
@@ -628,13 +630,14 @@ public final class MediaType {
    * Returns the string representation of this media type in the format described in <a
    * href="http://www.ietf.org/rfc/rfc2045.txt">RFC 2045</a>.
    */
-  @Override public String toString() {
+  @Override
+  public String toString() {
     StringBuilder builder = new StringBuilder().append(type).append('/').append(subtype);
     if (!parameters.isEmpty()) {
       builder.append("; ");
       Multimap<String, String> quotedParameters = Multimaps.transformValues(parameters,
           new Function<String, String>() {
-            @Override public String apply(String value) {
+            public String apply(String value) {
               return TOKEN_MATCHER.matchesAllOf(value) ? value : escapeAndQuote(value);
             }
           });

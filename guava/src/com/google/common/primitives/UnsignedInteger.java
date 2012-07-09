@@ -201,7 +201,6 @@ public final class UnsignedInteger extends Number implements Comparable<Unsigned
    * Returns {@code 0} if they are equal, a negative number if {@code this < other},
    * and a positive number if {@code this > other}.
    */
-  @Override
   public int compareTo(UnsignedInteger other) {
     checkNotNull(other);
     return compare(value, other.value);

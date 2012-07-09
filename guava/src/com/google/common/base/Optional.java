@@ -189,18 +189,21 @@ public abstract class Optional<T> implements Serializable {
    * are absent. Note that {@code Optional} instances of differing parameterized types can
    * be equal.
    */
-  @Override public abstract boolean equals(@Nullable Object object);
+  @Override
+  public abstract boolean equals(@Nullable Object object);
 
   /**
    * Returns a hash code for this instance.
    */
-  @Override public abstract int hashCode();
+  @Override
+  public abstract int hashCode();
 
   /**
    * Returns a string representation for this instance. The form of this string
    * representation is unspecified.
    */
-  @Override public abstract String toString();
+  @Override
+  public abstract String toString();
 
   /**
    * Returns the value of each present instance from the supplied {@code optionals}, in order,
@@ -212,11 +215,12 @@ public abstract class Optional<T> implements Serializable {
   public static <T> Iterable<T> presentInstances(final Iterable<Optional<T>> optionals) {
     checkNotNull(optionals);
     return new Iterable<T>() {
-      @Override public Iterator<T> iterator() {
+      public Iterator<T> iterator() {
         return new AbstractIterator<T>() {
           private final Iterator<Optional<T>> iterator = checkNotNull(optionals.iterator());
 
-          @Override protected T computeNext() {
+          @Override
+          protected T computeNext() {
             while (iterator.hasNext()) {
               Optional<T> optional = iterator.next();
               if (optional.isPresent()) {

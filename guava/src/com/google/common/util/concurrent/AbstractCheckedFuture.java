@@ -72,7 +72,6 @@ public abstract class AbstractCheckedFuture<V, X extends Exception>
    * @throws X if {@link #get()} throws an {@link InterruptedException},
    *         {@link CancellationException}, or {@link ExecutionException}
    */
-  @Override
   public V checkedGet() throws X {
     try {
       return get();
@@ -101,7 +100,6 @@ public abstract class AbstractCheckedFuture<V, X extends Exception>
    *         {@link CancellationException}, or {@link ExecutionException}
    * @throws TimeoutException {@inheritDoc}
    */
-  @Override
   public V checkedGet(long timeout, TimeUnit unit) throws TimeoutException, X {
     try {
       return get(timeout, unit);

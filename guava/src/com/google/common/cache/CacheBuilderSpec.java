@@ -132,7 +132,7 @@ public final class CacheBuilderSpec {
    */
   public static CacheBuilderSpec parse(String cacheBuilderSpecification) {
     CacheBuilderSpec spec = new CacheBuilderSpec(cacheBuilderSpecification);
-    if (!cacheBuilderSpecification.isEmpty()) {
+    if (cacheBuilderSpecification.length() > 0) {
       for (String keyValuePair : KEYS_SPLITTER.split(cacheBuilderSpecification)) {
         List<String> keyAndValue = ImmutableList.copyOf(KEY_VALUE_SPLITTER.split(keyValuePair));
         checkArgument(!keyAndValue.isEmpty(), "blank key-value pair");
@@ -279,9 +279,8 @@ public final class CacheBuilderSpec {
   abstract static class IntegerParser implements ValueParser {
     protected abstract void parseInteger(CacheBuilderSpec spec, int value);
 
-    @Override
     public void parse(CacheBuilderSpec spec, String key, String value) {
-      checkArgument(value != null && !value.isEmpty(), "value of key %s omitted", key);
+      checkArgument(value != null && value.length() > 0, "value of key %s omitted", key);
       try {
         parseInteger(spec, Integer.parseInt(value));
       } catch (NumberFormatException e) {
@@ -295,9 +294,8 @@ public final class CacheBuilderSpec {
   abstract static class LongParser implements ValueParser {
     protected abstract void parseLong(CacheBuilderSpec spec, long value);
 
-    @Override
     public void parse(CacheBuilderSpec spec, String key, String value) {
-      checkArgument(value != null && !value.isEmpty(), "value of key %s omitted", key);
+      checkArgument(value != null && value.length() > 0, "value of key %s omitted", key);
       try {
         parseLong(spec, Long.parseLong(value));
       } catch (NumberFormatException e) {
@@ -359,7 +357,6 @@ public final class CacheBuilderSpec {
       this.strength = strength;
     }
 
-    @Override
     public void parse(CacheBuilderSpec spec, String key, @Nullable String value) {
       checkArgument(value == null, "key %s does not take values", key);
       checkArgument(spec.keyStrength == null, "%s was already set to %s", key, spec.keyStrength);
@@ -375,7 +372,6 @@ public final class CacheBuilderSpec {
       this.strength = strength;
     }
 
-    @Override
     public void parse(CacheBuilderSpec spec, String key, @Nullable String value) {
       checkArgument(value == null, "key %s does not take values", key);
       checkArgument(spec.valueStrength == null,
@@ -392,22 +388,19 @@ public final class CacheBuilderSpec {
         long duration,
         TimeUnit unit);
 
-    @Override
     public void parse(CacheBuilderSpec spec, String key, String value) {
-      checkArgument(value != null && !value.isEmpty(), "value of key %s omitted", key);
+      checkArgument(value != null && value.length() > 0, "value of key %s omitted", key);
       try {
         char lastChar = value.charAt(value.length() - 1);
         TimeUnit timeUnit;
+        long multiplier = 1;
         switch (lastChar) {
           case 'd':
-            timeUnit = TimeUnit.DAYS;
-            break;
+            multiplier *= 24;
           case 'h':
-            timeUnit = TimeUnit.HOURS;
-            break;
+            multiplier *= 60;
           case 'm':
-            timeUnit = TimeUnit.MINUTES;
-            break;
+            multiplier *= 60;
           case 's':
             timeUnit = TimeUnit.SECONDS;
             break;
@@ -417,7 +410,7 @@ public final class CacheBuilderSpec {
                     key, value));
         }
 
-        long duration = Long.parseLong(value.substring(0, value.length() - 1));
+        long duration = multiplier * Long.parseLong(value.substring(0, value.length() - 1));
         parseDuration(spec, duration, timeUnit);
       } catch (NumberFormatException e) {
         throw new IllegalArgumentException(
@@ -428,7 +421,8 @@ public final class CacheBuilderSpec {
 
   /** Parse expireAfterAccess */
   static class AccessDurationParser extends DurationParser {
-    @Override protected void parseDuration(CacheBuilderSpec spec, long duration, TimeUnit unit) {
+    @Override
+    protected void parseDuration(CacheBuilderSpec spec, long duration, TimeUnit unit) {
       checkArgument(spec.accessExpirationTimeUnit == null, "expireAfterAccess already set");
       spec.accessExpirationDuration = duration;
       spec.accessExpirationTimeUnit = unit;
@@ -437,7 +431,8 @@ public final class CacheBuilderSpec {
 
   /** Parse expireAfterWrite */
   static class WriteDurationParser extends DurationParser {
-    @Override protected void parseDuration(CacheBuilderSpec spec, long duration, TimeUnit unit) {
+    @Override
+    protected void parseDuration(CacheBuilderSpec spec, long duration, TimeUnit unit) {
       checkArgument(spec.writeExpirationTimeUnit == null, "expireAfterWrite already set");
       spec.writeExpirationDuration = duration;
       spec.writeExpirationTimeUnit = unit;
@@ -446,7 +441,8 @@ public final class CacheBuilderSpec {
 
   /** Parse refreshAfterWrite */
   static class RefreshDurationParser extends DurationParser {
-    @Override protected void parseDuration(CacheBuilderSpec spec, long duration, TimeUnit unit) {
+    @Override
+    protected void parseDuration(CacheBuilderSpec spec, long duration, TimeUnit unit) {
       checkArgument(spec.refreshTimeUnit == null, "refreshAfterWrite already set");
       spec.refreshDuration = duration;
       spec.refreshTimeUnit = unit;

@@ -217,13 +217,13 @@ public abstract class Ordering<T> implements Comparator<T> {
         Platform.tryWeakKeys(new MapMaker()).makeComputingMap(
             new Function<Object, Integer>() {
               final AtomicInteger counter = new AtomicInteger(0);
-              @Override
               public Integer apply(Object from) {
                 return counter.getAndIncrement();
               }
             });
 
-    @Override public int compare(Object left, Object right) {
+    @Override
+    public int compare(Object left, Object right) {
       if (left == right) {
         return 0;
       }
@@ -241,7 +241,8 @@ public abstract class Ordering<T> implements Comparator<T> {
       return result;
     }
 
-    @Override public String toString() {
+    @Override
+    public String toString() {
       return "Ordering.arbitrary()";
     }
 
@@ -395,7 +396,7 @@ public abstract class Ordering<T> implements Comparator<T> {
   // Regular instance methods
 
   // Override to add @Nullable
-  @Override public abstract int compare(@Nullable T left, @Nullable T right);
+  public abstract int compare(@Nullable T left, @Nullable T right);
 
   /**
    * Returns the {@code k} least elements of the given iterable according to

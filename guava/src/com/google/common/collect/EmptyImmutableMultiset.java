@@ -30,17 +30,14 @@ import javax.annotation.Nullable;
 final class EmptyImmutableMultiset extends ImmutableMultiset<Object> {
   static final EmptyImmutableMultiset INSTANCE = new EmptyImmutableMultiset();
 
-  @Override
   public int count(@Nullable Object element) {
     return 0;
   }
 
-  @Override
   public ImmutableSet<Object> elementSet() {
     return ImmutableSet.of();
   }
 
-  @Override
   public int size() {
     return 0;
   }

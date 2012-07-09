@@ -154,8 +154,8 @@ public final class MapMaker extends GenericMapMaker<Object, Object> {
    * {@link #weakKeys} or {@link #softKeys} is specified, and {@link Equivalences#equals()}
    * otherwise.
    */
-  @GwtIncompatible("To be supported")
   @Override
+  @GwtIncompatible("To be supported")
   MapMaker keyEquivalence(Equivalence<Object> equivalence) {
     checkState(keyEquivalence == null, "key equivalence was already set to %s", keyEquivalence);
     keyEquivalence = checkNotNull(equivalence);
@@ -174,8 +174,8 @@ public final class MapMaker extends GenericMapMaker<Object, Object> {
    * {@link #weakValues} or {@link #softValues} is specified, and {@link Equivalences#equals()}
    * otherwise.
    */
-  @GwtIncompatible("To be supported")
   @Override
+  @GwtIncompatible("To be supported")
   MapMaker valueEquivalence(Equivalence<Object> equivalence) {
     checkState(valueEquivalence == null,
         "value equivalence was already set to %s", valueEquivalence);
@@ -234,8 +234,8 @@ public final class MapMaker extends GenericMapMaker<Object, Object> {
    *     CacheBuilder} is simply an enhanced API for an implementation which was branched from
    *     {@code MapMaker}.
    */
-  @Deprecated
   @Override
+  @Deprecated
   MapMaker maximumSize(int size) {
     checkState(this.maximumSize == UNSET_INT, "maximum size was already set to %s",
         this.maximumSize);
@@ -302,8 +302,8 @@ public final class MapMaker extends GenericMapMaker<Object, Object> {
    * @throws IllegalStateException if the key strength was already set
    * @see WeakReference
    */
-  @GwtIncompatible("java.lang.ref.WeakReference")
   @Override
+  @GwtIncompatible("java.lang.ref.WeakReference")
   public MapMaker weakKeys() {
     return setKeyStrength(Strength.WEAK);
   }
@@ -328,9 +328,9 @@ public final class MapMaker extends GenericMapMaker<Object, Object> {
    *     create a map that doesn't hold strong references to the keys.
    *     <b>This method is scheduled for deletion in January 2013.</b>
    */
+  @Override
   @Deprecated
   @GwtIncompatible("java.lang.ref.SoftReference")
-  @Override
   public MapMaker softKeys() {
     return setKeyStrength(Strength.SOFT);
   }
@@ -376,8 +376,8 @@ public final class MapMaker extends GenericMapMaker<Object, Object> {
    * @throws IllegalStateException if the value strength was already set
    * @see WeakReference
    */
-  @GwtIncompatible("java.lang.ref.WeakReference")
   @Override
+  @GwtIncompatible("java.lang.ref.WeakReference")
   public MapMaker weakValues() {
     return setValueStrength(Strength.WEAK);
   }
@@ -402,8 +402,8 @@ public final class MapMaker extends GenericMapMaker<Object, Object> {
    * @throws IllegalStateException if the value strength was already set
    * @see SoftReference
    */
-  @GwtIncompatible("java.lang.ref.SoftReference")
   @Override
+  @GwtIncompatible("java.lang.ref.SoftReference")
   public MapMaker softValues() {
     return setValueStrength(Strength.SOFT);
   }
@@ -433,8 +433,8 @@ public final class MapMaker extends GenericMapMaker<Object, Object> {
    *     {@code MapMaker}.
    *     <b>This method is scheduled for deletion in July 2012.</b>
    */
-  @Deprecated
   @Override
+  @Deprecated
   public
   MapMaker expiration(long duration, TimeUnit unit) {
     return expireAfterWrite(duration, unit);
@@ -465,8 +465,8 @@ public final class MapMaker extends GenericMapMaker<Object, Object> {
    *     CacheBuilder} is simply an enhanced API for an implementation which was branched from
    *     {@code MapMaker}.
    */
-  @Deprecated
   @Override
+  @Deprecated
   MapMaker expireAfterWrite(long duration, TimeUnit unit) {
     checkExpiration(duration, unit);
     this.expireAfterWriteNanos = unit.toNanos(duration);
@@ -515,9 +515,9 @@ public final class MapMaker extends GenericMapMaker<Object, Object> {
    *     {@code CacheBuilder} is simply an enhanced API for an implementation which was branched
    *     from {@code MapMaker}.
    */
+  @Override
   @Deprecated
   @GwtIncompatible("To be supported")
-  @Override
   MapMaker expireAfterAccess(long duration, TimeUnit unit) {
     checkExpiration(duration, unit);
     this.expireAfterAccessNanos = unit.toNanos(duration);
@@ -670,8 +670,8 @@ public final class MapMaker extends GenericMapMaker<Object, Object> {
    *     Migration Guide</a> for more details.
    *     <b>This method is scheduled for deletion in February 2013.</b>
    */
-  @Deprecated
   @Override
+  @Deprecated
   public <K, V> ConcurrentMap<K, V> makeComputingMap(
       Function<? super K, ? extends V> computingFunction) {
     return useNullMap()
@@ -887,7 +887,6 @@ public final class MapMaker extends GenericMapMaker<Object, Object> {
       return null;
     }
 
-    @Override
     public V putIfAbsent(K key, V value) {
       return put(key, value);
     }
@@ -897,19 +896,16 @@ public final class MapMaker extends GenericMapMaker<Object, Object> {
       return null;
     }
 
-    @Override
     public boolean remove(@Nullable Object key, @Nullable Object value) {
       return false;
     }
 
-    @Override
     public V replace(K key, V value) {
       checkNotNull(key);
       checkNotNull(value);
       return null;
     }
 
-    @Override
     public boolean replace(K key, @Nullable V oldValue, V newValue) {
       checkNotNull(key);
       checkNotNull(newValue);
@@ -934,8 +930,8 @@ public final class MapMaker extends GenericMapMaker<Object, Object> {
       this.computingFunction = checkNotNull(computingFunction);
     }
 
-    @SuppressWarnings("unchecked") // unsafe, which is why Cache is preferred
     @Override
+    @SuppressWarnings("unchecked") // unsafe, which is why Cache is preferred
     public V get(Object k) {
       K key = (K) k;
       V value = compute(key);

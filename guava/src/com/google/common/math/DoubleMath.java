@@ -84,7 +84,7 @@ public final class DoubleMath {
           return (z == x) ? x : DoubleUtils.nextDown(z); // x + 0.5 - epsilon
         } else {
           double z = x - 0.5;
-          return (z == x) ? x : Math.nextUp(z); // x - 0.5 + epsilon
+          return (z == x) ? x : DoubleUtils.nextUp(z); // x - 0.5 + epsilon
         }
 
       default:
@@ -158,7 +158,7 @@ public final class DoubleMath {
     if (MIN_LONG_AS_DOUBLE - x < 1.0 & x < MAX_LONG_AS_DOUBLE_PLUS_ONE) {
       return BigInteger.valueOf((long) x);
     }
-    int exponent = Math.getExponent(x);
+    int exponent = DoubleUtils.getExponent(x);
     if (exponent < 0) {
       return BigInteger.ZERO;
     }
@@ -208,7 +208,7 @@ public final class DoubleMath {
   @SuppressWarnings("fallthrough")
   public static int log2(double x, RoundingMode mode) {
     checkArgument(x > 0.0 && isFinite(x), "x must be positive and finite");
-    int exponent = Math.getExponent(x);
+    int exponent = DoubleUtils.getExponent(x);
     if (!isNormal(x)) {
       return log2(x * IMPLICIT_BIT, mode) - SIGNIFICAND_BITS;
       // Do the calculation on a normal value.
@@ -254,7 +254,7 @@ public final class DoubleMath {
   public static boolean isMathematicalInteger(double x) {
     return isFinite(x)
         && (x == 0.0 || SIGNIFICAND_BITS
-            - Long.numberOfTrailingZeros(getSignificand(x)) <= Math.getExponent(x));
+            - Long.numberOfTrailingZeros(getSignificand(x)) <= DoubleUtils.getExponent(x));
   }
 
   /**

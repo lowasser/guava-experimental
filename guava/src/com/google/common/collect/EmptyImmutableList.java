@@ -39,105 +39,117 @@ final class EmptyImmutableList extends ImmutableList<Object> {
   static final UnmodifiableListIterator<Object> ITERATOR =
       new UnmodifiableListIterator<Object>() {
 
-        @Override public boolean hasNext() {
+        public boolean hasNext() {
           return false;
         }
 
-        @Override public boolean hasPrevious() {
+        public boolean hasPrevious() {
           return false;
         }
 
-        @Override public Object next() {
+        public Object next() {
           throw new NoSuchElementException();
         }
 
-        @Override public int nextIndex() {
+        public int nextIndex() {
           return 0;
         }
 
-        @Override public Object previous() {
+        public Object previous() {
           throw new NoSuchElementException();
         }
 
-        @Override public int previousIndex() {
+        public int previousIndex() {
           return -1;
         }
       };
 
   private EmptyImmutableList() {}
 
-  @Override
   public int size() {
     return 0;
   }
 
-  @Override public boolean isEmpty() {
+  @Override
+  public boolean isEmpty() {
     return true;
   }
 
-  @Override boolean isPartialView() {
+  @Override
+  boolean isPartialView() {
     return false;
   }
 
-  @Override public boolean contains(Object target) {
+  @Override
+  public boolean contains(Object target) {
     return false;
   }
 
-  @Override public UnmodifiableIterator<Object> iterator() {
+  @Override
+  public UnmodifiableIterator<Object> iterator() {
     return Iterators.emptyIterator();
   }
 
   private static final Object[] EMPTY_ARRAY = new Object[0];
 
-  @Override public Object[] toArray() {
+  @Override
+  public Object[] toArray() {
     return EMPTY_ARRAY;
   }
 
-  @Override public <T> T[] toArray(T[] a) {
+  @Override
+  public <T> T[] toArray(T[] a) {
     if (a.length > 0) {
       a[0] = null;
     }
     return a;
   }
 
-  @Override
   public Object get(int index) {
     // guaranteed to fail, but at least we get a consistent message
     checkElementIndex(index, 0);
     throw new AssertionError("unreachable");
   }
 
-  @Override public int indexOf(@Nullable Object target) {
+  @Override
+  public int indexOf(@Nullable Object target) {
     return -1;
   }
 
-  @Override public int lastIndexOf(@Nullable Object target) {
+  @Override
+  public int lastIndexOf(@Nullable Object target) {
     return -1;
   }
 
-  @Override public ImmutableList<Object> subList(int fromIndex, int toIndex) {
+  @Override
+  public ImmutableList<Object> subList(int fromIndex, int toIndex) {
     checkPositionIndexes(fromIndex, toIndex, 0);
     return this;
   }
 
-  @Override public ImmutableList<Object> reverse() {
+  @Override
+  public ImmutableList<Object> reverse() {
     return this;
   }
 
-  @Override public UnmodifiableListIterator<Object> listIterator(){
+  @Override
+  public UnmodifiableListIterator<Object> listIterator(){
     return ITERATOR;
   }
 
-  @Override public UnmodifiableListIterator<Object> listIterator(int start) {
+  @Override
+  public UnmodifiableListIterator<Object> listIterator(int start) {
     checkPositionIndex(start, 0);
     return ITERATOR;
   }
 
-  @Override public boolean containsAll(Collection<?> targets) {
+  @Override
+  public boolean containsAll(Collection<?> targets) {
     return targets.isEmpty();
   }
 
-  @Override public boolean equals(@Nullable Object object) {
+  @Override
+  public boolean equals(@Nullable Object object) {
     if (object instanceof List) {
       List<?> that = (List<?>) object;
       return that.isEmpty();
@@ -145,11 +157,13 @@ final class EmptyImmutableList extends ImmutableList<Object> {
     return false;
   }
 
-  @Override public int hashCode() {
+  @Override
+  public int hashCode() {
     return 1;
   }
 
-  @Override public String toString() {
+  @Override
+  public String toString() {
     return "[]";
   }
 

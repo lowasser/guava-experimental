@@ -105,7 +105,6 @@ public final class Files {
       final File file) {
     Preconditions.checkNotNull(file);
     return new InputSupplier<FileInputStream>() {
-      @Override
       public FileInputStream getInput() throws IOException {
         return new FileInputStream(file);
       }
@@ -137,7 +136,6 @@ public final class Files {
       final File file, final boolean append) {
     Preconditions.checkNotNull(file);
     return new OutputSupplier<FileOutputStream>() {
-      @Override
       public FileOutputStream getOutput() throws IOException {
         return new FileOutputStream(file, append);
       }

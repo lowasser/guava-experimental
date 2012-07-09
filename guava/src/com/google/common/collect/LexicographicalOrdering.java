@@ -36,7 +36,8 @@ final class LexicographicalOrdering<T>
     this.elementOrder = elementOrder;
   }
 
-  @Override public int compare(
+  @Override
+  public int compare(
       Iterable<T> leftIterable, Iterable<T> rightIterable) {
     Iterator<T> left = leftIterable.iterator();
     Iterator<T> right = rightIterable.iterator();
@@ -55,7 +56,8 @@ final class LexicographicalOrdering<T>
     return 0;
   }
 
-  @Override public boolean equals(@Nullable Object object) {
+  @Override
+  public boolean equals(@Nullable Object object) {
     if (object == this) {
       return true;
     }
@@ -66,11 +68,13 @@ final class LexicographicalOrdering<T>
     return false;
   }
 
-  @Override public int hashCode() {
+  @Override
+  public int hashCode() {
     return elementOrder.hashCode() ^ 2075626741; // meaningless
   }
 
-  @Override public String toString() {
+  @Override
+  public String toString() {
     return elementOrder + ".lexicographical()";
   }
 

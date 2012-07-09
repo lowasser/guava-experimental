@@ -134,7 +134,8 @@ public class TreeMultimap<K, V> extends AbstractSortedSetMultimap<K, V> {
    * @return a new {@code TreeSet} containing a collection of values for one
    *     key
    */
-  @Override SortedSet<V> createCollection() {
+  @Override
+  SortedSet<V> createCollection() {
     return new TreeSet<V>(valueComparator);
   }
 
@@ -145,7 +146,6 @@ public class TreeMultimap<K, V> extends AbstractSortedSetMultimap<K, V> {
     return keyComparator;
   }
 
-  @Override
   public Comparator<? super V> valueComparator() {
     return valueComparator;
   }
@@ -157,7 +157,8 @@ public class TreeMultimap<K, V> extends AbstractSortedSetMultimap<K, V> {
    * returns a {@link SortedSet}, instead of the {@link java.util.Set} specified
    * in the {@link Multimap} interface.
    */
-  @Override public SortedSet<K> keySet() {
+  @Override
+  public SortedSet<K> keySet() {
     return (SortedSet<K>) super.keySet();
   }
 
@@ -168,7 +169,8 @@ public class TreeMultimap<K, V> extends AbstractSortedSetMultimap<K, V> {
    * returns a {@link SortedMap}, instead of the {@link java.util.Map} specified
    * in the {@link Multimap} interface.
    */
-  @Override public SortedMap<K, Collection<V>> asMap() {
+  @Override
+  public SortedMap<K, Collection<V>> asMap() {
     return (SortedMap<K, Collection<V>>) super.asMap();
   }
 

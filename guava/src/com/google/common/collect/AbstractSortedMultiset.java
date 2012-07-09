@@ -60,24 +60,20 @@ abstract class AbstractSortedMultiset<E> extends AbstractMultiset<E> implements 
     };
   }
 
-  @Override
   public Comparator<? super E> comparator() {
     return comparator;
   }
 
-  @Override
   public Entry<E> firstEntry() {
     Iterator<Entry<E>> entryIterator = entryIterator();
     return entryIterator.hasNext() ? entryIterator.next() : null;
   }
 
-  @Override
   public Entry<E> lastEntry() {
     Iterator<Entry<E>> entryIterator = descendingEntryIterator();
     return entryIterator.hasNext() ? entryIterator.next() : null;
   }
 
-  @Override
   public Entry<E> pollFirstEntry() {
     Iterator<Entry<E>> entryIterator = entryIterator();
     if (entryIterator.hasNext()) {
@@ -89,7 +85,6 @@ abstract class AbstractSortedMultiset<E> extends AbstractMultiset<E> implements 
     return null;
   }
 
-  @Override
   public Entry<E> pollLastEntry() {
     Iterator<Entry<E>> entryIterator = descendingEntryIterator();
     if (entryIterator.hasNext()) {
@@ -101,7 +96,6 @@ abstract class AbstractSortedMultiset<E> extends AbstractMultiset<E> implements 
     return null;
   }
 
-  @Override
   public SortedMultiset<E> subMultiset(E fromElement, BoundType fromBoundType, E toElement,
       BoundType toBoundType) {
     return tailMultiset(fromElement, fromBoundType).headMultiset(toElement, toBoundType);
@@ -115,7 +109,6 @@ abstract class AbstractSortedMultiset<E> extends AbstractMultiset<E> implements 
 
   private transient SortedMultiset<E> descendingMultiset;
 
-  @Override
   public SortedMultiset<E> descendingMultiset() {
     SortedMultiset<E> result = descendingMultiset;
     return (result == null) ? descendingMultiset = createDescendingMultiset() : result;

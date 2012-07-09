@@ -628,33 +628,27 @@ class MapMakerInternalMap<K, V>
    * Placeholder. Indicates that the value hasn't been set yet.
    */
   static final ValueReference<Object, Object> UNSET = new ValueReference<Object, Object>() {
-    @Override
     public Object get() {
       return null;
     }
 
-    @Override
     public ReferenceEntry<Object, Object> getEntry() {
       return null;
     }
 
-    @Override
     public ValueReference<Object, Object> copyFor(
         ReferenceQueue<Object> queue, Object value, ReferenceEntry<Object, Object> entry) {
       return this;
     }
 
-    @Override
     public boolean isComputingReference() {
       return false;
     }
 
-    @Override
     public Object waitForValue() {
       return null;
     }
 
-    @Override
     public void clear(ValueReference<Object, Object> newValue) {}
   };
 
@@ -771,142 +765,112 @@ class MapMakerInternalMap<K, V>
   private enum NullEntry implements ReferenceEntry<Object, Object> {
     INSTANCE;
 
-    @Override
     public ValueReference<Object, Object> getValueReference() {
       return null;
     }
 
-    @Override
     public void setValueReference(ValueReference<Object, Object> valueReference) {}
 
-    @Override
     public ReferenceEntry<Object, Object> getNext() {
       return null;
     }
 
-    @Override
     public int getHash() {
       return 0;
     }
 
-    @Override
     public Object getKey() {
       return null;
     }
 
-    @Override
     public long getExpirationTime() {
       return 0;
     }
 
-    @Override
     public void setExpirationTime(long time) {}
 
-    @Override
     public ReferenceEntry<Object, Object> getNextExpirable() {
       return this;
     }
 
-    @Override
     public void setNextExpirable(ReferenceEntry<Object, Object> next) {}
 
-    @Override
     public ReferenceEntry<Object, Object> getPreviousExpirable() {
       return this;
     }
 
-    @Override
     public void setPreviousExpirable(ReferenceEntry<Object, Object> previous) {}
 
-    @Override
     public ReferenceEntry<Object, Object> getNextEvictable() {
       return this;
     }
 
-    @Override
     public void setNextEvictable(ReferenceEntry<Object, Object> next) {}
 
-    @Override
     public ReferenceEntry<Object, Object> getPreviousEvictable() {
       return this;
     }
 
-    @Override
     public void setPreviousEvictable(ReferenceEntry<Object, Object> previous) {}
   }
 
   static abstract class AbstractReferenceEntry<K, V> implements ReferenceEntry<K, V> {
-    @Override
     public ValueReference<K, V> getValueReference() {
       throw new UnsupportedOperationException();
     }
 
-    @Override
     public void setValueReference(ValueReference<K, V> valueReference) {
       throw new UnsupportedOperationException();
     }
 
-    @Override
     public ReferenceEntry<K, V> getNext() {
       throw new UnsupportedOperationException();
     }
 
-    @Override
     public int getHash() {
       throw new UnsupportedOperationException();
     }
 
-    @Override
     public K getKey() {
       throw new UnsupportedOperationException();
     }
 
-    @Override
     public long getExpirationTime() {
       throw new UnsupportedOperationException();
     }
 
-    @Override
     public void setExpirationTime(long time) {
       throw new UnsupportedOperationException();
     }
 
-    @Override
     public ReferenceEntry<K, V> getNextExpirable() {
       throw new UnsupportedOperationException();
     }
 
-    @Override
     public void setNextExpirable(ReferenceEntry<K, V> next) {
       throw new UnsupportedOperationException();
     }
 
-    @Override
     public ReferenceEntry<K, V> getPreviousExpirable() {
       throw new UnsupportedOperationException();
     }
 
-    @Override
     public void setPreviousExpirable(ReferenceEntry<K, V> previous) {
       throw new UnsupportedOperationException();
     }
 
-    @Override
     public ReferenceEntry<K, V> getNextEvictable() {
       throw new UnsupportedOperationException();
     }
 
-    @Override
     public void setNextEvictable(ReferenceEntry<K, V> next) {
       throw new UnsupportedOperationException();
     }
 
-    @Override
     public ReferenceEntry<K, V> getPreviousEvictable() {
       throw new UnsupportedOperationException();
     }
 
-    @Override
     public void setPreviousEvictable(ReferenceEntry<K, V> previous) {
       throw new UnsupportedOperationException();
     }
@@ -918,17 +882,14 @@ class MapMakerInternalMap<K, V>
   }
 
   static final Queue<? extends Object> DISCARDING_QUEUE = new AbstractQueue<Object>() {
-    @Override
     public boolean offer(Object o) {
       return true;
     }
 
-    @Override
     public Object peek() {
       return null;
     }
 
-    @Override
     public Object poll() {
       return null;
     }
@@ -972,61 +933,50 @@ class MapMakerInternalMap<K, V>
       this.next = next;
     }
 
-    @Override
     public K getKey() {
       return this.key;
     }
 
     // null expiration
 
-    @Override
     public long getExpirationTime() {
       throw new UnsupportedOperationException();
     }
 
-    @Override
     public void setExpirationTime(long time) {
       throw new UnsupportedOperationException();
     }
 
-    @Override
     public ReferenceEntry<K, V> getNextExpirable() {
       throw new UnsupportedOperationException();
     }
 
-    @Override
     public void setNextExpirable(ReferenceEntry<K, V> next) {
       throw new UnsupportedOperationException();
     }
 
-    @Override
     public ReferenceEntry<K, V> getPreviousExpirable() {
       throw new UnsupportedOperationException();
     }
 
-    @Override
     public void setPreviousExpirable(ReferenceEntry<K, V> previous) {
       throw new UnsupportedOperationException();
     }
 
     // null eviction
 
-    @Override
     public ReferenceEntry<K, V> getNextEvictable() {
       throw new UnsupportedOperationException();
     }
 
-    @Override
     public void setNextEvictable(ReferenceEntry<K, V> next) {
       throw new UnsupportedOperationException();
     }
 
-    @Override
     public ReferenceEntry<K, V> getPreviousEvictable() {
       throw new UnsupportedOperationException();
     }
 
-    @Override
     public void setPreviousEvictable(ReferenceEntry<K, V> previous) {
       throw new UnsupportedOperationException();
     }
@@ -1037,24 +987,20 @@ class MapMakerInternalMap<K, V>
     final ReferenceEntry<K, V> next;
     volatile ValueReference<K, V> valueReference = unset();
 
-    @Override
     public ValueReference<K, V> getValueReference() {
       return valueReference;
     }
 
-    @Override
     public void setValueReference(ValueReference<K, V> valueReference) {
       ValueReference<K, V> previous = this.valueReference;
       this.valueReference = valueReference;
       previous.clear(valueReference);
     }
 
-    @Override
     public int getHash() {
       return hash;
     }
 
-    @Override
     public ReferenceEntry<K, V> getNext() {
       return next;
     }
@@ -1227,60 +1173,49 @@ class MapMakerInternalMap<K, V>
       this.next = next;
     }
 
-    @Override
     public K getKey() {
       return get();
     }
 
     // null expiration
-    @Override
     public long getExpirationTime() {
       throw new UnsupportedOperationException();
     }
 
-    @Override
     public void setExpirationTime(long time) {
       throw new UnsupportedOperationException();
     }
 
-    @Override
     public ReferenceEntry<K, V> getNextExpirable() {
       throw new UnsupportedOperationException();
     }
 
-    @Override
     public void setNextExpirable(ReferenceEntry<K, V> next) {
       throw new UnsupportedOperationException();
     }
 
-    @Override
     public ReferenceEntry<K, V> getPreviousExpirable() {
       throw new UnsupportedOperationException();
     }
 
-    @Override
     public void setPreviousExpirable(ReferenceEntry<K, V> previous) {
       throw new UnsupportedOperationException();
     }
 
     // null eviction
 
-    @Override
     public ReferenceEntry<K, V> getNextEvictable() {
       throw new UnsupportedOperationException();
     }
 
-    @Override
     public void setNextEvictable(ReferenceEntry<K, V> next) {
       throw new UnsupportedOperationException();
     }
 
-    @Override
     public ReferenceEntry<K, V> getPreviousEvictable() {
       throw new UnsupportedOperationException();
     }
 
-    @Override
     public void setPreviousEvictable(ReferenceEntry<K, V> previous) {
       throw new UnsupportedOperationException();
     }
@@ -1291,24 +1226,20 @@ class MapMakerInternalMap<K, V>
     final ReferenceEntry<K, V> next;
     volatile ValueReference<K, V> valueReference = unset();
 
-    @Override
     public ValueReference<K, V> getValueReference() {
       return valueReference;
     }
 
-    @Override
     public void setValueReference(ValueReference<K, V> valueReference) {
       ValueReference<K, V> previous = this.valueReference;
       this.valueReference = valueReference;
       previous.clear(valueReference);
     }
 
-    @Override
     public int getHash() {
       return hash;
     }
 
-    @Override
     public ReferenceEntry<K, V> getNext() {
       return next;
     }
@@ -1484,61 +1415,50 @@ class MapMakerInternalMap<K, V>
       this.next = next;
     }
 
-    @Override
     public K getKey() {
       return get();
     }
 
     // null expiration
 
-    @Override
     public long getExpirationTime() {
       throw new UnsupportedOperationException();
     }
 
-    @Override
     public void setExpirationTime(long time) {
       throw new UnsupportedOperationException();
     }
 
-    @Override
     public ReferenceEntry<K, V> getNextExpirable() {
       throw new UnsupportedOperationException();
     }
 
-    @Override
     public void setNextExpirable(ReferenceEntry<K, V> next) {
       throw new UnsupportedOperationException();
     }
 
-    @Override
     public ReferenceEntry<K, V> getPreviousExpirable() {
       throw new UnsupportedOperationException();
     }
 
-    @Override
     public void setPreviousExpirable(ReferenceEntry<K, V> previous) {
       throw new UnsupportedOperationException();
     }
 
     // null eviction
 
-    @Override
     public ReferenceEntry<K, V> getNextEvictable() {
       throw new UnsupportedOperationException();
     }
 
-    @Override
     public void setNextEvictable(ReferenceEntry<K, V> next) {
       throw new UnsupportedOperationException();
     }
 
-    @Override
     public ReferenceEntry<K, V> getPreviousEvictable() {
       throw new UnsupportedOperationException();
     }
 
-    @Override
     public void setPreviousEvictable(ReferenceEntry<K, V> previous) {
       throw new UnsupportedOperationException();
     }
@@ -1549,24 +1469,20 @@ class MapMakerInternalMap<K, V>
     final ReferenceEntry<K, V> next;
     volatile ValueReference<K, V> valueReference = unset();
 
-    @Override
     public ValueReference<K, V> getValueReference() {
       return valueReference;
     }
 
-    @Override
     public void setValueReference(ValueReference<K, V> valueReference) {
       ValueReference<K, V> previous = this.valueReference;
       this.valueReference = valueReference;
       previous.clear(valueReference);
     }
 
-    @Override
     public int getHash() {
       return hash;
     }
 
-    @Override
     public ReferenceEntry<K, V> getNext() {
       return next;
     }
@@ -1744,28 +1660,23 @@ class MapMakerInternalMap<K, V>
       this.entry = entry;
     }
 
-    @Override
     public ReferenceEntry<K, V> getEntry() {
       return entry;
     }
 
-    @Override
     public void clear(ValueReference<K, V> newValue) {
       clear();
     }
 
-    @Override
     public ValueReference<K, V> copyFor(
         ReferenceQueue<V> queue, V value, ReferenceEntry<K, V> entry) {
       return new WeakValueReference<K, V>(queue, value, entry);
     }
 
-    @Override
     public boolean isComputingReference() {
       return false;
     }
 
-    @Override
     public V waitForValue() {
       return get();
     }
@@ -1783,28 +1694,23 @@ class MapMakerInternalMap<K, V>
       this.entry = entry;
     }
 
-    @Override
     public ReferenceEntry<K, V> getEntry() {
       return entry;
     }
 
-    @Override
     public void clear(ValueReference<K, V> newValue) {
       clear();
     }
 
-    @Override
     public ValueReference<K, V> copyFor(
         ReferenceQueue<V> queue, V value, ReferenceEntry<K, V> entry) {
       return new SoftValueReference<K, V>(queue, value, entry);
     }
 
-    @Override
     public boolean isComputingReference() {
       return false;
     }
 
-    @Override
     public V waitForValue() {
       return get();
     }
@@ -1820,33 +1726,27 @@ class MapMakerInternalMap<K, V>
       this.referent = referent;
     }
 
-    @Override
     public V get() {
       return referent;
     }
 
-    @Override
     public ReferenceEntry<K, V> getEntry() {
       return null;
     }
 
-    @Override
     public ValueReference<K, V> copyFor(
         ReferenceQueue<V> queue, V value, ReferenceEntry<K, V> entry) {
       return this;
     }
 
-    @Override
     public boolean isComputingReference() {
       return false;
     }
 
-    @Override
     public V waitForValue() {
       return get();
     }
 
-    @Override
     public void clear(ValueReference<K, V> newValue) {}
   }
 
@@ -3201,7 +3101,6 @@ class MapMakerInternalMap<K, V>
 
     // implements Queue
 
-    @Override
     public boolean offer(ReferenceEntry<K, V> entry) {
       // unlink
       connectEvictables(entry.getPreviousEvictable(), entry.getNextEvictable());
@@ -3213,13 +3112,11 @@ class MapMakerInternalMap<K, V>
       return true;
     }
 
-    @Override
     public ReferenceEntry<K, V> peek() {
       ReferenceEntry<K, V> next = head.getNextEvictable();
       return (next == head) ? null : next;
     }
 
-    @Override
     public ReferenceEntry<K, V> poll() {
       ReferenceEntry<K, V> next = head.getNextEvictable();
       if (next == head) {
@@ -3337,7 +3234,6 @@ class MapMakerInternalMap<K, V>
 
     // implements Queue
 
-    @Override
     public boolean offer(ReferenceEntry<K, V> entry) {
       // unlink
       connectExpirables(entry.getPreviousExpirable(), entry.getNextExpirable());
@@ -3349,13 +3245,11 @@ class MapMakerInternalMap<K, V>
       return true;
     }
 
-    @Override
     public ReferenceEntry<K, V> peek() {
       ReferenceEntry<K, V> next = head.getNextExpirable();
       return (next == head) ? null : next;
     }
 
-    @Override
     public ReferenceEntry<K, V> poll() {
       ReferenceEntry<K, V> next = head.getNextExpirable();
       if (next == head) {
@@ -3431,7 +3325,6 @@ class MapMakerInternalMap<K, V>
       this.mapReference = new WeakReference<MapMakerInternalMap<?, ?>>(map);
     }
 
-    @Override
     public void run() {
       MapMakerInternalMap<?, ?> map = mapReference.get();
       if (map == null) {
@@ -3576,7 +3469,6 @@ class MapMakerInternalMap<K, V>
     return segmentFor(hash).put(key, hash, value, false);
   }
 
-  @Override
   public V putIfAbsent(K key, V value) {
     checkNotNull(key);
     checkNotNull(value);
@@ -3600,7 +3492,6 @@ class MapMakerInternalMap<K, V>
     return segmentFor(hash).remove(key, hash);
   }
 
-  @Override
   public boolean remove(@Nullable Object key, @Nullable Object value) {
     if (key == null || value == null) {
       return false;
@@ -3609,7 +3500,6 @@ class MapMakerInternalMap<K, V>
     return segmentFor(hash).remove(key, hash, value);
   }
 
-  @Override
   public boolean replace(K key, @Nullable V oldValue, V newValue) {
     checkNotNull(key);
     checkNotNull(newValue);
@@ -3620,7 +3510,6 @@ class MapMakerInternalMap<K, V>
     return segmentFor(hash).replace(key, hash, oldValue, newValue);
   }
 
-  @Override
   public V replace(K key, V value) {
     checkNotNull(key);
     checkNotNull(value);
@@ -3770,7 +3659,6 @@ class MapMakerInternalMap<K, V>
 
   final class KeyIterator extends HashIterator implements Iterator<K> {
 
-    @Override
     public K next() {
       return nextEntry().getKey();
     }
@@ -3778,7 +3666,6 @@ class MapMakerInternalMap<K, V>
 
   final class ValueIterator extends HashIterator implements Iterator<V> {
 
-    @Override
     public V next() {
       return nextEntry().getValue();
     }
@@ -3833,7 +3720,6 @@ class MapMakerInternalMap<K, V>
 
   final class EntryIterator extends HashIterator implements Iterator<Entry<K, V>> {
 
-    @Override
     public Entry<K, V> next() {
       return nextEntry();
     }

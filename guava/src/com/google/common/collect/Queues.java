@@ -17,15 +17,12 @@ package com.google.common.collect;
 import com.google.common.annotations.Beta;
 import com.google.common.base.Preconditions;
 
-import java.util.ArrayDeque;
 import java.util.Collection;
-import java.util.Deque;
 import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.SynchronousQueue;
@@ -53,34 +50,6 @@ public final class Queues {
     return new ArrayBlockingQueue<E>(capacity);
   }
 
-  // ArrayDeque
-
-  /**
-   * Creates an empty {@code ArrayDeque} instance.
-   *
-   * @return a new, empty {@code ArrayDeque}
-   * @since 12.0
-   */
-  public static <E> ArrayDeque<E> newArrayDeque() {
-    return new ArrayDeque<E>();
-  }
-
-  /**
-   * Creates an {@code ArrayDeque} instance containing the given elements.
-   *
-   * @param elements the elements that the queue should contain, in order
-   * @return a new {@code ArrayDeque} containing those elements
-   * @since 12.0
-   */
-  public static <E> ArrayDeque<E> newArrayDeque(Iterable<? extends E> elements) {
-    if (elements instanceof Collection) {
-      return new ArrayDeque<E>(Collections2.cast(elements));
-    }
-    ArrayDeque<E> deque = new ArrayDeque<E>();
-    Iterables.addAll(deque, elements);
-    return deque;
-  }
-
   // ConcurrentLinkedQueue
 
   /**
@@ -106,46 +75,6 @@ public final class Queues {
     ConcurrentLinkedQueue<E> queue = new ConcurrentLinkedQueue<E>();
     Iterables.addAll(queue, elements);
     return queue;
-  }
-
-  // LinkedBlockingDeque
-
-  /**
-   * Creates an empty {@code LinkedBlockingDeque} instance.
-   *
-   * @return a new, empty {@code LinkedBlockingDeque}
-   * @since 12.0
-   */
-  public static <E> LinkedBlockingDeque<E> newLinkedBlockingDeque() {
-    return new LinkedBlockingDeque<E>();
-  }
-
-  /**
-   * Creates a {@code LinkedBlockingDeque} with the given (fixed) capacity.
-   *
-   * @param capacity the capacity of this deque
-   * @return a new, empty {@code LinkedBlockingDeque}
-   * @throws IllegalArgumentException if {@code capacity} is less than 1
-   * @since 12.0
-   */
-  public static <E> LinkedBlockingDeque<E> newLinkedBlockingDeque(int capacity) {
-    return new LinkedBlockingDeque<E>(capacity);
-  }
-
-  /**
-   * Creates an {@code LinkedBlockingDeque} instance containing the given elements.
-   *
-   * @param elements the elements that the queue should contain, in order
-   * @return a new {@code LinkedBlockingDeque} containing those elements
-   * @since 12.0
-   */
-  public static <E> LinkedBlockingDeque<E> newLinkedBlockingDeque(Iterable<? extends E> elements) {
-    if (elements instanceof Collection) {
-      return new LinkedBlockingDeque<E>(Collections2.cast(elements));
-    }
-    LinkedBlockingDeque<E> deque = new LinkedBlockingDeque<E>();
-    Iterables.addAll(deque, elements);
-    return deque;
   }
 
   // LinkedBlockingQueue

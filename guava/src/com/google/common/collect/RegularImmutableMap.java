@@ -115,7 +115,7 @@ final class RegularImmutableMap<K, V> extends ImmutableMap<K, V> {
       this.next = next;
     }
 
-    @Override public LinkedEntry<K, V> next() {
+    public LinkedEntry<K, V> next() {
       return next;
     }
   }
@@ -132,12 +132,13 @@ final class RegularImmutableMap<K, V> extends ImmutableMap<K, V> {
       super(key, value);
     }
 
-    @Nullable @Override public LinkedEntry<K, V> next() {
+    @Nullable public LinkedEntry<K, V> next() {
       return null;
     }
   }
 
-  @Override public V get(@Nullable Object key) {
+  @Override
+  public V get(@Nullable Object key) {
     if (key == null) {
       return null;
     }
@@ -160,16 +161,17 @@ final class RegularImmutableMap<K, V> extends ImmutableMap<K, V> {
     return null;
   }
 
-  @Override
   public int size() {
     return entries.length;
   }
 
-  @Override public boolean isEmpty() {
+  @Override
+  public boolean isEmpty() {
     return false;
   }
 
-  @Override public boolean containsValue(@Nullable Object value) {
+  @Override
+  public boolean containsValue(@Nullable Object value) {
     if (value == null) {
       return false;
     }
@@ -181,7 +183,8 @@ final class RegularImmutableMap<K, V> extends ImmutableMap<K, V> {
     return false;
   }
 
-  @Override boolean isPartialView() {
+  @Override
+  boolean isPartialView() {
     return false;
   }
 
@@ -209,7 +212,8 @@ final class RegularImmutableMap<K, V> extends ImmutableMap<K, V> {
     return new KeySet(keySetHashCode);
   }
 
-  @Override public String toString() {
+  @Override
+  public String toString() {
     StringBuilder result
         = Collections2.newStringBuilderForCollection(size()).append('{');
     Collections2.STANDARD_JOINER.appendTo(result, entries);

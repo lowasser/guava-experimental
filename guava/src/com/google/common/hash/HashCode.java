@@ -74,7 +74,8 @@ public abstract class HashCode {
    */
   public abstract int bits();
 
-  @Override public boolean equals(Object object) {
+  @Override
+  public boolean equals(Object object) {
     if (object instanceof HashCode) {
       HashCode that = (HashCode) object;
       // Undocumented: this is a non-short-circuiting equals(), in case this is a cryptographic
@@ -89,7 +90,8 @@ public abstract class HashCode {
    * (so, for example, you can safely put {@code HashCode} instances into a {@code
    * HashSet}) but is otherwise probably not what you want to use.
    */
-  @Override public int hashCode() {
+  @Override
+  public int hashCode() {
     /*
      * As long as the hash function that produced this isn't of horrible quality, this
      * won't be of horrible quality either.
@@ -106,7 +108,8 @@ public abstract class HashCode {
    * everything else in the hashing API uniformly treats multibyte values as little-endian. But
    * this format conveniently matches that of utilities such as the UNIX {@code md5sum} command.
    */
-  @Override public String toString() {
+  @Override
+  public String toString() {
     byte[] bytes = asBytes();
     // TODO(user): Use c.g.common.base.ByteArrays once it is open sourced.
     StringBuilder sb = new StringBuilder(2 * bytes.length);

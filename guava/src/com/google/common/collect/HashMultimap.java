@@ -110,7 +110,8 @@ public final class HashMultimap<K, V> extends AbstractSetMultimap<K, V> {
    *
    * @return a new {@code HashSet} containing a collection of values for one key
    */
-  @Override Set<V> createCollection() {
+  @Override
+  Set<V> createCollection() {
     return Sets.<V>newHashSetWithExpectedSize(expectedValuesPerKey);
   }
 

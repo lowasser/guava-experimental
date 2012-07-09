@@ -139,7 +139,8 @@ class TypeResolver {
   private Type resolveTypeVariable(final TypeVariable<?> var) {
     final TypeResolver unguarded = this;
     TypeResolver guarded = new TypeResolver(typeTable) {
-      @Override Type resolveTypeVariable(
+      @Override
+      Type resolveTypeVariable(
           TypeVariable<?> intermediateVar, TypeResolver guardedResolver) {
         if (intermediateVar.getGenericDeclaration().equals(var.getGenericDeclaration())) {
           return intermediateVar;

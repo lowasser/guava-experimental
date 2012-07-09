@@ -126,7 +126,8 @@ public final class ArrayListMultimap<K, V> extends AbstractListMultimap<K, V> {
    * Creates a new, empty {@code ArrayList} to hold the collection of values for
    * an arbitrary key.
    */
-  @Override List<V> createCollection() {
+  @Override
+  List<V> createCollection() {
     return new ArrayList<V>(expectedValuesPerKey);
   }
 

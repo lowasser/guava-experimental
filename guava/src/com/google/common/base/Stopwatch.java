@@ -170,8 +170,9 @@ public final class Stopwatch {
    * Returns a string representation of the current elapsed time; equivalent to
    * {@code toString(4)} (four significant figures).
    */
+  @Override
   @GwtIncompatible("String.format()")
-  @Override public String toString() {
+  public String toString() {
     return toString(4);
   }
 

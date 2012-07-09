@@ -290,10 +290,12 @@ public final class Lists {
       this.first = first;
       this.rest = checkNotNull(rest);
     }
-    @Override public int size() {
+    @Override
+    public int size() {
       return rest.length + 1;
     }
-    @Override public E get(int index) {
+    @Override
+    public E get(int index) {
       // check explicitly so the IOOBE will have the right message
       checkElementIndex(index, size());
       return (index == 0) ? first : rest[index - 1];
@@ -335,10 +337,12 @@ public final class Lists {
       this.second = second;
       this.rest = checkNotNull(rest);
     }
-    @Override public int size() {
+    @Override
+    public int size() {
       return rest.length + 2;
     }
-    @Override public E get(int index) {
+    @Override
+    public E get(int index) {
       switch (index) {
         case 0:
           return first;
@@ -407,56 +411,50 @@ public final class Lists {
      * each element which can be overkill. That's why we forward this call
      * directly to the backing list.
      */
-    @Override public void clear() {
+    @Override
+    public void clear() {
       fromList.clear();
     }
-    @Override public int size() {
+    @Override
+    public int size() {
       return fromList.size();
     }
-    @Override public ListIterator<T> listIterator(final int index) {
+    @Override
+    public ListIterator<T> listIterator(final int index) {
       final ListIterator<F> delegate = fromList.listIterator(index);
       return new ListIterator<T>() {
-        @Override
         public void add(T e) {
           throw new UnsupportedOperationException();
         }
 
-        @Override
         public boolean hasNext() {
           return delegate.hasNext();
         }
 
-        @Override
         public boolean hasPrevious() {
           return delegate.hasPrevious();
         }
 
-        @Override
         public T next() {
           return function.apply(delegate.next());
         }
 
-        @Override
         public int nextIndex() {
           return delegate.nextIndex();
         }
 
-        @Override
         public T previous() {
           return function.apply(delegate.previous());
         }
 
-        @Override
         public int previousIndex() {
           return delegate.previousIndex();
         }
 
-        @Override
         public void remove() {
           delegate.remove();
         }
 
-        @Override
         public void set(T e) {
           throw new UnsupportedOperationException("not supported");
         }
@@ -484,19 +482,24 @@ public final class Lists {
       this.fromList = checkNotNull(fromList);
       this.function = checkNotNull(function);
     }
-    @Override public void clear() {
+    @Override
+    public void clear() {
       fromList.clear();
     }
-    @Override public T get(int index) {
+    @Override
+    public T get(int index) {
       return function.apply(fromList.get(index));
     }
-    @Override public boolean isEmpty() {
+    @Override
+    public boolean isEmpty() {
       return fromList.isEmpty();
     }
-    @Override public T remove(int index) {
+    @Override
+    public T remove(int index) {
       return function.apply(fromList.remove(index));
     }
-    @Override public int size() {
+    @Override
+    public int size() {
       return fromList.size();
     }
     private static final long serialVersionUID = 0;
@@ -537,7 +540,8 @@ public final class Lists {
       this.size = size;
     }
 
-    @Override public List<T> get(int index) {
+    @Override
+    public List<T> get(int index) {
       int listSize = size();
       checkElementIndex(index, listSize);
       int start = index * size;
@@ -545,7 +549,8 @@ public final class Lists {
       return list.subList(start, end);
     }
 
-    @Override public int size() {
+    @Override
+    public int size() {
       // TODO(user): refactor to common.math.IntMath.divide
       int result = list.size() / size;
       if (result * size != list.size()) {
@@ -554,7 +559,8 @@ public final class Lists {
       return result;
     }
 
-    @Override public boolean isEmpty() {
+    @Override
+    public boolean isEmpty() {
       return list.isEmpty();
     }
   }
@@ -586,36 +592,41 @@ public final class Lists {
       this.string = string;
     }
 
-    @Override public int indexOf(@Nullable Object object) {
+    @Override
+    public int indexOf(@Nullable Object object) {
       return (object instanceof Character)
           ? string.indexOf((Character) object) : -1;
     }
 
-    @Override public int lastIndexOf(@Nullable Object object) {
+    @Override
+    public int lastIndexOf(@Nullable Object object) {
       return (object instanceof Character)
           ? string.lastIndexOf((Character) object) : -1;
     }
 
-    @Override public ImmutableList<Character> subList(
+    @Override
+    public ImmutableList<Character> subList(
         int fromIndex, int toIndex) {
       checkPositionIndexes(fromIndex, toIndex, size()); // for GWT
       return charactersOf(string.substring(fromIndex, toIndex));
     }
 
-    @Override boolean isPartialView() {
+    @Override
+    boolean isPartialView() {
       return false;
     }
 
-    @Override public Character get(int index) {
+    public Character get(int index) {
       checkElementIndex(index, size()); // for GWT
       return string.charAt(index);
     }
 
-    @Override public int size() {
+    public int size() {
       return string.length();
     }
 
-    @Override public boolean equals(@Nullable Object obj) {
+    @Override
+    public boolean equals(@Nullable Object obj) {
       if (!(obj instanceof List)) {
         return false;
       }
@@ -637,7 +648,8 @@ public final class Lists {
 
     int hash = 0;
 
-    @Override public int hashCode() {
+    @Override
+    public int hashCode() {
       int h = hash;
       if (h == 0) {
         h = 1;
@@ -673,16 +685,19 @@ public final class Lists {
       this.sequence = sequence;
     }
 
-    @Override public Character get(int index) {
+    @Override
+    public Character get(int index) {
       checkElementIndex(index, size()); // for GWT
       return sequence.charAt(index);
     }
 
-    @Override public boolean contains(@Nullable Object o) {
+    @Override
+    public boolean contains(@Nullable Object o) {
       return indexOf(o) >= 0;
     }
 
-    @Override public int indexOf(@Nullable Object o) {
+    @Override
+    public int indexOf(@Nullable Object o) {
       if (o instanceof Character) {
         char c = (Character) o;
         for (int i = 0; i < sequence.length(); i++) {
@@ -694,7 +709,8 @@ public final class Lists {
       return -1;
     }
 
-    @Override public int lastIndexOf(@Nullable Object o) {
+    @Override
+    public int lastIndexOf(@Nullable Object o) {
       if (o instanceof Character) {
         char c = ((Character) o).charValue();
         for (int i = sequence.length() - 1; i >= 0; i--) {
@@ -706,16 +722,19 @@ public final class Lists {
       return -1;
     }
 
-    @Override public int size() {
+    @Override
+    public int size() {
       return sequence.length();
     }
 
-    @Override public List<Character> subList(int fromIndex, int toIndex) {
+    @Override
+    public List<Character> subList(int fromIndex, int toIndex) {
       checkPositionIndexes(fromIndex, toIndex, size()); // for GWT
       return charactersOf(sequence.subSequence(fromIndex, toIndex));
     }
 
-    @Override public int hashCode() {
+    @Override
+    public int hashCode() {
       int hash = 1;
       for (int i = 0; i < sequence.length(); i++) {
         hash = hash * 31 + sequence.charAt(i);
@@ -723,7 +742,8 @@ public final class Lists {
       return hash;
     }
 
-    @Override public boolean equals(@Nullable Object o) {
+    @Override
+    public boolean equals(@Nullable Object o) {
       if (!(o instanceof List)) {
         return false;
       }
@@ -789,67 +809,82 @@ public final class Lists {
       return size - index;
     }
 
-    @Override public void add(int index, @Nullable T element) {
+    @Override
+    public void add(int index, @Nullable T element) {
       forwardList.add(reversePosition(index), element);
     }
 
-    @Override public void clear() {
+    @Override
+    public void clear() {
       forwardList.clear();
     }
 
-    @Override public T remove(int index) {
+    @Override
+    public T remove(int index) {
       return forwardList.remove(reverseIndex(index));
     }
 
-    @Override protected void removeRange(int fromIndex, int toIndex) {
+    @Override
+    protected void removeRange(int fromIndex, int toIndex) {
       subList(fromIndex, toIndex).clear();
     }
 
-    @Override public T set(int index, @Nullable T element) {
+    @Override
+    public T set(int index, @Nullable T element) {
       return forwardList.set(reverseIndex(index), element);
     }
 
-    @Override public T get(int index) {
+    @Override
+    public T get(int index) {
       return forwardList.get(reverseIndex(index));
     }
 
-    @Override public boolean isEmpty() {
+    @Override
+    public boolean isEmpty() {
       return forwardList.isEmpty();
     }
 
-    @Override public int size() {
+    @Override
+    public int size() {
       return forwardList.size();
     }
 
-    @Override public boolean contains(@Nullable Object o) {
+    @Override
+    public boolean contains(@Nullable Object o) {
       return forwardList.contains(o);
     }
 
-    @Override public boolean containsAll(Collection<?> c) {
+    @Override
+    public boolean containsAll(Collection<?> c) {
       return forwardList.containsAll(c);
     }
 
-    @Override public List<T> subList(int fromIndex, int toIndex) {
+    @Override
+    public List<T> subList(int fromIndex, int toIndex) {
       checkPositionIndexes(fromIndex, toIndex, size());
       return reverse(forwardList.subList(
           reversePosition(toIndex), reversePosition(fromIndex)));
     }
 
-    @Override public int indexOf(@Nullable Object o) {
+    @Override
+    public int indexOf(@Nullable Object o) {
       int index = forwardList.lastIndexOf(o);
       return (index >= 0) ? reverseIndex(index) : -1;
     }
 
-    @Override public int lastIndexOf(@Nullable Object o) {
+    @Override
+    public int lastIndexOf(@Nullable Object o) {
       int index = forwardList.indexOf(o);
       return (index >= 0) ? reverseIndex(index) : -1;
     }
 
-    @Override public Iterator<T> iterator() {
+    @Override
+    public Iterator<T> iterator() {
       return listIterator();
     }
 
-    @Override public ListIterator<T> listIterator(int index) {
+    @Override
+    public ListIterator<T> listIterator(int index) {
       int start = reversePosition(index);
       final ListIterator<T> forwardIterator = forwardList.listIterator(start);
       return new ListIterator<T>() {
@@ -857,21 +892,21 @@ public final class Lists {
         boolean canRemove;
         boolean canSet;
 
-        @Override public void add(T e) {
+        public void add(T e) {
           forwardIterator.add(e);
           forwardIterator.previous();
           canSet = canRemove = false;
         }
 
-        @Override public boolean hasNext() {
+        public boolean hasNext() {
           return forwardIterator.hasPrevious();
         }
 
-        @Override public boolean hasPrevious() {
+        public boolean hasPrevious() {
           return forwardIterator.hasNext();
         }
 
-        @Override public T next() {
+        public T next() {
           if (!hasNext()) {
             throw new NoSuchElementException();
           }
@@ -879,11 +914,11 @@ public final class Lists {
           return forwardIterator.previous();
         }
 
-        @Override public int nextIndex() {
+        public int nextIndex() {
           return reversePosition(forwardIterator.nextIndex());
         }
 
-        @Override public T previous() {
+        public T previous() {
           if (!hasPrevious()) {
             throw new NoSuchElementException();
           }
@@ -891,17 +926,17 @@ public final class Lists {
           return forwardIterator.next();
         }
 
-        @Override public int previousIndex() {
+        public int previousIndex() {
           return nextIndex() - 1;
         }
 
-        @Override public void remove() {
+        public void remove() {
           checkState(canRemove);
           forwardIterator.remove();
           canRemove = canSet = false;
         }
 
-        @Override public void set(T e) {
+        public void set(T e) {
           checkState(canSet);
           forwardIterator.set(e);
         }
@@ -999,7 +1034,8 @@ public final class Lists {
     List<E> wrapper;
     if (list instanceof RandomAccess) {
       wrapper = new RandomAccessListWrapper<E>(list) {
-        @Override public ListIterator<E> listIterator(int index) {
+        @Override
+        public ListIterator<E> listIterator(int index) {
           return backingList.listIterator(index);
         }
 
@@ -1007,7 +1043,8 @@ public final class Lists {
       };
     } else {
       wrapper = new AbstractListWrapper<E>(list) {
-        @Override public ListIterator<E> listIterator(int index) {
+        @Override
+        public ListIterator<E> listIterator(int index) {
           return backingList.listIterator(index);
         }
 
@@ -1024,31 +1061,38 @@ public final class Lists {
       this.backingList = checkNotNull(backingList);
     }
 
-    @Override public void add(int index, E element) {
+    @Override
+    public void add(int index, E element) {
       backingList.add(index, element);
     }
 
-    @Override public boolean addAll(int index, Collection<? extends E> c) {
+    @Override
+    public boolean addAll(int index, Collection<? extends E> c) {
       return backingList.addAll(index, c);
     }
 
-    @Override public E get(int index) {
+    @Override
+    public E get(int index) {
       return backingList.get(index);
     }
 
-    @Override public E remove(int index) {
+    @Override
+    public E remove(int index) {
       return backingList.remove(index);
     }
 
-    @Override public E set(int index, E element) {
+    @Override
+    public E set(int index, E element) {
       return backingList.set(index, element);
     }
 
-    @Override public boolean contains(Object o) {
+    @Override
+    public boolean contains(Object o) {
       return backingList.contains(o);
     }
 
-    @Override public int size() {
+    @Override
+    public int size() {
       return backingList.size();
     }
   }

@@ -38,7 +38,8 @@ abstract class TransformedImmutableList<D, E> extends ImmutableList<E> {
       super(backingList);
     }
 
-    @Override E transform(D d) {
+    @Override
+    E transform(D d) {
       return TransformedImmutableList.this.transform(d);
     }
   }
@@ -51,19 +52,21 @@ abstract class TransformedImmutableList<D, E> extends ImmutableList<E> {
 
   abstract E transform(D d);
 
-  @Override public E get(int index) {
+  public E get(int index) {
     return transform(backingList.get(index));
   }
 
-  @Override public int size() {
+  public int size() {
     return backingList.size();
   }
 
-  @Override public ImmutableList<E> subList(int fromIndex, int toIndex) {
+  @Override
+  public ImmutableList<E> subList(int fromIndex, int toIndex) {
     return new TransformedView(backingList.subList(fromIndex, toIndex));
   }
 
-  @Override public boolean equals(@Nullable Object obj) {
+  @Override
+  public boolean equals(@Nullable Object obj) {
     if (obj == this) {
       return true;
     }
@@ -75,11 +78,13 @@ abstract class TransformedImmutableList<D, E> extends ImmutableList<E> {
     return false;
   }
 
-  @Override public int hashCode() {
+  @Override
+  public int hashCode() {
     return Lists.hashCodeImpl(this);
   }
 
-  @Override boolean isPartialView() {
+  @Override
+  boolean isPartialView() {
     return true;
   }
 }

@@ -251,7 +251,6 @@ public final class UnsignedBytes {
       static {
         theUnsafe = (Unsafe) AccessController.doPrivileged(
             new PrivilegedAction<Object>() {
-              @Override
               public Object run() {
                 try {
                   Field f = Unsafe.class.getDeclaredField("theUnsafe");
@@ -275,7 +274,7 @@ public final class UnsignedBytes {
         }
       }
 
-      @Override public int compare(byte[] left, byte[] right) {
+      public int compare(byte[] left, byte[] right) {
         int minLength = Math.min(left.length, right.length);
         int minWords = minLength / Longs.BYTES;
 
@@ -332,7 +331,7 @@ public final class UnsignedBytes {
     enum PureJavaComparator implements Comparator<byte[]> {
       INSTANCE;
 
-      @Override public int compare(byte[] left, byte[] right) {
+      public int compare(byte[] left, byte[] right) {
         int minLength = Math.min(left.length, right.length);
         for (int i = 0; i < minLength; i++) {
           int result = UnsignedBytes.compare(left[i], right[i]);

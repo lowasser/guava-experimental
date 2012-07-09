@@ -33,11 +33,11 @@ final class Murmur3_32HashFunction extends AbstractStreamingHashFunction impleme
     this.seed = seed;
   }
 
-  @Override public int bits() {
+  public int bits() {
     return 32;
   }
 
-  @Override public Hasher newHasher() {
+  public Hasher newHasher() {
     return new Murmur3_32Hasher(seed);
   }
 
@@ -52,7 +52,8 @@ final class Murmur3_32HashFunction extends AbstractStreamingHashFunction impleme
       h1 = seed;
     }
 
-    @Override protected void process(ByteBuffer bb) {
+    @Override
+    protected void process(ByteBuffer bb) {
       int k1 = bb.getInt();
       len += 4;
       
@@ -65,7 +66,8 @@ final class Murmur3_32HashFunction extends AbstractStreamingHashFunction impleme
       h1 = h1 * 5 + 0xe6546b64;
     }
     
-    @Override protected void processRemaining(ByteBuffer bb) {
+    @Override
+    protected void processRemaining(ByteBuffer bb) {
       len += bb.remaining();
       int k1 = 0;
       switch (bb.remaining()) {
@@ -86,7 +88,8 @@ final class Murmur3_32HashFunction extends AbstractStreamingHashFunction impleme
       }
     }
     
-    @Override public HashCode makeHash() {
+    @Override
+    public HashCode makeHash() {
       h1 ^= len;
 
       h1 ^= h1 >>> 16;

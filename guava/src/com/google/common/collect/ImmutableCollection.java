@@ -49,35 +49,30 @@ public abstract class ImmutableCollection<E>
   /**
    * Returns an unmodifiable iterator across the elements in this collection.
    */
-  @Override
   public abstract UnmodifiableIterator<E> iterator();
 
-  @Override
   public Object[] toArray() {
     return ObjectArrays.toArrayImpl(this);
   }
 
-  @Override
   public <T> T[] toArray(T[] other) {
     return ObjectArrays.toArrayImpl(this, other);
   }
 
-  @Override
   public boolean contains(@Nullable Object object) {
     return object != null && Iterators.contains(iterator(), object);
   }
 
-  @Override
   public boolean containsAll(Collection<?> targets) {
     return Collections2.containsAllImpl(this, targets);
   }
 
-  @Override
   public boolean isEmpty() {
     return size() == 0;
   }
 
-  @Override public String toString() {
+  @Override
+  public String toString() {
     return Collections2.toStringImpl(this);
   }
 
@@ -86,7 +81,6 @@ public abstract class ImmutableCollection<E>
    *
    * @throws UnsupportedOperationException always
    */
-  @Override
   public final boolean add(E e) {
     throw new UnsupportedOperationException();
   }
@@ -96,7 +90,6 @@ public abstract class ImmutableCollection<E>
    *
    * @throws UnsupportedOperationException always
    */
-  @Override
   public final boolean remove(Object object) {
     throw new UnsupportedOperationException();
   }
@@ -106,7 +99,6 @@ public abstract class ImmutableCollection<E>
    *
    * @throws UnsupportedOperationException always
    */
-  @Override
   public final boolean addAll(Collection<? extends E> newElements) {
     throw new UnsupportedOperationException();
   }
@@ -116,7 +108,6 @@ public abstract class ImmutableCollection<E>
    *
    * @throws UnsupportedOperationException always
    */
-  @Override
   public final boolean removeAll(Collection<?> oldElements) {
     throw new UnsupportedOperationException();
   }
@@ -126,7 +117,6 @@ public abstract class ImmutableCollection<E>
    *
    * @throws UnsupportedOperationException always
    */
-  @Override
   public final boolean retainAll(Collection<?> elementsToKeep) {
     throw new UnsupportedOperationException();
   }
@@ -136,7 +126,6 @@ public abstract class ImmutableCollection<E>
    *
    * @throws UnsupportedOperationException always
    */
-  @Override
   public final void clear() {
     throw new UnsupportedOperationException();
   }
@@ -172,41 +161,47 @@ public abstract class ImmutableCollection<E>
 
   private static class EmptyImmutableCollection
       extends ImmutableCollection<Object> {
-    @Override
     public int size() {
       return 0;
     }
 
-    @Override public boolean isEmpty() {
+    @Override
+    public boolean isEmpty() {
       return true;
     }
 
-    @Override public boolean contains(@Nullable Object object) {
+    @Override
+    public boolean contains(@Nullable Object object) {
       return false;
     }
 
-    @Override public UnmodifiableIterator<Object> iterator() {
+    @Override
+    public UnmodifiableIterator<Object> iterator() {
       return Iterators.EMPTY_ITERATOR;
     }
 
     private static final Object[] EMPTY_ARRAY = new Object[0];
 
-    @Override public Object[] toArray() {
+    @Override
+    public Object[] toArray() {
       return EMPTY_ARRAY;
     }
 
-    @Override public <T> T[] toArray(T[] array) {
+    @Override
+    public <T> T[] toArray(T[] array) {
       if (array.length > 0) {
         array[0] = null;
       }
       return array;
     }
 
-    @Override ImmutableList<Object> createAsList() {
+    @Override
+    ImmutableList<Object> createAsList() {
       return ImmutableList.of();
     }
 
-    @Override boolean isPartialView() {
+    @Override
+    boolean isPartialView() {
       return false;
     }
   }
@@ -222,25 +217,28 @@ public abstract class ImmutableCollection<E>
       this.elements = elements;
     }
 
-    @Override
     public int size() {
       return elements.length;
     }
 
-    @Override public boolean isEmpty() {
+    @Override
+    public boolean isEmpty() {
       return false;
     }
 
-    @Override public UnmodifiableIterator<E> iterator() {
+    @Override
+    public UnmodifiableIterator<E> iterator() {
       return Iterators.forArray(elements);
     }
 
-    @Override ImmutableList<E> createAsList() {
+    @Override
+    ImmutableList<E> createAsList() {
       return elements.length == 1 ? new SingletonImmutableList<E>(elements[0])
           : new RegularImmutableList<E>(elements);
     }
 
-    @Override boolean isPartialView() {
+    @Override
+    boolean isPartialView() {
       return false;
     }
   }

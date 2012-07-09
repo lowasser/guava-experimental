@@ -399,7 +399,6 @@ public final class Chars {
   private enum LexicographicalComparator implements Comparator<char[]> {
     INSTANCE;
 
-    @Override
     public int compare(char[] left, char[] right) {
       int minLength = Math.min(left.length, right.length);
       for (int i = 0; i < minLength; i++) {
@@ -479,26 +478,31 @@ public final class Chars {
       this.end = end;
     }
 
-    @Override public int size() {
+    @Override
+    public int size() {
       return end - start;
     }
 
-    @Override public boolean isEmpty() {
+    @Override
+    public boolean isEmpty() {
       return false;
     }
 
-    @Override public Character get(int index) {
+    @Override
+    public Character get(int index) {
       checkElementIndex(index, size());
       return array[start + index];
     }
 
-    @Override public boolean contains(Object target) {
+    @Override
+    public boolean contains(Object target) {
       // Overridden to prevent a ton of boxing
       return (target instanceof Character)
           && Chars.indexOf(array, (Character) target, start, end) != -1;
     }
 
-    @Override public int indexOf(Object target) {
+    @Override
+    public int indexOf(Object target) {
       // Overridden to prevent a ton of boxing
       if (target instanceof Character) {
         int i = Chars.indexOf(array, (Character) target, start, end);
@@ -509,7 +513,8 @@ public final class Chars {
       return -1;
     }
 
-    @Override public int lastIndexOf(Object target) {
+    @Override
+    public int lastIndexOf(Object target) {
       // Overridden to prevent a ton of boxing
       if (target instanceof Character) {
         int i = Chars.lastIndexOf(array, (Character) target, start, end);
@@ -520,14 +525,16 @@ public final class Chars {
       return -1;
     }
 
-    @Override public Character set(int index, Character element) {
+    @Override
+    public Character set(int index, Character element) {
       checkElementIndex(index, size());
       char oldValue = array[start + index];
       array[start + index] = checkNotNull(element);  // checkNotNull for GWT (do not optimize)
       return oldValue;
     }
 
-    @Override public List<Character> subList(int fromIndex, int toIndex) {
+    @Override
+    public List<Character> subList(int fromIndex, int toIndex) {
       int size = size();
       checkPositionIndexes(fromIndex, toIndex, size);
       if (fromIndex == toIndex) {
@@ -536,7 +543,8 @@ public final class Chars {
       return new CharArrayAsList(array, start + fromIndex, start + toIndex);
     }
 
-    @Override public boolean equals(Object object) {
+    @Override
+    public boolean equals(Object object) {
       if (object == this) {
         return true;
       }
@@ -556,7 +564,8 @@ public final class Chars {
       return super.equals(object);
     }
 
-    @Override public int hashCode() {
+    @Override
+    public int hashCode() {
       int result = 1;
       for (int i = start; i < end; i++) {
         result = 31 * result + Chars.hashCode(array[i]);
@@ -564,7 +573,8 @@ public final class Chars {
       return result;
     }
 
-    @Override public String toString() {
+    @Override
+    public String toString() {
       StringBuilder builder = new StringBuilder(size() * 3);
       builder.append('[').append(array[start]);
       for (int i = start + 1; i < end; i++) {

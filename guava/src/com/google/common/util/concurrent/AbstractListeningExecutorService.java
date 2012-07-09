@@ -39,19 +39,19 @@ import java.util.concurrent.TimeoutException;
  * @author Doug Lea
  */
 abstract class AbstractListeningExecutorService implements ListeningExecutorService {
-  @Override public ListenableFuture<?> submit(Runnable task) {
+  public ListenableFuture<?> submit(Runnable task) {
     ListenableFutureTask<Void> ftask = ListenableFutureTask.create(task, null);
     execute(ftask);
     return ftask;
   }
 
-  @Override public <T> ListenableFuture<T> submit(Runnable task, T result) {
+  public <T> ListenableFuture<T> submit(Runnable task, T result) {
     ListenableFutureTask<T> ftask = ListenableFutureTask.create(task, result);
     execute(ftask);
     return ftask;
   }
 
-  @Override public <T> ListenableFuture<T> submit(Callable<T> task) {
+  public <T> ListenableFuture<T> submit(Callable<T> task) {
     ListenableFutureTask<T> ftask = ListenableFutureTask.create(task);
     execute(ftask);
     return ftask;
@@ -129,7 +129,7 @@ abstract class AbstractListeningExecutorService implements ListeningExecutorServ
     }
   }
 
-  @Override public <T> T invokeAny(Collection<? extends Callable<T>> tasks)
+  public <T> T invokeAny(Collection<? extends Callable<T>> tasks)
       throws InterruptedException, ExecutionException {
     try {
       return doInvokeAny(tasks, false, 0);
@@ -138,13 +138,13 @@ abstract class AbstractListeningExecutorService implements ListeningExecutorServ
     }
   }
 
-  @Override public <T> T invokeAny(
+  public <T> T invokeAny(
       Collection<? extends Callable<T>> tasks, long timeout, TimeUnit unit)
       throws InterruptedException, ExecutionException, TimeoutException {
     return doInvokeAny(tasks, true, unit.toNanos(timeout));
   }
 
-  @Override public <T> List<Future<T>> invokeAll(Collection<? extends Callable<T>> tasks)
+  public <T> List<Future<T>> invokeAll(Collection<? extends Callable<T>> tasks)
       throws InterruptedException {
     if (tasks == null) {
       throw new NullPointerException();
@@ -177,7 +177,7 @@ abstract class AbstractListeningExecutorService implements ListeningExecutorServ
     }
   }
 
-  @Override public <T> List<Future<T>> invokeAll(
+  public <T> List<Future<T>> invokeAll(
       Collection<? extends Callable<T>> tasks, long timeout, TimeUnit unit)
       throws InterruptedException {
     if (tasks == null || unit == null) {

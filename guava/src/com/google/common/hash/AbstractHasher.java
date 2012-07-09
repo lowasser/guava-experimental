@@ -16,6 +16,8 @@ package com.google.common.hash;
 
 import com.google.common.base.Charsets;
 
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
 import java.nio.charset.Charset;
 
 /**
@@ -26,24 +28,32 @@ import java.nio.charset.Charset;
  * @author andreou@google.com (Dimitris Andreou)
  */
 abstract class AbstractHasher implements Hasher {
-  @Override public final Hasher putBoolean(boolean b) {
+  public final Hasher putBoolean(boolean b) {
     return putByte(b ? (byte) 1 : (byte) 0);
   }
 
-  @Override public final Hasher putDouble(double d) {
+  public final Hasher putDouble(double d) {
     return putLong(Double.doubleToRawLongBits(d));
   }
 
-  @Override public final Hasher putFloat(float f) {
+  public final Hasher putFloat(float f) {
     return putInt(Float.floatToRawIntBits(f));
   }
 
-  @Override public Hasher putString(CharSequence charSequence) {
+  public Hasher putString(CharSequence charSequence) {
     // TODO(user): Should we instead loop over the CharSequence and call #putChar?
     return putString(charSequence, Charsets.UTF_16LE);
   }
 
-  @Override public Hasher putString(CharSequence charSequence, Charset charset) {
-    return putBytes(charSequence.toString().getBytes(charset));
+  public Hasher putString(CharSequence charSequence, Charset charset) {
+    ByteBuffer buf = charset.encode(CharBuffer.wrap(charSequence));
+    if (buf.hasArray()) {
+      return putBytes(
+          buf.array(), buf.arrayOffset() + buf.position(), buf.limit() + buf.arrayOffset());
+    } else {
+      byte[] tmp = new byte[buf.remaining()];
+      buf.get(tmp);
+      return putBytes(tmp);
+    }
   }
 }

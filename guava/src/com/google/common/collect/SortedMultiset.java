@@ -79,7 +79,7 @@ public interface SortedMultiset<E> extends Multiset<E>, SortedIterable<E> {
   /**
    * Returns a {@link SortedSet} view of the distinct elements in this multiset.
    */
-  @Override SortedSet<E> elementSet();
+  SortedSet<E> elementSet();
 
   /**
    * {@inheritDoc}
@@ -87,7 +87,7 @@ public interface SortedMultiset<E> extends Multiset<E>, SortedIterable<E> {
    * <p>The iterator returns the elements in ascending order according to this
    * multiset's comparator.
    */
-  @Override Iterator<E> iterator();
+  Iterator<E> iterator();
 
   /**
    * Returns a descending view of this multiset. Modifications made to either

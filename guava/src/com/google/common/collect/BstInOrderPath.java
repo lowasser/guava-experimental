@@ -35,12 +35,10 @@ final class BstInOrderPath<N extends BstNode<?, N>> extends BstPath<N, BstInOrde
    */
   public static <N extends BstNode<?, N>> BstPathFactory<N, BstInOrderPath<N>> inOrderFactory() {
     return new BstPathFactory<N, BstInOrderPath<N>>() {
-      @Override
       public BstInOrderPath<N> extension(BstInOrderPath<N> path, BstSide side) {
         return BstInOrderPath.extension(path, side);
       }
 
-      @Override
       public BstInOrderPath<N> initialPath(N root) {
         return new BstInOrderPath<N>(root, null, null);
       }

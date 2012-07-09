@@ -48,17 +48,20 @@ public final class LimitInputStream extends FilterInputStream {
     left = limit;
   }
 
-  @Override public int available() throws IOException {
+  @Override
+  public int available() throws IOException {
     return (int) Math.min(in.available(), left);
   }
 
-  @Override public synchronized void mark(int readlimit) {
+  @Override
+  public synchronized void mark(int readlimit) {
     in.mark(readlimit);
     mark = left;
     // it's okay to mark even if mark isn't supported, as reset won't work
   }
 
-  @Override public int read() throws IOException {
+  @Override
+  public int read() throws IOException {
     if (left == 0) {
       return -1;
     }
@@ -70,7 +73,8 @@ public final class LimitInputStream extends FilterInputStream {
     return result;
   }
 
-  @Override public int read(byte[] b, int off, int len) throws IOException {
+  @Override
+  public int read(byte[] b, int off, int len) throws IOException {
     if (left == 0) {
       return -1;
     }
@@ -83,7 +87,8 @@ public final class LimitInputStream extends FilterInputStream {
     return result;
   }
 
-  @Override public synchronized void reset() throws IOException {
+  @Override
+  public synchronized void reset() throws IOException {
     if (!in.markSupported()) {
       throw new IOException("Mark not supported");
     }
@@ -95,7 +100,8 @@ public final class LimitInputStream extends FilterInputStream {
     left = mark;
   }
 
-  @Override public long skip(long n) throws IOException {
+  @Override
+  public long skip(long n) throws IOException {
     n = Math.min(n, left);
     long skipped = in.skip(n);
     left -= skipped;

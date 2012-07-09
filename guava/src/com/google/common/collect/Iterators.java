@@ -67,11 +67,9 @@ public final class Iterators {
 
   static final UnmodifiableIterator<Object> EMPTY_ITERATOR
       = new UnmodifiableIterator<Object>() {
-        @Override
         public boolean hasNext() {
           return false;
         }
-        @Override
         public Object next() {
           throw new NoSuchElementException();
         }
@@ -91,15 +89,15 @@ public final class Iterators {
 
   private static final Iterator<Object> EMPTY_MODIFIABLE_ITERATOR =
       new Iterator<Object>() {
-        @Override public boolean hasNext() {
+        public boolean hasNext() {
           return false;
         }
 
-        @Override public Object next() {
+        public Object next() {
           throw new NoSuchElementException();
         }
 
-        @Override public void remove() {
+        public void remove() {
           throw new IllegalStateException();
         }
       };
@@ -124,11 +122,9 @@ public final class Iterators {
       return (UnmodifiableIterator<T>) iterator;
     }
     return new UnmodifiableIterator<T>() {
-      @Override
       public boolean hasNext() {
         return iterator.hasNext();
       }
-      @Override
       public T next() {
         return iterator.next();
       }
@@ -154,27 +150,21 @@ public final class Iterators {
       return (UnmodifiableListIterator<T>) iterator;
     }
     return new UnmodifiableListIterator<T>() {
-      @Override
       public boolean hasNext() {
         return iterator.hasNext();
       }
-      @Override
       public boolean hasPrevious() {
         return iterator.hasPrevious();
       }
-      @Override
       public T next() {
         return iterator.next();
       }
-      @Override
       public T previous() {
         return iterator.previous();
       }
-      @Override
       public int nextIndex() {
         return iterator.nextIndex();
       }
-      @Override
       public int previousIndex() {
         return iterator.previousIndex();
       }
@@ -442,14 +432,12 @@ public final class Iterators {
       Iterator<T> iterator = emptyIterator();
       Iterator<T> removeFrom;
 
-      @Override
       public boolean hasNext() {
         if (!iterator.hasNext()) {
           iterator = iterable.iterator();
         }
         return iterator.hasNext();
       }
-      @Override
       public T next() {
         if (!hasNext()) {
           throw new NoSuchElementException();
@@ -457,7 +445,6 @@ public final class Iterators {
         removeFrom = iterator;
         return iterator.next();
       }
-      @Override
       public void remove() {
         checkState(removeFrom != null,
             "no calls to next() since last call to remove()");
@@ -568,7 +555,6 @@ public final class Iterators {
       Iterator<? extends T> current = emptyIterator();
       Iterator<? extends T> removeFrom;
 
-      @Override
       public boolean hasNext() {
         // http://code.google.com/p/google-collections/issues/detail?id=151
         // current.hasNext() might be relatively expensive, worth minimizing.
@@ -584,7 +570,6 @@ public final class Iterators {
         }
         return currentHasNext;
       }
-      @Override
       public T next() {
         if (!hasNext()) {
           throw new NoSuchElementException();
@@ -592,7 +577,6 @@ public final class Iterators {
         removeFrom = current;
         return current.next();
       }
-      @Override
       public void remove() {
         checkState(removeFrom != null,
             "no calls to next() since last call to remove()");
@@ -648,11 +632,9 @@ public final class Iterators {
     checkNotNull(iterator);
     checkArgument(size > 0);
     return new UnmodifiableIterator<List<T>>() {
-      @Override
       public boolean hasNext() {
         return iterator.hasNext();
       }
-      @Override
       public List<T> next() {
         if (!hasNext()) {
           throw new NoSuchElementException();
@@ -682,7 +664,8 @@ public final class Iterators {
     checkNotNull(unfiltered);
     checkNotNull(predicate);
     return new AbstractIterator<T>() {
-      @Override protected T computeNext() {
+      @Override
+      protected T computeNext() {
         while (unfiltered.hasNext()) {
           T element = unfiltered.next();
           if (predicate.apply(element)) {
@@ -983,12 +966,10 @@ public final class Iterators {
     return new Iterator<T>() {
       private int count;
 
-      @Override
       public boolean hasNext() {
         return count < limitSize && iterator.hasNext();
       }
 
-      @Override
       public T next() {
         if (!hasNext()) {
           throw new NoSuchElementException();
@@ -997,7 +978,6 @@ public final class Iterators {
         return iterator.next();
       }
 
-      @Override
       public void remove() {
         iterator.remove();
       }
@@ -1020,12 +1000,10 @@ public final class Iterators {
   public static <T> Iterator<T> consumingIterator(final Iterator<T> iterator) {
     checkNotNull(iterator);
     return new UnmodifiableIterator<T>() {
-      @Override
       public boolean hasNext() {
         return iterator.hasNext();
       }
 
-      @Override
       public T next() {
         T next = iterator.next();
         iterator.remove();
@@ -1064,7 +1042,8 @@ public final class Iterators {
     // TODO(kevinb): compare performance with Arrays.asList(array).iterator().
     checkNotNull(array);  // eager for GWT.
     return new AbstractIndexedListIterator<T>(array.length) {
-      @Override protected T get(int index) {
+      @Override
+      protected T get(int index) {
         return array[index];
       }
     };
@@ -1110,7 +1089,8 @@ public final class Iterators {
      * past the beginning of the iteration.
      */
     return new AbstractIndexedListIterator<T>(length, index) {
-      @Override protected T get(int index) {
+      @Override
+      protected T get(int index) {
         return array[offset + index];
       }
     };
@@ -1126,11 +1106,9 @@ public final class Iterators {
       @Nullable final T value) {
     return new UnmodifiableIterator<T>() {
       boolean done;
-      @Override
       public boolean hasNext() {
         return !done;
       }
-      @Override
       public T next() {
         if (done) {
           throw new NoSuchElementException();
@@ -1153,11 +1131,9 @@ public final class Iterators {
       final Enumeration<T> enumeration) {
     checkNotNull(enumeration);
     return new UnmodifiableIterator<T>() {
-      @Override
       public boolean hasNext() {
         return enumeration.hasMoreElements();
       }
-      @Override
       public T next() {
         return enumeration.nextElement();
       }
@@ -1174,11 +1150,9 @@ public final class Iterators {
   public static <T> Enumeration<T> asEnumeration(final Iterator<T> iterator) {
     checkNotNull(iterator);
     return new Enumeration<T>() {
-      @Override
       public boolean hasMoreElements() {
         return iterator.hasNext();
       }
-      @Override
       public T nextElement() {
         return iterator.next();
       }
@@ -1198,12 +1172,10 @@ public final class Iterators {
       this.iterator = checkNotNull(iterator);
     }
 
-    @Override
     public boolean hasNext() {
       return hasPeeked || iterator.hasNext();
     }
 
-    @Override
     public E next() {
       if (!hasPeeked) {
         return iterator.next();
@@ -1214,13 +1186,11 @@ public final class Iterators {
       return result;
     }
 
-    @Override
     public void remove() {
       checkState(!hasPeeked, "Can't remove after you've peeked at next");
       iterator.remove();
     }
 
-    @Override
     public E peek() {
       if (!hasPeeked) {
         peekedElement = iterator.next();
@@ -1335,7 +1305,6 @@ public final class Iterators {
       // to be sorted based on the top of each iterator.
       Comparator<PeekingIterator<T>> heapComparator =
           new Comparator<PeekingIterator<T>>() {
-            @Override
             public int compare(PeekingIterator<T> o1, PeekingIterator<T> o2) {
               return comparator.compare(o1.peek(), o2.peek());
             }

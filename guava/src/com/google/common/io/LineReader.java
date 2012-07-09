@@ -42,7 +42,8 @@ public final class LineReader {
 
   private final Queue<String> lines = new LinkedList<String>();
   private final LineBuffer lineBuf = new LineBuffer() {
-    @Override protected void handleLine(String line, String end) {
+    @Override
+    protected void handleLine(String line, String end) {
       lines.add(line);
     }
   };

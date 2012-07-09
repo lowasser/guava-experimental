@@ -38,7 +38,8 @@ final class ImmutableAsList<E> extends RegularImmutableList<E> {
     this.collection = collection;
   }
 
-  @Override public boolean contains(Object target) {
+  @Override
+  public boolean contains(Object target) {
     // The collection's contains() is at least as fast as RegularImmutableList's
     // and is often faster.
     return collection.contains(target);
@@ -63,7 +64,8 @@ final class ImmutableAsList<E> extends RegularImmutableList<E> {
     throw new InvalidObjectException("Use SerializedForm");
   }
 
-  @Override Object writeReplace() {
+  @Override
+  Object writeReplace() {
     return new SerializedForm(collection);
   }
 }

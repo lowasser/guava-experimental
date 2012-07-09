@@ -24,6 +24,7 @@ import com.google.common.primitives.Shorts;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.nio.CharBuffer;
 import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -55,7 +56,7 @@ final class MessageDigestHashFunction extends AbstractStreamingHashFunction {
     }
   }
 
-  @Override public Hasher newHasher() {
+  public Hasher newHasher() {
     return new MessageDigestHasher(getMessageDigest(algorithmName));
   }
 
@@ -69,26 +70,26 @@ final class MessageDigestHashFunction extends AbstractStreamingHashFunction {
       this.scratch = ByteBuffer.allocate(8).order(ByteOrder.LITTLE_ENDIAN);
     }
 
-    @Override public Hasher putByte(byte b) {
+    public Hasher putByte(byte b) {
       checkNotDone();
       digest.update(b);
       return this;
     }
 
-    @Override public Hasher putBytes(byte[] bytes) {
+    public Hasher putBytes(byte[] bytes) {
       checkNotDone();
       digest.update(bytes);
       return this;
     }
 
-    @Override public Hasher putBytes(byte[] bytes, int off, int len) {
+    public Hasher putBytes(byte[] bytes, int off, int len) {
       checkNotDone();
       checkPositionIndexes(off, off + len, bytes.length);
       digest.update(bytes, off, len);
       return this;
     }
     
-    @Override public Hasher putShort(short s) {
+    public Hasher putShort(short s) {
       checkNotDone();
       scratch.putShort(s);
       digest.update(scratch.array(), 0, Shorts.BYTES);
@@ -96,7 +97,7 @@ final class MessageDigestHashFunction extends AbstractStreamingHashFunction {
       return this;
     }
 
-    @Override public Hasher putInt(int i) {
+    public Hasher putInt(int i) {
       checkNotDone();
       scratch.putInt(i);
       digest.update(scratch.array(), 0, Ints.BYTES);
@@ -104,7 +105,7 @@ final class MessageDigestHashFunction extends AbstractStreamingHashFunction {
       return this;
     }
 
-    @Override public Hasher putLong(long l) {
+    public Hasher putLong(long l) {
       checkNotDone();
       scratch.putLong(l);
       digest.update(scratch.array(), 0, Longs.BYTES);
@@ -112,7 +113,7 @@ final class MessageDigestHashFunction extends AbstractStreamingHashFunction {
       return this;
     }
 
-    @Override public Hasher putFloat(float f) {
+    public Hasher putFloat(float f) {
       checkNotDone();
       scratch.putFloat(f);
       digest.update(scratch.array(), 0, 4);
@@ -120,7 +121,7 @@ final class MessageDigestHashFunction extends AbstractStreamingHashFunction {
       return this;
     }
 
-    @Override public Hasher putDouble(double d) {
+    public Hasher putDouble(double d) {
       checkNotDone();
       scratch.putDouble(d);
       digest.update(scratch.array(), 0, 8);
@@ -128,11 +129,11 @@ final class MessageDigestHashFunction extends AbstractStreamingHashFunction {
       return this;
     }
 
-    @Override public Hasher putBoolean(boolean b) {
+    public Hasher putBoolean(boolean b) {
       return putByte(b ? (byte) 1 : (byte) 0);
     }
 
-    @Override public Hasher putChar(char c) {
+    public Hasher putChar(char c) {
       checkNotDone();
       scratch.putChar(c);
       digest.update(scratch.array(), 0, Chars.BYTES);
@@ -140,18 +141,26 @@ final class MessageDigestHashFunction extends AbstractStreamingHashFunction {
       return this;
     }
     
-    @Override public Hasher putString(CharSequence charSequence) {
+    public Hasher putString(CharSequence charSequence) {
       for (int i = 0; i < charSequence.length(); i++) {
         putChar(charSequence.charAt(i));
       }
       return this;
     }
 
-    @Override public Hasher putString(CharSequence charSequence, Charset charset) {
-      return putBytes(charSequence.toString().getBytes(charset));
+    public Hasher putString(CharSequence charSequence, Charset charset) {
+      ByteBuffer buf = charset.encode(CharBuffer.wrap(charSequence));
+      if (buf.hasArray()) {
+        return putBytes(
+            buf.array(), buf.arrayOffset() + buf.position(), buf.limit() + buf.arrayOffset());
+      } else {
+        byte[] tmp = new byte[buf.remaining()];
+        buf.get(tmp);
+        return putBytes(tmp);
+      }
     }
 
-    @Override public <T> Hasher putObject(T instance, Funnel<? super T> funnel) {
+    public <T> Hasher putObject(T instance, Funnel<? super T> funnel) {
       checkNotDone();
       funnel.funnel(instance, this);
       return this;

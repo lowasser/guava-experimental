@@ -26,13 +26,13 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.math.IntMath;
 
 import java.util.AbstractQueue;
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.ConcurrentModificationException;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.PriorityQueue;
@@ -235,7 +235,8 @@ public final class MinMaxPriorityQueue<E> extends AbstractQueue<E> {
     this.queue = new Object[queueSize];
   }
 
-  @Override public int size() {
+  @Override
+  public int size() {
     return size;
   }
 
@@ -247,12 +248,14 @@ public final class MinMaxPriorityQueue<E> extends AbstractQueue<E> {
    *
    * @return {@code true} always
    */
-  @Override public boolean add(E element) {
+  @Override
+  public boolean add(E element) {
     offer(element);
     return true;
   }
 
-  @Override public boolean addAll(Collection<? extends E> newElements) {
+  @Override
+  public boolean addAll(Collection<? extends E> newElements) {
     boolean modified = false;
     for (E element : newElements) {
       offer(element);
@@ -267,7 +270,7 @@ public final class MinMaxPriorityQueue<E> extends AbstractQueue<E> {
    * greatest element (according to its comparator), which may be {@code
    * element} itself.
    */
-  @Override public boolean offer(E element) {
+  public boolean offer(E element) {
     checkNotNull(element);
     modCount++;
     int insertIndex = size++;
@@ -280,7 +283,7 @@ public final class MinMaxPriorityQueue<E> extends AbstractQueue<E> {
     return size <= maximumSize || pollLast() != element;
   }
 
-  @Override public E poll() {
+  public E poll() {
     return isEmpty() ? null : removeAndGet(0);
   }
 
@@ -289,7 +292,7 @@ public final class MinMaxPriorityQueue<E> extends AbstractQueue<E> {
     return (E) queue[index];
   }
 
-  @Override public E peek() {
+  public E peek() {
     return isEmpty() ? null : elementData(0);
   }
 
@@ -752,13 +755,13 @@ public final class MinMaxPriorityQueue<E> extends AbstractQueue<E> {
     private E lastFromForgetMeNot;
     private boolean canRemove;
 
-    @Override public boolean hasNext() {
+    public boolean hasNext() {
       checkModCount();
       return (nextNotInSkipMe(cursor + 1) < size())
           || ((forgetMeNot != null) && !forgetMeNot.isEmpty());
     }
 
-    @Override public E next() {
+    public E next() {
       checkModCount();
       int tempCursor = nextNotInSkipMe(cursor + 1);
       if (tempCursor < size()) {
@@ -777,7 +780,7 @@ public final class MinMaxPriorityQueue<E> extends AbstractQueue<E> {
           "iterator moved past last element in queue.");
     }
 
-    @Override public void remove() {
+    public void remove() {
       checkState(canRemove,
           "no calls to remove() since the last call to next()");
       checkModCount();
@@ -787,7 +790,7 @@ public final class MinMaxPriorityQueue<E> extends AbstractQueue<E> {
         MoveDesc<E> moved = removeAt(cursor);
         if (moved != null) {
           if (forgetMeNot == null) {
-            forgetMeNot = new ArrayDeque<E>();
+            forgetMeNot = new LinkedList<E>();
             skipMe = new ArrayList<E>(3);
           }
           forgetMeNot.add(moved.toTrickle);
@@ -863,18 +866,21 @@ public final class MinMaxPriorityQueue<E> extends AbstractQueue<E> {
    *
    * @return an iterator over the elements contained in this collection
    */
-  @Override public Iterator<E> iterator() {
+  @Override
+  public Iterator<E> iterator() {
     return new QueueIterator();
   }
 
-  @Override public void clear() {
+  @Override
+  public void clear() {
     for (int i = 0; i < size; i++) {
       queue[i] = null;
     }
     size = 0;
   }
 
-  @Override public Object[] toArray() {
+  @Override
+  public Object[] toArray() {
     Object[] copyTo = new Object[size];
     System.arraycopy(queue, 0, copyTo, 0, size);
     return copyTo;

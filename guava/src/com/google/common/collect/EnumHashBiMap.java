@@ -90,11 +90,13 @@ public final class EnumHashBiMap<K extends Enum<K>, V>
     return checkNotNull(key);
   }
 
-  @Override public V put(K key, @Nullable V value) {
+  @Override
+  public V put(K key, @Nullable V value) {
     return super.put(key, value);
   }
 
-  @Override public V forcePut(K key, @Nullable V value) {
+  @Override
+  public V forcePut(K key, @Nullable V value) {
     return super.forcePut(key, value);
   }
 

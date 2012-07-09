@@ -34,44 +34,52 @@ final class EmptyImmutableMap extends ImmutableMap<Object, Object> {
 
   private EmptyImmutableMap() {}
 
-  @Override public Object get(@Nullable Object key) {
+  @Override
+  public Object get(@Nullable Object key) {
     return null;
   }
 
-  @Override
   public int size() {
     return 0;
   }
 
-  @Override public boolean isEmpty() {
+  @Override
+  public boolean isEmpty() {
     return true;
   }
 
-  @Override public boolean containsKey(@Nullable Object key) {
+  @Override
+  public boolean containsKey(@Nullable Object key) {
     return false;
   }
 
-  @Override public boolean containsValue(@Nullable Object value) {
+  @Override
+  public boolean containsValue(@Nullable Object value) {
     return false;
   }
 
-  @Override ImmutableSet<Entry<Object, Object>> createEntrySet() {
+  @Override
+  ImmutableSet<Entry<Object, Object>> createEntrySet() {
     throw new AssertionError("should never be called");
   }
 
-  @Override public ImmutableSet<Entry<Object, Object>> entrySet() {
+  @Override
+  public ImmutableSet<Entry<Object, Object>> entrySet() {
     return ImmutableSet.of();
   }
 
-  @Override public ImmutableSet<Object> keySet() {
+  @Override
+  public ImmutableSet<Object> keySet() {
     return ImmutableSet.of();
   }
 
-  @Override public ImmutableCollection<Object> values() {
+  @Override
+  public ImmutableCollection<Object> values() {
     return ImmutableCollection.EMPTY_IMMUTABLE_COLLECTION;
   }
 
-  @Override public boolean equals(@Nullable Object object) {
+  @Override
+  public boolean equals(@Nullable Object object) {
     if (object instanceof Map) {
       Map<?, ?> that = (Map<?, ?>) object;
       return that.isEmpty();
@@ -79,15 +87,18 @@ final class EmptyImmutableMap extends ImmutableMap<Object, Object> {
     return false;
   }
 
-  @Override boolean isPartialView() {
+  @Override
+  boolean isPartialView() {
     return false;
   }
 
-  @Override public int hashCode() {
+  @Override
+  public int hashCode() {
     return 0;
   }
 
-  @Override public String toString() {
+  @Override
+  public String toString() {
     return "{}";
   }
 

@@ -46,77 +46,85 @@ final class SingletonImmutableTable<R, C, V> extends ImmutableTable<R, C, V> {
     this(cell.getRowKey(), cell.getColumnKey(), cell.getValue());
   }
 
-  @Override public ImmutableSet<Cell<R, C, V>> cellSet() {
+  @Override
+  public ImmutableSet<Cell<R, C, V>> cellSet() {
     return ImmutableSet.of(
         Tables.immutableCell(singleRowKey, singleColumnKey, singleValue));
   }
 
-  @Override public ImmutableMap<R, V> column(C columnKey) {
+  @Override
+  public ImmutableMap<R, V> column(C columnKey) {
     checkNotNull(columnKey);
     return containsColumn(columnKey)
         ? ImmutableMap.of(singleRowKey, singleValue)
         : ImmutableMap.<R, V>of();
   }
 
-  @Override public ImmutableSet<C> columnKeySet() {
+  @Override
+  public ImmutableSet<C> columnKeySet() {
     return ImmutableSet.of(singleColumnKey);
   }
 
-  @Override public ImmutableMap<C, Map<R, V>> columnMap() {
+  @Override
+  public ImmutableMap<C, Map<R, V>> columnMap() {
     return ImmutableMap.of(singleColumnKey,
         (Map<R, V>) ImmutableMap.of(singleRowKey, singleValue));
   }
 
-  @Override public boolean contains(@Nullable Object rowKey,
+  public boolean contains(@Nullable Object rowKey,
       @Nullable Object columnKey) {
     return containsRow(rowKey) && containsColumn(columnKey);
   }
 
-  @Override public boolean containsColumn(@Nullable Object columnKey) {
+  public boolean containsColumn(@Nullable Object columnKey) {
     return Objects.equal(this.singleColumnKey, columnKey);
   }
 
-  @Override public boolean containsRow(@Nullable Object rowKey) {
+  public boolean containsRow(@Nullable Object rowKey) {
     return Objects.equal(this.singleRowKey, rowKey);
   }
 
-  @Override public boolean containsValue(@Nullable Object value) {
+  public boolean containsValue(@Nullable Object value) {
     return Objects.equal(this.singleValue, value);
   }
 
-  @Override public V get(@Nullable Object rowKey, @Nullable Object columnKey) {
+  public V get(@Nullable Object rowKey, @Nullable Object columnKey) {
     return contains(rowKey, columnKey) ? singleValue : null;
   }
 
-  @Override public boolean isEmpty() {
+  public boolean isEmpty() {
     return false;
   }
 
-  @Override public ImmutableMap<C, V> row(R rowKey) {
+  @Override
+  public ImmutableMap<C, V> row(R rowKey) {
     checkNotNull(rowKey);
     return containsRow(rowKey)
         ? ImmutableMap.of(singleColumnKey, singleValue)
         : ImmutableMap.<C, V>of();
   }
 
-  @Override public ImmutableSet<R> rowKeySet() {
+  @Override
+  public ImmutableSet<R> rowKeySet() {
     return ImmutableSet.of(singleRowKey);
   }
 
-  @Override public ImmutableMap<R, Map<C, V>> rowMap() {
+  @Override
+  public ImmutableMap<R, Map<C, V>> rowMap() {
     return ImmutableMap.of(singleRowKey,
         (Map<C, V>) ImmutableMap.of(singleColumnKey, singleValue));
   }
 
-  @Override public int size() {
+  public int size() {
     return 1;
   }
 
-  @Override public ImmutableCollection<V> values() {
+  public ImmutableCollection<V> values() {
     return ImmutableSet.of(singleValue);
   }
 
-  @Override public boolean equals(@Nullable Object obj) {
+  @Override
+  public boolean equals(@Nullable Object obj) {
     if (obj == this) {
       return true;
     } else if (obj instanceof Table<?, ?, ?>) {
@@ -131,11 +139,13 @@ final class SingletonImmutableTable<R, C, V> extends ImmutableTable<R, C, V> {
     return false;
   }
 
-  @Override public int hashCode() {
+  @Override
+  public int hashCode() {
     return Objects.hashCode(singleRowKey, singleColumnKey, singleValue);
   }
 
-  @Override public String toString() {
+  @Override
+  public String toString() {
     return new StringBuilder()
         .append('{')
         .append(singleRowKey)

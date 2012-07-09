@@ -45,13 +45,11 @@ class RegularImmutableMultiset<E> extends ImmutableMultiset<E> {
     return map.isPartialView();
   }
 
-  @Override
   public int count(@Nullable Object element) {
     Integer value = map.get(element);
     return (value == null) ? 0 : value;
   }
 
-  @Override
   public int size() {
     return size;
   }
@@ -61,7 +59,6 @@ class RegularImmutableMultiset<E> extends ImmutableMultiset<E> {
     return map.containsKey(element);
   }
 
-  @Override
   public ImmutableSet<E> elementSet() {
     return map.keySet();
   }
@@ -73,7 +70,6 @@ class RegularImmutableMultiset<E> extends ImmutableMultiset<E> {
   @Override
   ImmutableSet<Entry<E>> createEntrySet() {
     return new EntrySet() {
-      @Override
       public int size() {
         return map.size();
       }

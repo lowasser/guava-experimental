@@ -17,21 +17,17 @@ package com.google.common.collect;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
-import com.google.common.collect.testing.NavigableMapTestSuiteBuilder;
-import com.google.common.collect.testing.SafeTreeMap;
-import com.google.common.collect.testing.TestStringSortedMapGenerator;
 import com.google.common.collect.testing.features.CollectionSize;
 import com.google.common.collect.testing.features.MapFeature;
 import com.google.common.collect.testing.google.BiMapTestSuiteBuilder;
 import com.google.common.collect.testing.google.TestStringBiMapGenerator;
 import com.google.common.testing.SerializableTester;
 
+import java.util.Map.Entry;
+
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-
-import java.util.Map;
-import java.util.Map.Entry;
 
 /**
  * Test suites for wrappers in {@code Maps}.
@@ -41,37 +37,6 @@ import java.util.Map.Entry;
 public class MapsCollectionTest extends TestCase {
   public static Test suite() {
     TestSuite suite = new TestSuite();
-    suite.addTest(NavigableMapTestSuiteBuilder
-        .using(new TestStringSortedMapGenerator() {
-          @Override
-          protected Map<String, String> create(Entry<String, String>[] entries) {
-            SafeTreeMap<String, String> map = new SafeTreeMap<String, String>();
-            for (Entry<String, String> entry : entries) {
-              map.put(entry.getKey(), entry.getValue());
-            }
-            return Maps.unmodifiableNavigableMap(map);
-          }
-        })
-        .named("unmodifiableNavigableMap[SafeTreeMap]")
-        .withFeatures(CollectionSize.ANY,
-            MapFeature.ALLOWS_NULL_VALUES)
-        .createTestSuite());
-    suite.addTest(NavigableMapTestSuiteBuilder
-        .using(new TestStringSortedMapGenerator() {
-
-          @Override
-          protected Map<String, String> create(Entry<String, String>[] entries) {
-            SafeTreeMap<String, String> map = new SafeTreeMap<String, String>();
-            for (Entry<String, String> entry : entries) {
-              map.put(entry.getKey(), entry.getValue());
-            }
-            return SerializableTester.reserialize(Maps.unmodifiableNavigableMap(map));
-          }
-        })
-        .named("unmodifiableNavigableMap[SafeTreeMap], reserialized")
-        .withFeatures(CollectionSize.ANY,
-            MapFeature.ALLOWS_NULL_VALUES)
-        .createTestSuite());
     suite.addTest(BiMapTestSuiteBuilder
         .using(new TestStringBiMapGenerator() {
           @Override

@@ -85,11 +85,13 @@ public final class HashBiMap<K, V> extends AbstractBiMap<K, V> {
 
   // Override these two methods to show that keys and values may be null
 
-  @Override public V put(@Nullable K key, @Nullable V value) {
+  @Override
+  public V put(@Nullable K key, @Nullable V value) {
     return super.put(key, value);
   }
 
-  @Override public V forcePut(@Nullable K key, @Nullable V value) {
+  @Override
+  public V forcePut(@Nullable K key, @Nullable V value) {
     return super.forcePut(key, value);
   }
 

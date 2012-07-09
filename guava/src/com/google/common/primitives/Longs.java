@@ -391,7 +391,6 @@ public final class Longs {
   private enum LexicographicalComparator implements Comparator<long[]> {
     INSTANCE;
 
-    @Override
     public int compare(long[] left, long[] right) {
       int minLength = Math.min(left.length, right.length);
       for (int i = 0; i < minLength; i++) {
@@ -472,26 +471,31 @@ public final class Longs {
       this.end = end;
     }
 
-    @Override public int size() {
+    @Override
+    public int size() {
       return end - start;
     }
 
-    @Override public boolean isEmpty() {
+    @Override
+    public boolean isEmpty() {
       return false;
     }
 
-    @Override public Long get(int index) {
+    @Override
+    public Long get(int index) {
       checkElementIndex(index, size());
       return array[start + index];
     }
 
-    @Override public boolean contains(Object target) {
+    @Override
+    public boolean contains(Object target) {
       // Overridden to prevent a ton of boxing
       return (target instanceof Long)
           && Longs.indexOf(array, (Long) target, start, end) != -1;
     }
 
-    @Override public int indexOf(Object target) {
+    @Override
+    public int indexOf(Object target) {
       // Overridden to prevent a ton of boxing
       if (target instanceof Long) {
         int i = Longs.indexOf(array, (Long) target, start, end);
@@ -502,7 +506,8 @@ public final class Longs {
       return -1;
     }
 
-    @Override public int lastIndexOf(Object target) {
+    @Override
+    public int lastIndexOf(Object target) {
       // Overridden to prevent a ton of boxing
       if (target instanceof Long) {
         int i = Longs.lastIndexOf(array, (Long) target, start, end);
@@ -513,14 +518,16 @@ public final class Longs {
       return -1;
     }
 
-    @Override public Long set(int index, Long element) {
+    @Override
+    public Long set(int index, Long element) {
       checkElementIndex(index, size());
       long oldValue = array[start + index];
       array[start + index] = checkNotNull(element);  // checkNotNull for GWT (do not optimize)
       return oldValue;
     }
 
-    @Override public List<Long> subList(int fromIndex, int toIndex) {
+    @Override
+    public List<Long> subList(int fromIndex, int toIndex) {
       int size = size();
       checkPositionIndexes(fromIndex, toIndex, size);
       if (fromIndex == toIndex) {
@@ -529,7 +536,8 @@ public final class Longs {
       return new LongArrayAsList(array, start + fromIndex, start + toIndex);
     }
 
-    @Override public boolean equals(Object object) {
+    @Override
+    public boolean equals(Object object) {
       if (object == this) {
         return true;
       }
@@ -549,7 +557,8 @@ public final class Longs {
       return super.equals(object);
     }
 
-    @Override public int hashCode() {
+    @Override
+    public int hashCode() {
       int result = 1;
       for (int i = start; i < end; i++) {
         result = 31 * result + Longs.hashCode(array[i]);
@@ -557,7 +566,8 @@ public final class Longs {
       return result;
     }
 
-    @Override public String toString() {
+    @Override
+    public String toString() {
       StringBuilder builder = new StringBuilder(size() * 10);
       builder.append('[').append(array[start]);
       for (int i = start + 1; i < end; i++) {

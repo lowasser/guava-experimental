@@ -85,7 +85,6 @@ public abstract class AbstractFuture<V> implements ListenableFuture<V> {
    *     or during the call (optional but recommended).
    * @throws CancellationException {@inheritDoc}
    */
-  @Override
   public V get(long timeout, TimeUnit unit) throws InterruptedException,
       TimeoutException, ExecutionException {
     return sync.get(unit.toNanos(timeout));
@@ -106,22 +105,18 @@ public abstract class AbstractFuture<V> implements ListenableFuture<V> {
    *     or during the call (optional but recommended).
    * @throws CancellationException {@inheritDoc}
    */
-  @Override
   public V get() throws InterruptedException, ExecutionException {
     return sync.get();
   }
 
-  @Override
   public boolean isDone() {
     return sync.isDone();
   }
 
-  @Override
   public boolean isCancelled() {
     return sync.isCancelled();
   }
 
-  @Override
   public boolean cancel(boolean mayInterruptIfRunning) {
     if (!sync.cancel()) {
       return false;
@@ -150,7 +145,6 @@ public abstract class AbstractFuture<V> implements ListenableFuture<V> {
    *
    * @since 10.0
    */
-  @Override
   public void addListener(Runnable listener, Executor exec) {
     executionList.add(listener, exec);
   }

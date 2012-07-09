@@ -51,7 +51,7 @@ final class Types {
   /** Class#toString without the "class " and "interface " prefixes */
   private static final Function<Type, String> TYPE_TO_STRING =
       new Function<Type, String>() {
-        @Override public String apply(Type from) {
+        public String apply(Type from) {
           return Types.toString(from);
         }
       };
@@ -103,15 +103,15 @@ final class Types {
   private enum ClassOwnership {
 
     OWNED_BY_ENCLOSING_CLASS {
-      @Nullable
       @Override
+      @Nullable
       Class<?> getOwnerType(Class<?> rawType) {
         return rawType.getEnclosingClass();
       }
     },
     LOCAL_CLASS_HAS_NO_OWNER {
-      @Nullable
       @Override
+      @Nullable
       Class<?> getOwnerType(Class<?> rawType) {
         if (rawType.isLocalClass()) {
           return null;
@@ -224,19 +224,22 @@ final class Types {
       this.componentType = JavaVersion.CURRENT.usedInGenericType(componentType);
     }
 
-    @Override public Type getGenericComponentType() {
+    public Type getGenericComponentType() {
       return componentType;
     }
 
-    @Override public String toString() {
+    @Override
+    public String toString() {
       return Types.toString(componentType) + "[]";
     }
 
-    @Override public int hashCode() {
+    @Override
+    public int hashCode() {
       return componentType.hashCode();
     }
 
-    @Override public boolean equals(Object obj) {
+    @Override
+    public boolean equals(Object obj) {
       if (obj instanceof GenericArrayType) {
         GenericArrayType that = (GenericArrayType) obj;
         return Objects.equal(
@@ -265,19 +268,20 @@ final class Types {
       this.argumentsList = JavaVersion.CURRENT.usedInGenericType(typeArguments);
     }
 
-    @Override public Type[] getActualTypeArguments() {
+    public Type[] getActualTypeArguments() {
       return toArray(argumentsList);
     }
 
-    @Override public Type getRawType() {
+    public Type getRawType() {
       return rawType;
     }
 
-    @Override public Type getOwnerType() {
+    public Type getOwnerType() {
       return ownerType;
     }
 
-    @Override public String toString() {
+    @Override
+    public String toString() {
       StringBuilder builder = new StringBuilder();
       if (ownerType != null) {
         builder.append(Types.toString(ownerType)).append('.');
@@ -289,12 +293,14 @@ final class Types {
       return builder.toString();
     }
 
-    @Override public int hashCode() {
+    @Override
+    public int hashCode() {
       return (ownerType == null ? 0 : ownerType.hashCode())
           ^ argumentsList.hashCode() ^ rawType.hashCode();
     }
 
-    @Override public boolean equals(Object other) {
+    @Override
+    public boolean equals(Object other) {
       if (!(other instanceof ParameterizedType)) {
         return false;
       }
@@ -322,27 +328,30 @@ final class Types {
       this.bounds = ImmutableList.copyOf(bounds);
     }
 
-    @Override public Type[] getBounds() {
+    public Type[] getBounds() {
       return toArray(bounds);
     }
 
-    @Override public D getGenericDeclaration() {
+    public D getGenericDeclaration() {
       return genericDeclaration;
     }
 
-    @Override public String getName() {
+    public String getName() {
       return name;
     }
 
-    @Override public String toString() {
+    @Override
+    public String toString() {
       return name;
     }
 
-    @Override public int hashCode() {
+    @Override
+    public int hashCode() {
       return genericDeclaration.hashCode() ^ name.hashCode();
     }
 
-    @Override public boolean equals(Object obj) {
+    @Override
+    public boolean equals(Object obj) {
       if (obj instanceof TypeVariable) {
         TypeVariable<?> that = (TypeVariable<?>) obj;
         return name.equals(that.getName())
@@ -364,15 +373,16 @@ final class Types {
       this.upperBounds = JavaVersion.CURRENT.usedInGenericType(upperBounds);
     }
 
-    @Override public Type[] getLowerBounds() {
+    public Type[] getLowerBounds() {
       return toArray(lowerBounds);
     }
 
-    @Override public Type[] getUpperBounds() {
+    public Type[] getUpperBounds() {
       return toArray(upperBounds);
     }
 
-    @Override public boolean equals(Object obj) {
+    @Override
+    public boolean equals(Object obj) {
       if (obj instanceof WildcardType) {
         WildcardType that = (WildcardType) obj;
         return lowerBounds.equals(Arrays.asList(that.getLowerBounds()))
@@ -381,11 +391,13 @@ final class Types {
       return false;
     }
 
-    @Override public int hashCode() {
+    @Override
+    public int hashCode() {
       return lowerBounds.hashCode() ^ upperBounds.hashCode();
     }
 
-    @Override public String toString() {
+    @Override
+    public String toString() {
       StringBuilder builder = new StringBuilder("?");
       for (Type lowerBound : lowerBounds) {
         builder.append(" super ").append(Types.toString(lowerBound));
@@ -444,10 +456,12 @@ final class Types {
   enum JavaVersion {
 
     JAVA6 {
-      @Override GenericArrayType newArrayType(Type componentType) {
+      @Override
+      GenericArrayType newArrayType(Type componentType) {
         return new GenericArrayTypeImpl(componentType);
       }
-      @Override Type usedInGenericType(Type type) {
+      @Override
+      Type usedInGenericType(Type type) {
         checkNotNull(type);
         if (type instanceof Class) {
           Class<?> cls = (Class<?>) type;
@@ -459,14 +473,16 @@ final class Types {
       }
     },
     JAVA7 {
-      @Override Type newArrayType(Type componentType) {
+      @Override
+      Type newArrayType(Type componentType) {
         if (componentType instanceof Class) {
           return getArrayClass((Class<?>) componentType);
         } else {
           return new GenericArrayTypeImpl(componentType);
         }
       }
-      @Override Type usedInGenericType(Type type) {
+      @Override
+      Type usedInGenericType(Type type) {
         return checkNotNull(type);
       }
     }

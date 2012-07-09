@@ -93,21 +93,17 @@ abstract class AbstractMapBasedMultiset<E> extends AbstractMultiset<E>
     return new Iterator<Multiset.Entry<E>>() {
       Map.Entry<E, Count> toRemove;
 
-      @Override
       public boolean hasNext() {
         return backingEntries.hasNext();
       }
 
-      @Override
       public Multiset.Entry<E> next() {
         final Map.Entry<E, Count> mapEntry = backingEntries.next();
         toRemove = mapEntry;
         return new Multisets.AbstractEntry<E>() {
-          @Override
           public E getElement() {
             return mapEntry.getKey();
           }
-          @Override
           public int getCount() {
             int count = mapEntry.getValue().get();
             if (count == 0) {
@@ -121,7 +117,6 @@ abstract class AbstractMapBasedMultiset<E> extends AbstractMultiset<E>
         };
       }
 
-      @Override
       public void remove() {
         Iterators.checkRemove(toRemove != null);
         size -= toRemove.getValue().getAndSet(0);
@@ -147,11 +142,13 @@ abstract class AbstractMapBasedMultiset<E> extends AbstractMultiset<E>
 
   // Optimizations - Query Operations
 
-  @Override public int size() {
+  @Override
+  public int size() {
     return Ints.saturatedCast(size);
   }
 
-  @Override public Iterator<E> iterator() {
+  @Override
+  public Iterator<E> iterator() {
     return new MapBasedMultisetIterator();
   }
 
@@ -170,12 +167,10 @@ abstract class AbstractMapBasedMultiset<E> extends AbstractMultiset<E>
       this.entryIterator = backingMap.entrySet().iterator();
     }
 
-    @Override
     public boolean hasNext() {
       return occurrencesLeft > 0 || entryIterator.hasNext();
     }
 
-    @Override
     public E next() {
       if (occurrencesLeft == 0) {
         currentEntry = entryIterator.next();
@@ -186,7 +181,6 @@ abstract class AbstractMapBasedMultiset<E> extends AbstractMultiset<E>
       return currentEntry.getKey();
     }
 
-    @Override
     public void remove() {
       checkState(canRemove,
           "no calls to next() since the last call to remove()");
@@ -202,7 +196,8 @@ abstract class AbstractMapBasedMultiset<E> extends AbstractMultiset<E>
     }
   }
 
-  @Override public int count(@Nullable Object element) {
+  @Override
+  public int count(@Nullable Object element) {
     try {
       Count frequency = backingMap.get(element);
       return (frequency == null) ? 0 : frequency.get();
@@ -222,7 +217,8 @@ abstract class AbstractMapBasedMultiset<E> extends AbstractMultiset<E>
    *     {@link Integer#MAX_VALUE} occurrences of {@code element} in this
    *     multiset.
    */
-  @Override public int add(@Nullable E element, int occurrences) {
+  @Override
+  public int add(@Nullable E element, int occurrences) {
     if (occurrences == 0) {
       return count(element);
     }
@@ -244,7 +240,8 @@ abstract class AbstractMapBasedMultiset<E> extends AbstractMultiset<E>
     return oldCount;
   }
 
-  @Override public int remove(@Nullable Object element, int occurrences) {
+  @Override
+  public int remove(@Nullable Object element, int occurrences) {
     if (occurrences == 0) {
       return count(element);
     }
@@ -271,7 +268,8 @@ abstract class AbstractMapBasedMultiset<E> extends AbstractMultiset<E>
   }
 
   // Roughly a 33% performance improvement over AbstractMultiset.setCount().
-  @Override public int setCount(E element, int count) {
+  @Override
+  public int setCount(E element, int count) {
     checkNonnegative(count, "count");
 
     Count existingCounter;
@@ -302,7 +300,8 @@ abstract class AbstractMapBasedMultiset<E> extends AbstractMultiset<E>
 
   // Views
 
-  @Override Set<E> createElementSet() {
+  @Override
+  Set<E> createElementSet() {
     return new MapBasedElementSet();
   }
 

@@ -39,9 +39,9 @@ public abstract class AbstractExecutionThreadService implements Service {
   
   /* use AbstractService for state management */
   private final Service delegate = new AbstractService() {
-    @Override protected final void doStart() {
+    @Override
+    protected final void doStart() {
       executor().execute(new Runnable() {
-        @Override
         public void run() {
           try {
             startUp();
@@ -71,7 +71,8 @@ public abstract class AbstractExecutionThreadService implements Service {
       });
     }
 
-    @Override protected void doStop() {
+    @Override
+    protected void doStop() {
       triggerShutdown();
     }
   };
@@ -127,40 +128,40 @@ public abstract class AbstractExecutionThreadService implements Service {
    */
   protected Executor executor() {
     return new Executor() {
-      @Override
       public void execute(Runnable command) {
         new Thread(command, getServiceName()).start();
       }
     };
   }
 
-  @Override public String toString() {
+  @Override
+  public String toString() {
     return getServiceName() + " [" + state() + "]";
   }
 
   // We override instead of using ForwardingService so that these can be final.
 
-  @Override public final ListenableFuture<State> start() {
+  public final ListenableFuture<State> start() {
     return delegate.start();
   }
 
-  @Override public final State startAndWait() {
+  public final State startAndWait() {
     return delegate.startAndWait();
   }
 
-  @Override public final boolean isRunning() {
+  public final boolean isRunning() {
     return delegate.isRunning();
   }
 
-  @Override public final State state() {
+  public final State state() {
     return delegate.state();
   }
 
-  @Override public final ListenableFuture<State> stop() {
+  public final ListenableFuture<State> stop() {
     return delegate.stop();
   }
 
-  @Override public final State stopAndWait() {
+  public final State stopAndWait() {
     return delegate.stopAndWait();
   }
 

@@ -121,13 +121,11 @@ public final class Collections2 {
       // .<E> above needed to compile in JDK 5
     }
 
-    @Override
     public boolean add(E element) {
       checkArgument(predicate.apply(element));
       return unfiltered.add(element);
     }
 
-    @Override
     public boolean addAll(Collection<? extends E> collection) {
       for (E element : collection) {
         checkArgument(predicate.apply(element));
@@ -135,12 +133,10 @@ public final class Collections2 {
       return unfiltered.addAll(collection);
     }
 
-    @Override
     public void clear() {
       Iterables.removeIf(unfiltered, predicate);
     }
 
-    @Override
     public boolean contains(Object element) {
       try {
         // unsafe cast can result in a CCE from predicate.apply(), which we
@@ -161,7 +157,6 @@ public final class Collections2 {
       }
     }
 
-    @Override
     public boolean containsAll(Collection<?> collection) {
       for (Object element : collection) {
         if (!contains(element)) {
@@ -171,17 +166,14 @@ public final class Collections2 {
       return true;
     }
 
-    @Override
     public boolean isEmpty() {
       return !Iterators.any(unfiltered.iterator(), predicate);
     }
 
-    @Override
     public Iterator<E> iterator() {
       return Iterators.filter(unfiltered.iterator(), predicate);
     }
 
-    @Override
     public boolean remove(Object element) {
       try {
         // unsafe cast can result in a CCE from predicate.apply(), which we
@@ -198,11 +190,9 @@ public final class Collections2 {
       }
     }
 
-    @Override
     public boolean removeAll(final Collection<?> collection) {
       checkNotNull(collection);
       Predicate<E> combinedPredicate = new Predicate<E>() {
-        @Override
         public boolean apply(E input) {
           return predicate.apply(input) && collection.contains(input);
         }
@@ -210,11 +200,9 @@ public final class Collections2 {
       return Iterables.removeIf(unfiltered, combinedPredicate);
     }
 
-    @Override
     public boolean retainAll(final Collection<?> collection) {
       checkNotNull(collection);
       Predicate<E> combinedPredicate = new Predicate<E>() {
-        @Override
         public boolean apply(E input) {
           // See comment in contains() concerning predicate.apply(e)
           return predicate.apply(input) && !collection.contains(input);
@@ -223,23 +211,21 @@ public final class Collections2 {
       return Iterables.removeIf(unfiltered, combinedPredicate);
     }
 
-    @Override
     public int size() {
       return Iterators.size(iterator());
     }
 
-    @Override
     public Object[] toArray() {
       // creating an ArrayList so filtering happens once
       return Lists.newArrayList(iterator()).toArray();
     }
 
-    @Override
     public <T> T[] toArray(T[] array) {
       return Lists.newArrayList(iterator()).toArray(array);
     }
 
-    @Override public String toString() {
+    @Override
+    public String toString() {
       return Iterators.toString(iterator());
     }
   }
@@ -278,19 +264,23 @@ public final class Collections2 {
       this.function = checkNotNull(function);
     }
 
-    @Override public void clear() {
+    @Override
+    public void clear() {
       fromCollection.clear();
     }
 
-    @Override public boolean isEmpty() {
+    @Override
+    public boolean isEmpty() {
       return fromCollection.isEmpty();
     }
 
-    @Override public Iterator<T> iterator() {
+    @Override
+    public Iterator<T> iterator() {
       return Iterators.transform(fromCollection.iterator(), function);
     }
 
-    @Override public int size() {
+    @Override
+    public int size() {
       return fromCollection.size();
     }
   }
@@ -325,7 +315,7 @@ public final class Collections2 {
         = newStringBuilderForCollection(collection.size()).append('[');
     STANDARD_JOINER.appendTo(
         sb, Iterables.transform(collection, new Function<Object, Object>() {
-          @Override public Object apply(Object input) {
+          public Object apply(Object input) {
             return input == collection ? "(this Collection)" : input;
           }
         }));
@@ -481,19 +471,23 @@ public final class Collections2 {
       return (int) permutations;
     }
 
-    @Override public int size() {
+    @Override
+    public int size() {
       return size;
     }
 
-    @Override public boolean isEmpty() {
+    @Override
+    public boolean isEmpty() {
       return false;
     }
 
-    @Override public Iterator<List<E>> iterator() {
+    @Override
+    public Iterator<List<E>> iterator() {
       return new OrderedPermutationIterator<E>(inputList, comparator);
     }
 
-    @Override public boolean contains(@Nullable Object obj) {
+    @Override
+    public boolean contains(@Nullable Object obj) {
       if (obj instanceof List<?>) {
         List<?> list = (List<?>) obj;
         return isPermutation(inputList, list);
@@ -501,7 +495,8 @@ public final class Collections2 {
       return false;
     }
 
-    @Override public String toString() {
+    @Override
+    public String toString() {
       return "orderedPermutationCollection(" + inputList + ")";
     }
   }
@@ -518,7 +513,8 @@ public final class Collections2 {
       this.comparator = comparator;
     }
 
-    @Override protected List<E> computeNext() {
+    @Override
+    protected List<E> computeNext() {
       if (nextPermutation == null) {
         return endOfData();
       }
@@ -594,19 +590,23 @@ public final class Collections2 {
       this.inputList = input;
     }
 
-    @Override public int size() {
+    @Override
+    public int size() {
       return IntMath.factorial(inputList.size());
     }
 
-    @Override public boolean isEmpty() {
+    @Override
+    public boolean isEmpty() {
       return false;
     }
 
-    @Override public Iterator<List<E>> iterator() {
+    @Override
+    public Iterator<List<E>> iterator() {
       return new PermutationIterator<E>(inputList);
     }
 
-    @Override public boolean contains(@Nullable Object obj) {
+    @Override
+    public boolean contains(@Nullable Object obj) {
       if (obj instanceof List<?>) {
         List<?> list = (List<?>) obj;
         return isPermutation(inputList, list);
@@ -614,7 +614,8 @@ public final class Collections2 {
       return false;
     }
 
-    @Override public String toString() {
+    @Override
+    public String toString() {
       return "permutations(" + inputList + ")";
     }
   }
@@ -638,7 +639,8 @@ public final class Collections2 {
       j = Integer.MAX_VALUE;
     }
 
-    @Override protected List<E> computeNext() {
+    @Override
+    protected List<E> computeNext() {
       if (j <= 0) {
         return endOfData();
       }

@@ -45,26 +45,29 @@ class RegularImmutableList<E> extends ImmutableList<E> {
     this(array, 0, array.length);
   }
 
-  @Override
   public int size() {
     return size;
   }
 
-  @Override public boolean isEmpty() {
+  @Override
+  public boolean isEmpty() {
     return false;
   }
 
-  @Override boolean isPartialView() {
+  @Override
+  boolean isPartialView() {
     return offset != 0 || size != array.length;
   }
 
-  @Override public Object[] toArray() {
+  @Override
+  public Object[] toArray() {
     Object[] newArray = new Object[size()];
     System.arraycopy(array, offset, newArray, 0, size);
     return newArray;
   }
 
-  @Override public <T> T[] toArray(T[] other) {
+  @Override
+  public <T> T[] toArray(T[] other) {
     if (other.length < size) {
       other = ObjectArrays.newArray(other, size);
     } else if (other.length > size) {
@@ -75,7 +78,6 @@ class RegularImmutableList<E> extends ImmutableList<E> {
   }
 
   // The fake cast to E is safe because the creation methods only allow E's
-  @Override
   @SuppressWarnings("unchecked")
   public E get(int index) {
     Preconditions.checkElementIndex(index, size);
@@ -88,15 +90,16 @@ class RegularImmutableList<E> extends ImmutableList<E> {
         array, offset + fromIndex, toIndex - fromIndex);
   }
 
-  @SuppressWarnings("unchecked")
   @Override
+  @SuppressWarnings("unchecked")
   public UnmodifiableListIterator<E> listIterator(int index) {
     // for performance
     // The fake cast to E is safe because the creation methods only allow E's
     return (UnmodifiableListIterator<E>) Iterators.forArray(array, offset, size, index);
   }
 
-  @Override public boolean equals(@Nullable Object object) {
+  @Override
+  public boolean equals(@Nullable Object object) {
     if (object == this) {
       return true;
     }
@@ -127,7 +130,8 @@ class RegularImmutableList<E> extends ImmutableList<E> {
     return true;
   }
 
-  @Override public String toString() {
+  @Override
+  public String toString() {
     StringBuilder sb = Collections2.newStringBuilderForCollection(size())
         .append('[').append(array[offset]);
     for (int i = offset + 1; i < offset + size; i++) {

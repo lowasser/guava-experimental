@@ -38,17 +38,14 @@ abstract class TransformedIterator<F, T> implements Iterator<T> {
 
   abstract T transform(F from);
 
-  @Override
   public final boolean hasNext() {
     return backingIterator.hasNext();
   }
 
-  @Override
   public final T next() {
     return transform(backingIterator.next());
   }
 
-  @Override
   public final void remove() {
     backingIterator.remove();
   }

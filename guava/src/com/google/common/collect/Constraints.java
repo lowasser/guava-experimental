@@ -45,12 +45,12 @@ public final class Constraints {
   private enum NotNullConstraint implements Constraint<Object> {
     INSTANCE;
 
-    @Override
     public Object checkElement(Object element) {
       return checkNotNull(element);
     }
 
-    @Override public String toString() {
+    @Override
+    public String toString() {
       return "Not null";
     }
   }
@@ -92,14 +92,17 @@ public final class Constraints {
       this.delegate = checkNotNull(delegate);
       this.constraint = checkNotNull(constraint);
     }
-    @Override protected Collection<E> delegate() {
+    @Override
+    protected Collection<E> delegate() {
       return delegate;
     }
-    @Override public boolean add(E element) {
+    @Override
+    public boolean add(E element) {
       constraint.checkElement(element);
       return delegate.add(element);
     }
-    @Override public boolean addAll(Collection<? extends E> elements) {
+    @Override
+    public boolean addAll(Collection<? extends E> elements) {
       return delegate.addAll(checkElements(elements, constraint));
     }
   }
@@ -130,14 +133,17 @@ public final class Constraints {
       this.delegate = checkNotNull(delegate);
       this.constraint = checkNotNull(constraint);
     }
-    @Override protected Set<E> delegate() {
+    @Override
+    protected Set<E> delegate() {
       return delegate;
     }
-    @Override public boolean add(E element) {
+    @Override
+    public boolean add(E element) {
       constraint.checkElement(element);
       return delegate.add(element);
     }
-    @Override public boolean addAll(Collection<? extends E> elements) {
+    @Override
+    public boolean addAll(Collection<? extends E> elements) {
       return delegate.addAll(checkElements(elements, constraint));
     }
   }
@@ -169,24 +175,30 @@ public final class Constraints {
       this.delegate = checkNotNull(delegate);
       this.constraint = checkNotNull(constraint);
     }
-    @Override protected SortedSet<E> delegate() {
+    @Override
+    protected SortedSet<E> delegate() {
       return delegate;
     }
-    @Override public SortedSet<E> headSet(E toElement) {
+    @Override
+    public SortedSet<E> headSet(E toElement) {
       return constrainedSortedSet(delegate.headSet(toElement), constraint);
     }
-    @Override public SortedSet<E> subSet(E fromElement, E toElement) {
+    @Override
+    public SortedSet<E> subSet(E fromElement, E toElement) {
       return constrainedSortedSet(
           delegate.subSet(fromElement, toElement), constraint);
     }
-    @Override public SortedSet<E> tailSet(E fromElement) {
+    @Override
+    public SortedSet<E> tailSet(E fromElement) {
       return constrainedSortedSet(delegate.tailSet(fromElement), constraint);
     }
-    @Override public boolean add(E element) {
+    @Override
+    public boolean add(E element) {
       constraint.checkElement(element);
       return delegate.add(element);
     }
-    @Override public boolean addAll(Collection<? extends E> elements) {
+    @Override
+    public boolean addAll(Collection<? extends E> elements) {
       return delegate.addAll(checkElements(elements, constraint));
     }
   }
@@ -221,36 +233,45 @@ public final class Constraints {
       this.delegate = checkNotNull(delegate);
       this.constraint = checkNotNull(constraint);
     }
-    @Override protected List<E> delegate() {
+    @Override
+    protected List<E> delegate() {
       return delegate;
     }
 
-    @Override public boolean add(E element) {
+    @Override
+    public boolean add(E element) {
       constraint.checkElement(element);
       return delegate.add(element);
     }
-    @Override public void add(int index, E element) {
+    @Override
+    public void add(int index, E element) {
       constraint.checkElement(element);
       delegate.add(index, element);
     }
-    @Override public boolean addAll(Collection<? extends E> elements) {
+    @Override
+    public boolean addAll(Collection<? extends E> elements) {
       return delegate.addAll(checkElements(elements, constraint));
     }
-    @Override public boolean addAll(int index, Collection<? extends E> elements)
+    @Override
+    public boolean addAll(int index, Collection<? extends E> elements)
     {
       return delegate.addAll(index, checkElements(elements, constraint));
     }
-    @Override public ListIterator<E> listIterator() {
+    @Override
+    public ListIterator<E> listIterator() {
       return constrainedListIterator(delegate.listIterator(), constraint);
     }
-    @Override public ListIterator<E> listIterator(int index) {
+    @Override
+    public ListIterator<E> listIterator(int index) {
       return constrainedListIterator(delegate.listIterator(index), constraint);
     }
-    @Override public E set(int index, E element) {
+    @Override
+    public E set(int index, E element) {
       constraint.checkElement(element);
       return delegate.set(index, element);
     }
-    @Override public List<E> subList(int fromIndex, int toIndex) {
+    @Override
+    public List<E> subList(int fromIndex, int toIndex) {
       return constrainedList(
           delegate.subList(fromIndex, toIndex), constraint);
     }
@@ -289,15 +310,18 @@ public final class Constraints {
       this.delegate = delegate;
       this.constraint = constraint;
     }
-    @Override protected ListIterator<E> delegate() {
+    @Override
+    protected ListIterator<E> delegate() {
       return delegate;
     }
 
-    @Override public void add(E element) {
+    @Override
+    public void add(E element) {
       constraint.checkElement(element);
       delegate.add(element);
     }
-    @Override public void set(E element) {
+    @Override
+    public void set(E element) {
       constraint.checkElement(element);
       delegate.set(element);
     }
@@ -343,24 +367,30 @@ public final class Constraints {
       this.delegate = checkNotNull(delegate);
       this.constraint = checkNotNull(constraint);
     }
-    @Override protected Multiset<E> delegate() {
+    @Override
+    protected Multiset<E> delegate() {
       return delegate;
     }
-    @Override public boolean add(E element) {
+    @Override
+    public boolean add(E element) {
       return standardAdd(element);
     }
-    @Override public boolean addAll(Collection<? extends E> elements) {
+    @Override
+    public boolean addAll(Collection<? extends E> elements) {
       return delegate.addAll(checkElements(elements, constraint));
     }
-    @Override public int add(E element, int occurrences) {
+    @Override
+    public int add(E element, int occurrences) {
       constraint.checkElement(element);
       return delegate.add(element, occurrences);
     }
-    @Override public int setCount(E element, int count) {
+    @Override
+    public int setCount(E element, int count) {
       constraint.checkElement(element);
       return delegate.setCount(element, count);
     }
-    @Override public boolean setCount(E element, int oldCount, int newCount) {
+    @Override
+    public boolean setCount(E element, int oldCount, int newCount) {
       constraint.checkElement(element);
       return delegate.setCount(element, oldCount, newCount);
     }

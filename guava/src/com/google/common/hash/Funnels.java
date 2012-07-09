@@ -40,7 +40,8 @@ public final class Funnels {
       into.putBytes(from);
     }
 
-    @Override public String toString() {
+    @Override
+    public String toString() {
       return "Funnels.byteArrayFunnel()";
     }
   }
@@ -59,7 +60,8 @@ public final class Funnels {
       into.putString(from);
     }
 
-    @Override public String toString() {
+    @Override
+    public String toString() {
       return "Funnels.stringFunnel()";
     }
   }

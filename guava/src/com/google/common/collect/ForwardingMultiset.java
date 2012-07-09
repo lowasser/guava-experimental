@@ -55,47 +55,43 @@ public abstract class ForwardingMultiset<E> extends ForwardingCollection<E>
   /** Constructor for use by subclasses. */
   protected ForwardingMultiset() {}
 
-  @Override protected abstract Multiset<E> delegate();
-
   @Override
+  protected abstract Multiset<E> delegate();
+
   public int count(Object element) {
     return delegate().count(element);
   }
 
-  @Override
   public int add(E element, int occurrences) {
     return delegate().add(element, occurrences);
   }
 
-  @Override
   public int remove(Object element, int occurrences) {
     return delegate().remove(element, occurrences);
   }
 
-  @Override
   public Set<E> elementSet() {
     return delegate().elementSet();
   }
 
-  @Override
   public Set<Entry<E>> entrySet() {
     return delegate().entrySet();
   }
 
-  @Override public boolean equals(@Nullable Object object) {
+  @Override
+  public boolean equals(@Nullable Object object) {
     return object == this || delegate().equals(object);
   }
 
-  @Override public int hashCode() {
+  @Override
+  public int hashCode() {
     return delegate().hashCode();
   }
 
-  @Override
   public int setCount(E element, int count) {
     return delegate().setCount(element, count);
   }
 
-  @Override
   public boolean setCount(E element, int oldCount, int newCount) {
     return delegate().setCount(element, oldCount, newCount);
   }
@@ -107,7 +103,8 @@ public abstract class ForwardingMultiset<E> extends ForwardingCollection<E>
    * 
    * @since 7.0
    */
-  @Override @Beta protected boolean standardContains(@Nullable Object object) {
+  @Override
+  @Beta protected boolean standardContains(@Nullable Object object) {
     return count(object) > 0;
   }
 
@@ -118,7 +115,8 @@ public abstract class ForwardingMultiset<E> extends ForwardingCollection<E>
    *
    * @since 7.0
    */
-  @Override @Beta protected void standardClear() {
+  @Override
+  @Beta protected void standardClear() {
     Iterator<Entry<E>> entryIterator = entrySet().iterator();
     while (entryIterator.hasNext()) {
       entryIterator.next();
@@ -162,7 +160,8 @@ public abstract class ForwardingMultiset<E> extends ForwardingCollection<E>
    * 
    * @since 7.0
    */
-  @Beta @Override protected boolean standardAddAll(
+  @Override
+  @Beta protected boolean standardAddAll(
       Collection<? extends E> elementsToAdd) {
     return Multisets.addAllImpl(this, elementsToAdd);
   }
@@ -175,7 +174,8 @@ public abstract class ForwardingMultiset<E> extends ForwardingCollection<E>
    * 
    * @since 7.0
    */
-  @Beta @Override protected boolean standardRemove(Object element) {
+  @Override
+  @Beta protected boolean standardRemove(Object element) {
     return remove(element, 1) > 0;
   }
 
@@ -187,7 +187,8 @@ public abstract class ForwardingMultiset<E> extends ForwardingCollection<E>
    *
    * @since 7.0
    */
-  @Beta @Override protected boolean standardRemoveAll(
+  @Override
+  @Beta protected boolean standardRemoveAll(
       Collection<?> elementsToRemove) {
     return Multisets.removeAllImpl(this, elementsToRemove);
   }
@@ -200,7 +201,8 @@ public abstract class ForwardingMultiset<E> extends ForwardingCollection<E>
    *
    * @since 7.0
    */
-  @Beta @Override protected boolean standardRetainAll(
+  @Override
+  @Beta protected boolean standardRetainAll(
       Collection<?> elementsToRetain) {
     return Multisets.retainAllImpl(this, elementsToRetain);
   }
@@ -307,7 +309,8 @@ public abstract class ForwardingMultiset<E> extends ForwardingCollection<E>
    *
    * @since 7.0
    */
-  @Beta @Override protected String standardToString() {
+  @Override
+  @Beta protected String standardToString() {
     return entrySet().toString();
   }
 }

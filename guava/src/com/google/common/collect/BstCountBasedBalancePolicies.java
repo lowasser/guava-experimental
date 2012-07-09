@@ -47,14 +47,12 @@ final class BstCountBasedBalancePolicies {
       final BstAggregate<N> countAggregate) {
     checkNotNull(countAggregate);
     return new BstBalancePolicy<N>() {
-      @Override
       public N balance(
           BstNodeFactory<N> nodeFactory, N source, @Nullable N left, @Nullable N right) {
         return checkNotNull(nodeFactory).createNode(source, left, right);
       }
 
       @Nullable
-      @Override
       public N combine(BstNodeFactory<N> nodeFactory, @Nullable N left, @Nullable N right) {
         if (left == null) {
           return right;
@@ -80,7 +78,6 @@ final class BstCountBasedBalancePolicies {
       final BstAggregate<N> countAggregate) {
     checkNotNull(countAggregate);
     return new BstBalancePolicy<N>() {
-      @Override
       public N balance(
           BstNodeFactory<N> nodeFactory, N source, @Nullable N left, @Nullable N right) {
         long countL = countAggregate.treeValue(left);
@@ -129,7 +126,6 @@ final class BstCountBasedBalancePolicies {
       }
 
       @Nullable
-      @Override
       public N combine(BstNodeFactory<N> nodeFactory, @Nullable N left, @Nullable N right) {
         if (left == null) {
           return right;
@@ -162,7 +158,6 @@ final class BstCountBasedBalancePolicies {
     final BstBalancePolicy<N> singleBalancePolicy =
         BstCountBasedBalancePolicies.<K, N>singleRebalancePolicy(countAggregate);
     return new BstBalancePolicy<N>() {
-      @Override
       public N balance(
           BstNodeFactory<N> nodeFactory, N source, @Nullable N left, @Nullable N right) {
         if (left == null) {
@@ -186,7 +181,6 @@ final class BstCountBasedBalancePolicies {
       }
 
       @Nullable
-      @Override
       public N combine(BstNodeFactory<N> nodeFactory, @Nullable N left, @Nullable N right) {
         if (left == null) {
           return right;

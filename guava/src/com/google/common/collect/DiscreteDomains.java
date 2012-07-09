@@ -48,25 +48,30 @@ public final class DiscreteDomains {
       implements Serializable {
     private static final IntegerDomain INSTANCE = new IntegerDomain();
 
-    @Override public Integer next(Integer value) {
+    @Override
+    public Integer next(Integer value) {
       int i = value;
       return (i == Integer.MAX_VALUE) ? null : i + 1;
     }
 
-    @Override public Integer previous(Integer value) {
+    @Override
+    public Integer previous(Integer value) {
       int i = value;
       return (i == Integer.MIN_VALUE) ? null : i - 1;
     }
 
-    @Override public long distance(Integer start, Integer end) {
+    @Override
+    public long distance(Integer start, Integer end) {
       return (long) end - start;
     }
 
-    @Override public Integer minValue() {
+    @Override
+    public Integer minValue() {
       return Integer.MIN_VALUE;
     }
 
-    @Override public Integer maxValue() {
+    @Override
+    public Integer maxValue() {
       return Integer.MAX_VALUE;
     }
 
@@ -88,17 +93,20 @@ public final class DiscreteDomains {
       implements Serializable {
     private static final LongDomain INSTANCE = new LongDomain();
 
-    @Override public Long next(Long value) {
+    @Override
+    public Long next(Long value) {
       long l = value;
       return (l == Long.MAX_VALUE) ? null : l + 1;
     }
 
-    @Override public Long previous(Long value) {
+    @Override
+    public Long previous(Long value) {
       long l = value;
       return (l == Long.MIN_VALUE) ? null : l - 1;
     }
 
-    @Override public long distance(Long start, Long end) {
+    @Override
+    public long distance(Long start, Long end) {
       long result = end - start;
       if (end > start && result < 0) { // overflow
         return Long.MAX_VALUE;
@@ -109,11 +117,13 @@ public final class DiscreteDomains {
       return result;
     }
 
-    @Override public Long minValue() {
+    @Override
+    public Long minValue() {
       return Long.MIN_VALUE;
     }
 
-    @Override public Long maxValue() {
+    @Override
+    public Long maxValue() {
       return Long.MAX_VALUE;
     }
 
@@ -141,15 +151,18 @@ public final class DiscreteDomains {
     private static final BigInteger MAX_LONG =
         BigInteger.valueOf(Long.MAX_VALUE);
 
-    @Override public BigInteger next(BigInteger value) {
+    @Override
+    public BigInteger next(BigInteger value) {
       return value.add(BigInteger.ONE);
     }
 
-    @Override public BigInteger previous(BigInteger value) {
+    @Override
+    public BigInteger previous(BigInteger value) {
       return value.subtract(BigInteger.ONE);
     }
 
-    @Override public long distance(BigInteger start, BigInteger end) {
+    @Override
+    public long distance(BigInteger start, BigInteger end) {
       return start.subtract(end).max(MIN_LONG).min(MAX_LONG).longValue();
     }
 

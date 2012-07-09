@@ -325,7 +325,6 @@ public abstract class ImmutableSortedMultiset<E> extends ImmutableSortedMultiset
     this.comparator = checkNotNull(comparator);
   }
 
-  @Override
   public Comparator<? super E> comparator() {
     return comparator;
   }
@@ -350,7 +349,6 @@ public abstract class ImmutableSortedMultiset<E> extends ImmutableSortedMultiset
 
   private transient ImmutableSortedSet<E> elementSet;
 
-  @Override
   public ImmutableSortedSet<E> elementSet() {
     ImmutableSortedSet<E> result = elementSet;
     if (result == null) {
@@ -365,7 +363,6 @@ public abstract class ImmutableSortedMultiset<E> extends ImmutableSortedMultiset
 
   transient ImmutableSortedMultiset<E> descendingMultiset;
 
-  @Override
   public ImmutableSortedMultiset<E> descendingMultiset() {
     ImmutableSortedMultiset<E> result = descendingMultiset;
     if (result == null) {
@@ -381,7 +378,6 @@ public abstract class ImmutableSortedMultiset<E> extends ImmutableSortedMultiset
    *
    * @throws UnsupportedOperationException always
    */
-  @Override
   public final Entry<E> pollFirstEntry() {
     throw new UnsupportedOperationException();
   }
@@ -393,21 +389,17 @@ public abstract class ImmutableSortedMultiset<E> extends ImmutableSortedMultiset
    *
    * @throws UnsupportedOperationException always
    */
-  @Override
   public Entry<E> pollLastEntry() {
     throw new UnsupportedOperationException();
   }
 
-  @Override
   public abstract ImmutableSortedMultiset<E> headMultiset(E upperBound, BoundType boundType);
 
-  @Override
   public ImmutableSortedMultiset<E> subMultiset(
       E lowerBound, BoundType lowerBoundType, E upperBound, BoundType upperBoundType) {
     return tailMultiset(lowerBound, lowerBoundType).headMultiset(upperBound, upperBoundType);
   }
 
-  @Override
   public abstract ImmutableSortedMultiset<E> tailMultiset(E lowerBound, BoundType boundType);
 
   /**

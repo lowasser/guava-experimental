@@ -129,7 +129,6 @@ public interface LoadingCache<K, V> extends Cache<K, V>, Function<K, V> {
    *     regardless of whether the exception was checked or unchecked
    * @throws ExecutionError if an error was thrown while loading the value
    */
-  @Override
   V apply(K key);
 
   /**
@@ -156,6 +155,5 @@ public interface LoadingCache<K, V> extends Cache<K, V>, Function<K, V> {
    * <p><b>Note that although the view <i>is</i> modifiable, no method on the returned map will ever
    * cause entries to be automatically loaded.</b>
    */
-  @Override
   ConcurrentMap<K, V> asMap();
 }

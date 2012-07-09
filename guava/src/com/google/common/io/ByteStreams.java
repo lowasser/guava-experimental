@@ -77,7 +77,6 @@ public final class ByteStreams {
   public static InputSupplier<ByteArrayInputStream> newInputStreamSupplier(
       final byte[] b, final int off, final int len) {
     return new InputSupplier<ByteArrayInputStream>() {
-      @Override
       public ByteArrayInputStream getInput() {
         return new ByteArrayInputStream(b, off, len);
       }
@@ -291,7 +290,7 @@ public final class ByteStreams {
           new ByteArrayInputStream(bytes, start, bytes.length - start));
     }
 
-    @Override public void readFully(byte b[]) {
+    public void readFully(byte b[]) {
       try {
         input.readFully(b);
       } catch (IOException e) {
@@ -299,7 +298,7 @@ public final class ByteStreams {
       }
     }
 
-    @Override public void readFully(byte b[], int off, int len) {
+    public void readFully(byte b[], int off, int len) {
       try {
         input.readFully(b, off, len);
       } catch (IOException e) {
@@ -307,7 +306,7 @@ public final class ByteStreams {
       }
     }
 
-    @Override public int skipBytes(int n) {
+    public int skipBytes(int n) {
       try {
         return input.skipBytes(n);
       } catch (IOException e) {
@@ -315,7 +314,7 @@ public final class ByteStreams {
       }
     }
 
-    @Override public boolean readBoolean() {
+    public boolean readBoolean() {
       try {
         return input.readBoolean();
       } catch (IOException e) {
@@ -323,7 +322,7 @@ public final class ByteStreams {
       }
     }
 
-    @Override public byte readByte() {
+    public byte readByte() {
       try {
         return input.readByte();
       } catch (EOFException e) {
@@ -333,7 +332,7 @@ public final class ByteStreams {
       }
     }
 
-    @Override public int readUnsignedByte() {
+    public int readUnsignedByte() {
       try {
         return input.readUnsignedByte();
       } catch (IOException e) {
@@ -341,7 +340,7 @@ public final class ByteStreams {
       }
     }
 
-    @Override public short readShort() {
+    public short readShort() {
       try {
         return input.readShort();
       } catch (IOException e) {
@@ -349,7 +348,7 @@ public final class ByteStreams {
       }
     }
 
-    @Override public int readUnsignedShort() {
+    public int readUnsignedShort() {
       try {
         return input.readUnsignedShort();
       } catch (IOException e) {
@@ -357,7 +356,7 @@ public final class ByteStreams {
       }
     }
 
-    @Override public char readChar() {
+    public char readChar() {
       try {
         return input.readChar();
       } catch (IOException e) {
@@ -365,7 +364,7 @@ public final class ByteStreams {
       }
     }
 
-    @Override public int readInt() {
+    public int readInt() {
       try {
         return input.readInt();
       } catch (IOException e) {
@@ -373,7 +372,7 @@ public final class ByteStreams {
       }
     }
 
-    @Override public long readLong() {
+    public long readLong() {
       try {
         return input.readLong();
       } catch (IOException e) {
@@ -381,7 +380,7 @@ public final class ByteStreams {
       }
     }
 
-    @Override public float readFloat() {
+    public float readFloat() {
       try {
         return input.readFloat();
       } catch (IOException e) {
@@ -389,7 +388,7 @@ public final class ByteStreams {
       }
     }
 
-    @Override public double readDouble() {
+    public double readDouble() {
       try {
         return input.readDouble();
       } catch (IOException e) {
@@ -397,7 +396,7 @@ public final class ByteStreams {
       }
     }
 
-    @Override public String readLine() {
+    public String readLine() {
       try {
         return input.readLine();
       } catch (IOException e) {
@@ -405,7 +404,7 @@ public final class ByteStreams {
       }
     }
 
-    @Override public String readUTF() {
+    public String readUTF() {
       try {
         return input.readUTF();
       } catch (IOException e) {
@@ -452,7 +451,7 @@ public final class ByteStreams {
       output = new DataOutputStream(byteArrayOutputSteam);
     }
 
-    @Override public void write(int b) {
+    public void write(int b) {
       try {
         output.write(b);
       } catch (IOException impossible) {
@@ -460,7 +459,7 @@ public final class ByteStreams {
       }
     }
 
-    @Override public void write(byte[] b) {
+    public void write(byte[] b) {
       try {
         output.write(b);
       } catch (IOException impossible) {
@@ -468,7 +467,7 @@ public final class ByteStreams {
       }
     }
 
-    @Override public void write(byte[] b, int off, int len) {
+    public void write(byte[] b, int off, int len) {
       try {
         output.write(b, off, len);
       } catch (IOException impossible) {
@@ -476,7 +475,7 @@ public final class ByteStreams {
       }
     }
 
-    @Override public void writeBoolean(boolean v) {
+    public void writeBoolean(boolean v) {
       try {
         output.writeBoolean(v);
       } catch (IOException impossible) {
@@ -484,7 +483,7 @@ public final class ByteStreams {
       }
     }
 
-    @Override public void writeByte(int v) {
+    public void writeByte(int v) {
       try {
         output.writeByte(v);
       } catch (IOException impossible) {
@@ -492,7 +491,7 @@ public final class ByteStreams {
       }
     }
 
-    @Override public void writeBytes(String s) {
+    public void writeBytes(String s) {
       try {
         output.writeBytes(s);
       } catch (IOException impossible) {
@@ -500,7 +499,7 @@ public final class ByteStreams {
       }
     }
 
-    @Override public void writeChar(int v) {
+    public void writeChar(int v) {
       try {
         output.writeChar(v);
       } catch (IOException impossible) {
@@ -508,7 +507,7 @@ public final class ByteStreams {
       }
     }
 
-    @Override public void writeChars(String s) {
+    public void writeChars(String s) {
       try {
         output.writeChars(s);
       } catch (IOException impossible) {
@@ -516,7 +515,7 @@ public final class ByteStreams {
       }
     }
 
-    @Override public void writeDouble(double v) {
+    public void writeDouble(double v) {
       try {
         output.writeDouble(v);
       } catch (IOException impossible) {
@@ -524,7 +523,7 @@ public final class ByteStreams {
       }
     }
 
-    @Override public void writeFloat(float v) {
+    public void writeFloat(float v) {
       try {
         output.writeFloat(v);
       } catch (IOException impossible) {
@@ -532,7 +531,7 @@ public final class ByteStreams {
       }
     }
 
-    @Override public void writeInt(int v) {
+    public void writeInt(int v) {
       try {
         output.writeInt(v);
       } catch (IOException impossible) {
@@ -540,7 +539,7 @@ public final class ByteStreams {
       }
     }
 
-    @Override public void writeLong(long v) {
+    public void writeLong(long v) {
       try {
         output.writeLong(v);
       } catch (IOException impossible) {
@@ -548,7 +547,7 @@ public final class ByteStreams {
       }
     }
 
-    @Override public void writeShort(int v) {
+    public void writeShort(int v) {
       try {
         output.writeShort(v);
       } catch (IOException impossible) {
@@ -556,7 +555,7 @@ public final class ByteStreams {
       }
     }
 
-    @Override public void writeUTF(String s) {
+    public void writeUTF(String s) {
       try {
         output.writeUTF(s);
       } catch (IOException impossible) {
@@ -564,7 +563,7 @@ public final class ByteStreams {
       }
     }
 
-    @Override public byte[] toByteArray() {
+    public byte[] toByteArray() {
       return byteArrayOutputSteam.toByteArray();
     }
 
@@ -734,13 +733,11 @@ public final class ByteStreams {
   public static long getChecksum(InputSupplier<? extends InputStream> supplier,
       final Checksum checksum) throws IOException {
     return readBytes(supplier, new ByteProcessor<Long>() {
-      @Override
       public boolean processBytes(byte[] buf, int off, int len) {
         checksum.update(buf, off, len);
         return true;
       }
 
-      @Override
       public Long getResult() {
         long result = checksum.getValue();
         checksum.reset();
@@ -766,13 +763,11 @@ public final class ByteStreams {
   public static byte[] getDigest(InputSupplier<? extends InputStream> supplier,
       final MessageDigest md) throws IOException {
     return readBytes(supplier, new ByteProcessor<byte[]>() {
-      @Override
       public boolean processBytes(byte[] buf, int off, int len) {
         md.update(buf, off, len);
         return true;
       }
 
-      @Override
       public byte[] getResult() {
         return md.digest();
       }
@@ -794,13 +789,11 @@ public final class ByteStreams {
       throws IOException {
     final Hasher hasher = hashFunction.newHasher();
     return readBytes(supplier, new ByteProcessor<HashCode>() {
-      @Override
       public boolean processBytes(byte[] buf, int off, int len) {
         hasher.putBytes(buf, off, len);
         return true;
       }
 
-      @Override
       public HashCode getResult() {
         return hasher.hash();
       }
@@ -866,7 +859,7 @@ public final class ByteStreams {
     Preconditions.checkArgument(offset >= 0, "offset is negative");
     Preconditions.checkArgument(length >= 0, "length is negative");
     return new InputSupplier<InputStream>() {
-      @Override public InputStream getInput() throws IOException {
+      public InputStream getInput() throws IOException {
         InputStream in = supplier.getInput();
         if (offset > 0) {
           try {
@@ -899,7 +892,7 @@ public final class ByteStreams {
   public static InputSupplier<InputStream> join(
       final Iterable<? extends InputSupplier<? extends InputStream>> suppliers) {
     return new InputSupplier<InputStream>() {
-      @Override public InputStream getInput() throws IOException {
+      public InputStream getInput() throws IOException {
         return new MultiInputStream(suppliers.iterator());
       }
     };

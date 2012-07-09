@@ -39,36 +39,37 @@ public abstract class ForwardingBlockingQueue<E> extends ForwardingQueue<E>
   /** Constructor for use by subclasses. */
   protected ForwardingBlockingQueue() {}
 
-  @Override protected abstract BlockingQueue<E> delegate();
+  @Override
+  protected abstract BlockingQueue<E> delegate();
 
-  @Override public int drainTo(
+  public int drainTo(
       Collection<? super E> c, int maxElements) {
     return delegate().drainTo(c, maxElements);
   }
 
-  @Override public int drainTo(Collection<? super E> c) {
+  public int drainTo(Collection<? super E> c) {
     return delegate().drainTo(c);
   }
 
-  @Override public boolean offer(E e, long timeout, TimeUnit unit)
+  public boolean offer(E e, long timeout, TimeUnit unit)
       throws InterruptedException {
     return delegate().offer(e, timeout, unit);
   }
 
-  @Override public E poll(long timeout, TimeUnit unit)
+  public E poll(long timeout, TimeUnit unit)
       throws InterruptedException {
     return delegate().poll(timeout, unit);
   }
 
-  @Override public void put(E e) throws InterruptedException {
+  public void put(E e) throws InterruptedException {
     delegate().put(e);
   }
 
-  @Override public int remainingCapacity() {
+  public int remainingCapacity() {
     return delegate().remainingCapacity();
   }
 
-  @Override public E take() throws InterruptedException {
+  public E take() throws InterruptedException {
     return delegate().take();
   }
 }

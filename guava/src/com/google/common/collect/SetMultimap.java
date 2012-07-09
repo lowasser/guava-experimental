@@ -49,7 +49,6 @@ public interface SetMultimap<K, V> extends Multimap<K, V> {
    * method returns a {@link Set}, instead of the {@link java.util.Collection}
    * specified in the {@link Multimap} interface.
    */
-  @Override
   Set<V> get(@Nullable K key);
 
   /**
@@ -59,7 +58,6 @@ public interface SetMultimap<K, V> extends Multimap<K, V> {
    * method returns a {@link Set}, instead of the {@link java.util.Collection}
    * specified in the {@link Multimap} interface.
    */
-  @Override
   Set<V> removeAll(@Nullable Object key);
 
   /**
@@ -71,7 +69,6 @@ public interface SetMultimap<K, V> extends Multimap<K, V> {
    *
    * <p>Any duplicates in {@code values} will be stored in the multimap once.
    */
-  @Override
   Set<V> replaceValues(K key, Iterable<? extends V> values);
 
   /**
@@ -81,7 +78,6 @@ public interface SetMultimap<K, V> extends Multimap<K, V> {
    * method returns a {@link Set}, instead of the {@link java.util.Collection}
    * specified in the {@link Multimap} interface.
    */
-  @Override
   Set<Map.Entry<K, V>> entries();
 
   /**
@@ -90,7 +86,6 @@ public interface SetMultimap<K, V> extends Multimap<K, V> {
    * <p>Though the method signature doesn't say so explicitly, the returned map
    * has {@link Set} values.
    */
-  @Override
   Map<K, Collection<V>> asMap();
 
   /**
@@ -103,6 +98,5 @@ public interface SetMultimap<K, V> extends Multimap<K, V> {
    * <p>An empty {@code SetMultimap} is equal to any other empty {@code
    * Multimap}, including an empty {@code ListMultimap}.
    */
-  @Override
   boolean equals(@Nullable Object obj);
 }

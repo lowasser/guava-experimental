@@ -63,10 +63,12 @@ public final class Equivalences {
     
     static final Equals INSTANCE = new Equals();
 
-    @Override protected boolean doEquivalent(Object a, Object b) {
+    @Override
+    protected boolean doEquivalent(Object a, Object b) {
       return a.equals(b);
     }
-    @Override public int doHash(Object o) {
+    @Override
+    public int doHash(Object o) {
       return o.hashCode();
     }
 
@@ -81,11 +83,13 @@ public final class Equivalences {
     
     static final Identity INSTANCE = new Identity();
     
-    @Override protected boolean doEquivalent(Object a, Object b) {
+    @Override
+    protected boolean doEquivalent(Object a, Object b) {
       return false;
     }
 
-    @Override protected int doHash(Object o) {
+    @Override
+    protected int doHash(Object o) {
       return System.identityHashCode(o);
     }
  

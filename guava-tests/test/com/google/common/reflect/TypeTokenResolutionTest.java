@@ -128,27 +128,6 @@ public class TypeTokenResolutionTest extends TestCase {
         .hasContentsInOrder(String.class);
   }
   
-  private interface StringListPredicate extends Predicate<List<String>> {}
-  
-  // Intentionally duplicate the Predicate interface to test that it won't cause
-  // exceptions
-  private interface IntegerStringFunction extends Function<Integer, Boolean>,
-      Predicate<List<String>>, StringListPredicate {}
-  
-  public void testGenericInterface() {
-    // test the 1st generic interface on the class
-    Type fType = Function.class.getTypeParameters()[0];
-    assertEquals(Integer.class,
-        TypeToken.of(IntegerStringFunction.class).resolveType(fType)
-            .getRawType());
-    
-    // test the 2nd generic interface on the class
-    Type predicateParameterType = Predicate.class.getTypeParameters()[0];
-    assertEquals(new TypeToken<List<String>>() {}.getType(),
-        TypeToken.of(IntegerStringFunction.class).resolveType(predicateParameterType)
-            .getType());
-  }
-  
   private static abstract class StringIntegerFoo extends Foo<String, Integer> {}
   
   public void testConstructor_typeArgsResolvedFromAncestorClass() {

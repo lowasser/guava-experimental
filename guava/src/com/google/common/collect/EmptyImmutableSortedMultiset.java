@@ -31,22 +31,18 @@ final class EmptyImmutableSortedMultiset<E> extends ImmutableSortedMultiset<E> {
     super(comparator);
   }
 
-  @Override
   public Entry<E> firstEntry() {
     return null;
   }
 
-  @Override
   public Entry<E> lastEntry() {
     return null;
   }
 
-  @Override
   public int count(@Nullable Object element) {
     return 0;
   }
 
-  @Override
   public int size() {
     return 0;
   }

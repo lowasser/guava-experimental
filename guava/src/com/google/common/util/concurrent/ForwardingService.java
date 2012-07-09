@@ -32,29 +32,30 @@ public abstract class ForwardingService extends ForwardingObject
   /** Constructor for use by subclasses. */
   protected ForwardingService() {}
 
-  @Override protected abstract Service delegate();
+  @Override
+  protected abstract Service delegate();
 
-  @Override public ListenableFuture<State> start() {
+  public ListenableFuture<State> start() {
     return delegate().start();
   }
 
-  @Override public State state() {
+  public State state() {
     return delegate().state();
   }
 
-  @Override public ListenableFuture<State> stop() {
+  public ListenableFuture<State> stop() {
     return delegate().stop();
   }
 
-  @Override public State startAndWait() {
+  public State startAndWait() {
     return delegate().startAndWait();
   }
 
-  @Override public State stopAndWait() {
+  public State stopAndWait() {
     return delegate().stopAndWait();
   }
 
-  @Override public boolean isRunning() {
+  public boolean isRunning() {
     return delegate().isRunning();
   }
 

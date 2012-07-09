@@ -45,12 +45,10 @@ final class RegularImmutableSortedMultiset<E> extends ImmutableSortedMultiset<E>
       this.cumulativeCount = count + ((previous == null) ? 0 : previous.cumulativeCount);
     }
 
-    @Override
     public E getElement() {
       return element;
     }
 
-    @Override
     public int getCount() {
       return count;
     }
@@ -98,7 +96,6 @@ final class RegularImmutableSortedMultiset<E> extends ImmutableSortedMultiset<E>
   @Override
   ImmutableSet<Entry<E>> createEntrySet() {
     return new EntrySet() {
-      @Override
       public int size() {
         return entries.size();
       }
@@ -108,8 +105,8 @@ final class RegularImmutableSortedMultiset<E> extends ImmutableSortedMultiset<E>
         return asList().iterator();
       }
 
-      @SuppressWarnings("unchecked") // upcasting entries is totally safe
       @Override
+      @SuppressWarnings("unchecked") // upcasting entries is totally safe
       ImmutableList<Entry<E>> createAsList() {
         // TODO(user): make this delegate contains() calls to entries
         return (ImmutableList) entries;
@@ -117,17 +114,14 @@ final class RegularImmutableSortedMultiset<E> extends ImmutableSortedMultiset<E>
     };
   }
 
-  @Override
   public CumulativeCountEntry<E> firstEntry() {
     return entries.get(0);
   }
 
-  @Override
   public CumulativeCountEntry<E> lastEntry() {
     return entries.get(entries.size() - 1);
   }
 
-  @Override
   public int size() {
     CumulativeCountEntry<E> firstEntry = firstEntry();
     CumulativeCountEntry<E> lastEntry = lastEntry();
@@ -141,7 +135,6 @@ final class RegularImmutableSortedMultiset<E> extends ImmutableSortedMultiset<E>
   }
 
   @SuppressWarnings("unchecked")
-  @Override
   public int count(@Nullable Object element) {
     if (element == null) {
       return 0;

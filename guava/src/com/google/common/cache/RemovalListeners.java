@@ -42,10 +42,8 @@ public final class RemovalListeners {
   public static <K, V> RemovalListener<K, V> asynchronous(
       final RemovalListener<K, V> listener, final Executor executor) {
     return new RemovalListener<K, V>() {
-      @Override
       public void onRemoval(final RemovalNotification<K, V> notification) {
         executor.execute(new Runnable() {
-          @Override
           public void run() {
             listener.onRemoval(notification);
           }

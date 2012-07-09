@@ -300,7 +300,6 @@ public final class Hashing {
       return HashCodes.fromBytesNoCopy(bytes);
     }
 
-    @Override
     public int bits() {
       return bits;
     }

@@ -155,7 +155,7 @@ public final class ThreadFactoryBuilder {
         : Executors.defaultThreadFactory();
     final AtomicLong count = (nameFormat != null) ? new AtomicLong(0) : null;
     return new ThreadFactory() {
-      @Override public Thread newThread(Runnable runnable) {
+      public Thread newThread(Runnable runnable) {
         Thread thread = backingThreadFactory.newThread(runnable);
         if (nameFormat != null) {
           thread.setName(String.format(nameFormat, count.getAndIncrement()));

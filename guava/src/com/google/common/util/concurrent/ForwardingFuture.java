@@ -41,29 +41,25 @@ public abstract class ForwardingFuture<V> extends ForwardingObject
   /** Constructor for use by subclasses. */
   protected ForwardingFuture() {}
 
-  @Override protected abstract Future<V> delegate();
-
   @Override
+  protected abstract Future<V> delegate();
+
   public boolean cancel(boolean mayInterruptIfRunning) {
     return delegate().cancel(mayInterruptIfRunning);
   }
 
-  @Override
   public boolean isCancelled() {
     return delegate().isCancelled();
   }
 
-  @Override
   public boolean isDone() {
     return delegate().isDone();
   }
 
-  @Override
   public V get() throws InterruptedException, ExecutionException {
     return delegate().get();
   }
 
-  @Override
   public V get(long timeout, TimeUnit unit)
       throws InterruptedException, ExecutionException, TimeoutException {
     return delegate().get(timeout, unit);

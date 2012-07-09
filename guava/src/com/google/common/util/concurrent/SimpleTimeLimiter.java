@@ -80,7 +80,6 @@ public final class SimpleTimeLimiter implements TimeLimiter {
     this(Executors.newCachedThreadPool());
   }
 
-  @Override
   public <T> T newProxy(final T target, Class<T> interfaceType,
       final long timeoutDuration, final TimeUnit timeoutUnit) {
     checkNotNull(target);
@@ -94,11 +93,9 @@ public final class SimpleTimeLimiter implements TimeLimiter {
         = findInterruptibleMethods(interfaceType);
 
     InvocationHandler handler = new InvocationHandler() {
-      @Override
       public Object invoke(Object obj, final Method method, final Object[] args)
           throws Throwable {
         Callable<Object> callable = new Callable<Object>() {
-          @Override
           public Object call() throws Exception {
             try {
               return method.invoke(target, args);
@@ -116,7 +113,6 @@ public final class SimpleTimeLimiter implements TimeLimiter {
   }
 
   // TODO: should this actually throw only ExecutionException?
-  @Override
   public <T> T callWithTimeout(Callable<T> callable, long timeoutDuration,
       TimeUnit timeoutUnit, boolean amInterruptible) throws Exception {
     checkNotNull(callable);

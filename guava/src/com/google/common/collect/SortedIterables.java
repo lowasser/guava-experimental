@@ -140,7 +140,6 @@ final class SortedIterables {
       List<Multiset.Entry<E>> entries = Lists.newArrayList(multiset.entrySet());
       Collections.sort(
           entries, Ordering.from(comparator).onResultOf(new Function<Multiset.Entry<E>, E>() {
-            @Override
             public E apply(Entry<E> entry) {
               return entry.getElement();
             }
@@ -186,7 +185,6 @@ final class SortedIterables {
 
   static <E> Collection<Multiset.Entry<E>> singletonEntries(Collection<E> set) {
     return Collections2.transform(set, new Function<E, Multiset.Entry<E>>() {
-      @Override
       public Entry<E> apply(E elem) {
         return Multisets.immutableEntry(elem, 1);
       }

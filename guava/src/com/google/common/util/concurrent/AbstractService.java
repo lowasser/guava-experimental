@@ -81,7 +81,6 @@ public abstract class AbstractService implements Service {
    */
   protected abstract void doStop();
 
-  @Override
   public final ListenableFuture<State> start() {
     lock.lock();
     try {
@@ -99,7 +98,6 @@ public abstract class AbstractService implements Service {
     return startup;
   }
 
-  @Override
   public final ListenableFuture<State> stop() {
     lock.lock();
     try {
@@ -124,12 +122,10 @@ public abstract class AbstractService implements Service {
     return shutdown;
   }
 
-  @Override
   public State startAndWait() {
     return Futures.getUnchecked(start());
   }
 
-  @Override
   public State stopAndWait() {
     return Futures.getUnchecked(stop());
   }
@@ -216,12 +212,10 @@ public abstract class AbstractService implements Service {
     }
   }
 
-  @Override
   public final boolean isRunning() {
     return state() == State.RUNNING;
   }
 
-  @Override
   public final State state() {
     lock.lock();
     try {
@@ -235,7 +229,8 @@ public abstract class AbstractService implements Service {
     }
   }
 
-  @Override public String toString() {
+  @Override
+  public String toString() {
     return getClass().getSimpleName() + " [" + state() + "]";
   }
 

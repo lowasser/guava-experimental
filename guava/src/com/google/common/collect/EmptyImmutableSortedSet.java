@@ -37,45 +37,52 @@ class EmptyImmutableSortedSet<E> extends ImmutableSortedSet<E> {
     super(comparator);
   }
 
-  @Override
   public int size() {
     return 0;
   }
 
-  @Override public boolean isEmpty() {
+  @Override
+  public boolean isEmpty() {
     return true;
   }
 
-  @Override public boolean contains(Object target) {
+  @Override
+  public boolean contains(Object target) {
     return false;
   }
 
-  @Override public UnmodifiableIterator<E> iterator() {
+  @Override
+  public UnmodifiableIterator<E> iterator() {
     return Iterators.emptyIterator();
   }
 
-  @Override boolean isPartialView() {
+  @Override
+  boolean isPartialView() {
     return false;
   }
 
   private static final Object[] EMPTY_ARRAY = new Object[0];
 
-  @Override public Object[] toArray() {
+  @Override
+  public Object[] toArray() {
     return EMPTY_ARRAY;
   }
 
-  @Override public <T> T[] toArray(T[] a) {
+  @Override
+  public <T> T[] toArray(T[] a) {
     if (a.length > 0) {
       a[0] = null;
     }
     return a;
   }
 
-  @Override public boolean containsAll(Collection<?> targets) {
+  @Override
+  public boolean containsAll(Collection<?> targets) {
     return targets.isEmpty();
   }
 
-  @Override public boolean equals(@Nullable Object object) {
+  @Override
+  public boolean equals(@Nullable Object object) {
     if (object instanceof Set) {
       Set<?> that = (Set<?>) object;
       return that.isEmpty();
@@ -83,20 +90,20 @@ class EmptyImmutableSortedSet<E> extends ImmutableSortedSet<E> {
     return false;
   }
 
-  @Override public int hashCode() {
+  @Override
+  public int hashCode() {
     return 0;
   }
 
-  @Override public String toString() {
+  @Override
+  public String toString() {
     return "[]";
   }
 
-  @Override
   public E first() {
     throw new NoSuchElementException();
   }
 
-  @Override
   public E last() {
     throw new NoSuchElementException();
   }
@@ -117,7 +124,8 @@ class EmptyImmutableSortedSet<E> extends ImmutableSortedSet<E> {
     return this;
   }
 
-  @Override int indexOf(@Nullable Object target) {
+  @Override
+  int indexOf(@Nullable Object target) {
     return -1;
   }
 

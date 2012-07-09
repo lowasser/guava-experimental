@@ -16,12 +16,10 @@ import java.io.IOException;
  * @author andreou@google.com (Dimitris Andreou)
  */
 abstract class AbstractNonStreamingHashFunction implements HashFunction {
-  @Override
   public Hasher newHasher() {
     return new BufferingHasher(32);
   }
 
-  @Override
   public Hasher newHasher(int expectedInputSize) {
     Preconditions.checkArgument(expectedInputSize >= 0);
     return new BufferingHasher(expectedInputSize);
@@ -38,13 +36,11 @@ abstract class AbstractNonStreamingHashFunction implements HashFunction {
       this.stream = new ExposedByteArrayOutputStream(expectedInputSize);
     }
 
-    @Override
     public Hasher putByte(byte b) {
       stream.write(b);
       return this;
     }
 
-    @Override
     public Hasher putBytes(byte[] bytes) {
       try {
         stream.write(bytes);
@@ -54,20 +50,17 @@ abstract class AbstractNonStreamingHashFunction implements HashFunction {
       return this;
     }
     
-    @Override
     public Hasher putBytes(byte[] bytes, int off, int len) {
       stream.write(bytes, off, len);
       return this;
     }
 
-    @Override
     public Hasher putShort(short s) {
       stream.write(s & BOTTOM_BYTE);
       stream.write((s >>> 8)  & BOTTOM_BYTE);
       return this;
     }
 
-    @Override
     public Hasher putInt(int i) {
       stream.write(i & BOTTOM_BYTE);
       stream.write((i >>> 8) & BOTTOM_BYTE);
@@ -76,7 +69,6 @@ abstract class AbstractNonStreamingHashFunction implements HashFunction {
       return this;
     }
 
-    @Override
     public Hasher putLong(long l) {
       for (int i = 0; i < 64; i += 8) {
         stream.write((byte) ((l >>> i) & BOTTOM_BYTE));
@@ -84,20 +76,17 @@ abstract class AbstractNonStreamingHashFunction implements HashFunction {
       return this;
     }
 
-    @Override
     public Hasher putChar(char c) {
       stream.write(c & BOTTOM_BYTE);
       stream.write((c >>> 8) & BOTTOM_BYTE);
       return this;
     }
 
-    @Override
     public <T> Hasher putObject(T instance, Funnel<? super T> funnel) {
       funnel.funnel(instance, this);
       return this;
     }
 
-    @Override
     public HashCode hash() {
       return hashBytes(stream.byteArray(), 0, stream.length());
     }

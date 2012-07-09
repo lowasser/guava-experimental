@@ -153,7 +153,8 @@ public final class LinkedHashMultimap<K, V> extends AbstractSetMultimap<K, V> {
    * @return a new {@code LinkedHashSet} containing a collection of values for
    *     one key
    */
-  @Override Set<V> createCollection() {
+  @Override
+  Set<V> createCollection() {
     return new LinkedHashSet<V>(Maps.capacity(expectedValuesPerKey));
   }
 
@@ -167,7 +168,8 @@ public final class LinkedHashMultimap<K, V> extends AbstractSetMultimap<K, V> {
    * @return a new decorated {@code LinkedHashSet} containing a collection of
    *     values for one key
    */
-  @Override Collection<V> createCollection(@Nullable K key) {
+  @Override
+  Collection<V> createCollection(@Nullable K key) {
     return new SetDecorator(key, createCollection());
   }
 
@@ -180,7 +182,8 @@ public final class LinkedHashMultimap<K, V> extends AbstractSetMultimap<K, V> {
       this.key = key;
     }
 
-    @Override protected Set<V> delegate() {
+    @Override
+    protected Set<V> delegate() {
       return delegate;
     }
 
@@ -198,7 +201,8 @@ public final class LinkedHashMultimap<K, V> extends AbstractSetMultimap<K, V> {
       return entries;
     }
 
-    @Override public boolean add(@Nullable V value) {
+    @Override
+    public boolean add(@Nullable V value) {
       boolean changed = delegate.add(value);
       if (changed) {
         linkedEntries.add(createEntry(value));
@@ -206,7 +210,8 @@ public final class LinkedHashMultimap<K, V> extends AbstractSetMultimap<K, V> {
       return changed;
     }
 
-    @Override public boolean addAll(Collection<? extends V> values) {
+    @Override
+    public boolean addAll(Collection<? extends V> values) {
       boolean changed = delegate.addAll(values);
       if (changed) {
         linkedEntries.addAll(createEntries(delegate()));
@@ -214,28 +219,27 @@ public final class LinkedHashMultimap<K, V> extends AbstractSetMultimap<K, V> {
       return changed;
     }
 
-    @Override public void clear() {
+    @Override
+    public void clear() {
       for (V value : delegate) {
         linkedEntries.remove(createEntry(value));
       }
       delegate.clear();
     }
 
-    @Override public Iterator<V> iterator() {
+    @Override
+    public Iterator<V> iterator() {
       final Iterator<V> delegateIterator = delegate.iterator();
       return new Iterator<V>() {
         V value;
 
-        @Override
         public boolean hasNext() {
           return delegateIterator.hasNext();
         }
-        @Override
         public V next() {
           value = delegateIterator.next();
           return value;
         }
-        @Override
         public void remove() {
           delegateIterator.remove();
           linkedEntries.remove(createEntry(value));
@@ -243,7 +247,8 @@ public final class LinkedHashMultimap<K, V> extends AbstractSetMultimap<K, V> {
       };
     }
 
-    @Override public boolean remove(@Nullable Object value) {
+    @Override
+    public boolean remove(@Nullable Object value) {
       boolean changed = delegate.remove(value);
       if (changed) {
         /*
@@ -255,7 +260,8 @@ public final class LinkedHashMultimap<K, V> extends AbstractSetMultimap<K, V> {
       return changed;
     }
 
-    @Override public boolean removeAll(Collection<?> values) {
+    @Override
+    public boolean removeAll(Collection<?> values) {
       boolean changed = delegate.removeAll(values);
       if (changed) {
         linkedEntries.removeAll(createEntries(values));
@@ -263,7 +269,8 @@ public final class LinkedHashMultimap<K, V> extends AbstractSetMultimap<K, V> {
       return changed;
     }
 
-    @Override public boolean retainAll(Collection<?> values) {
+    @Override
+    public boolean retainAll(Collection<?> values) {
       /*
        * Calling linkedEntries.retainAll() would incorrectly remove values
        * with other keys.
@@ -290,24 +297,22 @@ public final class LinkedHashMultimap<K, V> extends AbstractSetMultimap<K, V> {
    *
    * @return a key-value iterator with the correct ordering
    */
-  @Override Iterator<Map.Entry<K, V>> createEntryIterator() {
+  @Override
+  Iterator<Map.Entry<K, V>> createEntryIterator() {
     final Iterator<Map.Entry<K, V>> delegateIterator = linkedEntries.iterator();
 
     return new Iterator<Map.Entry<K, V>>() {
       Map.Entry<K, V> entry;
 
-      @Override
       public boolean hasNext() {
         return delegateIterator.hasNext();
       }
 
-      @Override
       public Map.Entry<K, V> next() {
         entry = delegateIterator.next();
         return entry;
       }
 
-      @Override
       public void remove() {
         // Remove from iterator first to keep iterator valid.
         delegateIterator.remove();
@@ -324,7 +329,8 @@ public final class LinkedHashMultimap<K, V> extends AbstractSetMultimap<K, V> {
    * However, the provided values always come last in the {@link #entries()} and
    * {@link #values()} iteration orderings.
    */
-  @Override public Set<V> replaceValues(
+  @Override
+  public Set<V> replaceValues(
       @Nullable K key, Iterable<? extends V> values) {
     return super.replaceValues(key, values);
   }
@@ -341,7 +347,8 @@ public final class LinkedHashMultimap<K, V> extends AbstractSetMultimap<K, V> {
    * multimap, taken at the time the entry is returned by a method call to the
    * collection or its iterator.
    */
-  @Override public Set<Map.Entry<K, V>> entries() {
+  @Override
+  public Set<Map.Entry<K, V>> entries() {
     return super.entries();
   }
 
@@ -352,7 +359,8 @@ public final class LinkedHashMultimap<K, V> extends AbstractSetMultimap<K, V> {
    * <p>The iterator generated by the returned collection traverses the values
    * in the order they were added to the multimap.
    */
-  @Override public Collection<V> values() {
+  @Override
+  public Collection<V> values() {
     return super.values();
   }
 

@@ -48,7 +48,6 @@ public interface ListMultimap<K, V> extends Multimap<K, V> {
    * insertion ordering, this method returns a {@link List}, instead of the
    * {@link java.util.Collection} specified in the {@link Multimap} interface.
    */
-  @Override
   List<V> get(@Nullable K key);
 
   /**
@@ -58,7 +57,6 @@ public interface ListMultimap<K, V> extends Multimap<K, V> {
    * insertion ordering, this method returns a {@link List}, instead of the
    * {@link java.util.Collection} specified in the {@link Multimap} interface.
    */
-  @Override
   List<V> removeAll(@Nullable Object key);
 
   /**
@@ -68,7 +66,6 @@ public interface ListMultimap<K, V> extends Multimap<K, V> {
    * insertion ordering, this method returns a {@link List}, instead of the
    * {@link java.util.Collection} specified in the {@link Multimap} interface.
    */
-  @Override
   List<V> replaceValues(K key, Iterable<? extends V> values);
 
   /**
@@ -77,7 +74,6 @@ public interface ListMultimap<K, V> extends Multimap<K, V> {
    * <p>Though the method signature doesn't say so explicitly, the returned map
    * has {@link List} values.
    */
-  @Override
   Map<K, Collection<V>> asMap();
 
   /**
@@ -90,6 +86,5 @@ public interface ListMultimap<K, V> extends Multimap<K, V> {
    * <p>An empty {@code ListMultimap} is equal to any other empty {@code
    * Multimap}, including an empty {@code SetMultimap}.
    */
-  @Override
   boolean equals(@Nullable Object obj);
 }

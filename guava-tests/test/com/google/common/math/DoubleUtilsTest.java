@@ -32,6 +32,12 @@ import java.math.BigInteger;
  * @author Louis Wasserman
  */
 public class DoubleUtilsTest extends TestCase {
+  public void testNextUp() {
+    for (double d : FINITE_DOUBLE_CANDIDATES) {
+      assertEquals(FpUtils.nextUp(d), DoubleUtils.nextUp(d));
+    }
+  }
+  
   public void testNextDown() {
     for (double d : FINITE_DOUBLE_CANDIDATES) {
       assertEquals(FpUtils.nextDown(d), DoubleUtils.nextDown(d));

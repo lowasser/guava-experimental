@@ -118,7 +118,6 @@ public class EventBus {
   private final SetMultimap<Class<?>, EventHandler> handlersByType =
       Multimaps.newSetMultimap(new ConcurrentHashMap<Class<?>, Collection<EventHandler>>(),
           new Supplier<Set<EventHandler>>() {
-            @Override
             public Set<EventHandler> get() {
               return new CopyOnWriteArraySet<EventHandler>();
             }
@@ -141,7 +140,8 @@ public class EventBus {
   private final ThreadLocal<ConcurrentLinkedQueue<EventWithHandler>>
       eventsToDispatch =
       new ThreadLocal<ConcurrentLinkedQueue<EventWithHandler>>() {
-    @Override protected ConcurrentLinkedQueue<EventWithHandler> initialValue() {
+    @Override
+    protected ConcurrentLinkedQueue<EventWithHandler> initialValue() {
       return new ConcurrentLinkedQueue<EventWithHandler>();
     }
   };
@@ -149,7 +149,8 @@ public class EventBus {
   /** true if the current thread is currently dispatching an event */
   private final ThreadLocal<Boolean> isDispatching =
       new ThreadLocal<Boolean>() {
-    @Override protected Boolean initialValue() {
+    @Override
+    protected Boolean initialValue() {
       return false;
     }
   };

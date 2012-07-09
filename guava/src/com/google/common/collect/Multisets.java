@@ -99,8 +99,9 @@ public final class Multisets {
       this.delegate = delegate;
     }
 
+    @Override
     @SuppressWarnings("unchecked")
-    @Override protected Multiset<E> delegate() {
+    protected Multiset<E> delegate() {
       // This is safe because all non-covariant methods are overriden
       return (Multiset<E>) delegate;
     }
@@ -119,8 +120,9 @@ public final class Multisets {
 
     transient Set<Multiset.Entry<E>> entrySet;
 
+    @Override
     @SuppressWarnings("unchecked")
-    @Override public Set<Multiset.Entry<E>> entrySet() {
+    public Set<Multiset.Entry<E>> entrySet() {
       Set<Multiset.Entry<E>> es = entrySet;
       return (es == null)
           // Safe because the returned set is made unmodifiable and Entry
@@ -129,49 +131,60 @@ public final class Multisets {
           : es;
     }
 
+    @Override
     @SuppressWarnings("unchecked")
-    @Override public Iterator<E> iterator() {
+    public Iterator<E> iterator() {
       // Safe because the returned Iterator is made unmodifiable
       return (Iterator<E>) Iterators.unmodifiableIterator(delegate.iterator());
     }
 
-    @Override public boolean add(E element) {
+    @Override
+    public boolean add(E element) {
       throw new UnsupportedOperationException();
     }
 
-    @Override public int add(E element, int occurences) {
+    @Override
+    public int add(E element, int occurences) {
       throw new UnsupportedOperationException();
     }
 
-    @Override public boolean addAll(Collection<? extends E> elementsToAdd) {
+    @Override
+    public boolean addAll(Collection<? extends E> elementsToAdd) {
       throw new UnsupportedOperationException();
     }
 
-    @Override public boolean remove(Object element) {
+    @Override
+    public boolean remove(Object element) {
       throw new UnsupportedOperationException();
     }
 
-    @Override public int remove(Object element, int occurrences) {
+    @Override
+    public int remove(Object element, int occurrences) {
       throw new UnsupportedOperationException();
     }
 
-    @Override public boolean removeAll(Collection<?> elementsToRemove) {
+    @Override
+    public boolean removeAll(Collection<?> elementsToRemove) {
       throw new UnsupportedOperationException();
     }
 
-    @Override public boolean retainAll(Collection<?> elementsToRetain) {
+    @Override
+    public boolean retainAll(Collection<?> elementsToRetain) {
       throw new UnsupportedOperationException();
     }
 
-    @Override public void clear() {
+    @Override
+    public void clear() {
       throw new UnsupportedOperationException();
     }
 
-    @Override public int setCount(E element, int count) {
+    @Override
+    public int setCount(E element, int count) {
       throw new UnsupportedOperationException();
     }
 
-    @Override public boolean setCount(E element, int oldCount, int newCount) {
+    @Override
+    public boolean setCount(E element, int oldCount, int newCount) {
       throw new UnsupportedOperationException();
     }
 
@@ -209,7 +222,6 @@ public final class Multisets {
       return (SortedMultiset<E>) super.delegate();
     }
 
-    @Override
     public Comparator<? super E> comparator() {
       return delegate().comparator();
     }
@@ -226,7 +238,6 @@ public final class Multisets {
 
     private transient UnmodifiableSortedMultiset<E> descendingMultiset;
 
-    @Override
     public SortedMultiset<E> descendingMultiset() {
       UnmodifiableSortedMultiset<E> result = descendingMultiset;
       if (result == null) {
@@ -238,33 +249,27 @@ public final class Multisets {
       return result;
     }
 
-    @Override
     public Entry<E> firstEntry() {
       return delegate().firstEntry();
     }
 
-    @Override
     public Entry<E> lastEntry() {
       return delegate().lastEntry();
     }
 
-    @Override
     public Entry<E> pollFirstEntry() {
       throw new UnsupportedOperationException();
     }
 
-    @Override
     public Entry<E> pollLastEntry() {
       throw new UnsupportedOperationException();
     }
 
-    @Override
     public SortedMultiset<E> headMultiset(E upperBound, BoundType boundType) {
       return unmodifiableSortedMultiset(
           delegate().headMultiset(upperBound, boundType));
     }
 
-    @Override
     public SortedMultiset<E> subMultiset(
         E lowerBound, BoundType lowerBoundType,
         E upperBound, BoundType upperBoundType) {
@@ -272,7 +277,6 @@ public final class Multisets {
           lowerBound, lowerBoundType, upperBound, upperBoundType));
     }
 
-    @Override
     public SortedMultiset<E> tailMultiset(E lowerBound, BoundType boundType) {
       return unmodifiableSortedMultiset(
           delegate().tailMultiset(lowerBound, boundType));
@@ -304,12 +308,10 @@ public final class Multisets {
       checkArgument(count >= 0);
     }
 
-    @Override
     @Nullable public E getElement() {
       return element;
     }
 
-    @Override
     public int getCount() {
       return count;
     }
@@ -347,21 +349,19 @@ public final class Multisets {
       delegate = checkNotNull(set);
     }
 
-    @Override protected Set<E> delegate() {
+    @Override
+    protected Set<E> delegate() {
       return delegate;
     }
 
-    @Override
     public int count(Object element) {
       return delegate.contains(element) ? 1 : 0;
     }
 
-    @Override
     public int add(E element, int occurrences) {
       throw new UnsupportedOperationException();
     }
 
-    @Override
     public int remove(Object element, int occurrences) {
       if (occurrences == 0) {
         return count(element);
@@ -372,7 +372,6 @@ public final class Multisets {
 
     transient Set<E> elementSet;
 
-    @Override
     public Set<E> elementSet() {
       Set<E> es = elementSet;
       return (es == null) ? elementSet = new ElementSet() : es;
@@ -380,15 +379,17 @@ public final class Multisets {
 
     transient Set<Entry<E>> entrySet;
 
-    @Override public Set<Entry<E>> entrySet() {
+    public Set<Entry<E>> entrySet() {
       Set<Entry<E>> es = entrySet;
       if (es == null) {
         es = entrySet = new EntrySet<E>() {
-          @Override Multiset<E> multiset() {
+          @Override
+          Multiset<E> multiset() {
             return SetMultiset.this;
           }
 
-          @Override public Iterator<Entry<E>> iterator() {
+          @Override
+          public Iterator<Entry<E>> iterator() {
             return new TransformedIterator<E, Entry<E>>(delegate.iterator()) {
               @Override
               Entry<E> transform(E e) {
@@ -397,7 +398,8 @@ public final class Multisets {
             };
           }
 
-          @Override public int size() {
+          @Override
+          public int size() {
             return delegate.size();
           }
         };
@@ -405,15 +407,16 @@ public final class Multisets {
       return es;
     }
 
-    @Override public boolean add(E o) {
-      throw new UnsupportedOperationException();
-    }
-
-    @Override public boolean addAll(Collection<? extends E> c) {
+    @Override
+    public boolean add(E o) {
       throw new UnsupportedOperationException();
     }
 
     @Override
+    public boolean addAll(Collection<? extends E> c) {
+      throw new UnsupportedOperationException();
+    }
+
     public int setCount(E element, int count) {
       checkNonnegative(count, "count");
 
@@ -427,12 +430,12 @@ public final class Multisets {
       }
     }
 
-    @Override
     public boolean setCount(E element, int oldCount, int newCount) {
       return setCountImpl(this, element, oldCount, newCount);
     }
 
-    @Override public boolean equals(@Nullable Object object) {
+    @Override
+    public boolean equals(@Nullable Object object) {
       if (object instanceof Multiset) {
         Multiset<?> that = (Multiset<?>) object;
         return this.size() == that.size() && delegate.equals(that.elementSet());
@@ -440,7 +443,8 @@ public final class Multisets {
       return false;
     }
 
-    @Override public int hashCode() {
+    @Override
+    public int hashCode() {
       int sum = 0;
       for (E e : this) {
         sum += ((e == null) ? 0 : e.hashCode()) ^ 1;
@@ -450,15 +454,18 @@ public final class Multisets {
 
     /** @see SetMultiset#elementSet */
     class ElementSet extends ForwardingSet<E> {
-      @Override protected Set<E> delegate() {
+      @Override
+      protected Set<E> delegate() {
         return delegate;
       }
 
-      @Override public boolean add(E o) {
+      @Override
+      public boolean add(E o) {
         throw new UnsupportedOperationException();
       }
 
-      @Override public boolean addAll(Collection<? extends E> c) {
+      @Override
+      public boolean addAll(Collection<? extends E> c) {
         throw new UnsupportedOperationException();
       }
     }
@@ -666,7 +673,8 @@ public final class Multisets {
      * Indicates whether an object equals this entry, following the behavior
      * specified in {@link Multiset.Entry#equals}.
      */
-    @Override public boolean equals(@Nullable Object object) {
+    @Override
+    public boolean equals(@Nullable Object object) {
       if (object instanceof Multiset.Entry) {
         Multiset.Entry<?> that = (Multiset.Entry<?>) object;
         return this.getCount() == that.getCount()
@@ -679,7 +687,8 @@ public final class Multisets {
      * Return this entry's hash code, following the behavior specified in
      * {@link Multiset.Entry#hashCode}.
      */
-    @Override public int hashCode() {
+    @Override
+    public int hashCode() {
       E e = getElement();
       return ((e == null) ? 0 : e.hashCode()) ^ getCount();
     }
@@ -691,7 +700,8 @@ public final class Multisets {
      * " x " (space, x and space) followed by the count. Elements and counts are
      * converted to strings as by {@code String.valueOf}.
      */
-    @Override public String toString() {
+    @Override
+    public String toString() {
       String text = String.valueOf(getElement());
       int n = getCount();
       return (n == 1) ? text : (text + " x " + n);
@@ -805,23 +815,28 @@ public final class Multisets {
   static abstract class ElementSet<E> extends AbstractSet<E> {
     abstract Multiset<E> multiset();
 
-    @Override public void clear() {
+    @Override
+    public void clear() {
       multiset().clear();
     }
 
-    @Override public boolean contains(Object o) {
+    @Override
+    public boolean contains(Object o) {
       return multiset().contains(o);
     }
 
-    @Override public boolean containsAll(Collection<?> c) {
+    @Override
+    public boolean containsAll(Collection<?> c) {
       return multiset().containsAll(c);
     }
 
-    @Override public boolean isEmpty() {
+    @Override
+    public boolean isEmpty() {
       return multiset().isEmpty();
     }
 
-    @Override public Iterator<E> iterator() {
+    @Override
+    public Iterator<E> iterator() {
       return new TransformedIterator<Entry<E>, E>(multiset().entrySet().iterator()) {
         @Override
         E transform(Entry<E> entry) {
@@ -840,7 +855,8 @@ public final class Multisets {
       return false;
     }
 
-    @Override public int size() {
+    @Override
+    public int size() {
       return multiset().entrySet().size();
     }
   }
@@ -848,7 +864,8 @@ public final class Multisets {
   static abstract class EntrySet<E> extends AbstractSet<Entry<E>>{
     abstract Multiset<E> multiset();
 
-    @Override public boolean contains(@Nullable Object o) {
+    @Override
+    public boolean contains(@Nullable Object o) {
       if (o instanceof Entry) {
         @SuppressWarnings("cast")
         Entry<?> entry = (Entry<?>) o;
@@ -862,13 +879,15 @@ public final class Multisets {
       return false;
     }
 
+    @Override
     @SuppressWarnings("cast")
-    @Override public boolean remove(Object o) {
+    public boolean remove(Object o) {
       return contains(o)
           && multiset().elementSet().remove(((Entry<?>) o).getElement());
     }
 
-    @Override public void clear() {
+    @Override
+    public void clear() {
       multiset().clear();
     }
   }
@@ -897,12 +916,10 @@ public final class Multisets {
       this.entryIterator = entryIterator;
     }
 
-    @Override
     public boolean hasNext() {
       return laterCount > 0 || entryIterator.hasNext();
     }
 
-    @Override
     public E next() {
       if (!hasNext()) {
         throw new NoSuchElementException();
@@ -916,7 +933,6 @@ public final class Multisets {
       return currentEntry.getElement();
     }
 
-    @Override
     public void remove() {
       Iterators.checkRemove(canRemove);
       if (totalCount == 1) {

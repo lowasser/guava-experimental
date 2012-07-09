@@ -204,7 +204,6 @@ public final class UnsignedLong extends Number implements Comparable<UnsignedLon
     return bigInt;
   }
 
-  @Override
   public int compareTo(UnsignedLong o) {
     checkNotNull(o);
     return UnsignedLongs.compare(value, o.value);

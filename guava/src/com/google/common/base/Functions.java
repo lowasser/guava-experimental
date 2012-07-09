@@ -60,13 +60,13 @@ public final class Functions {
   private enum ToStringFunction implements Function<Object, String> {
     INSTANCE;
 
-    @Override
     public String apply(Object o) {
       checkNotNull(o);  // eager for GWT.
       return o.toString();
     }
 
-    @Override public String toString() {
+    @Override
+    public String toString() {
       return "toString";
     }
   }
@@ -83,12 +83,12 @@ public final class Functions {
   private enum IdentityFunction implements Function<Object, Object> {
     INSTANCE;
 
-    @Override
     public Object apply(Object o) {
       return o;
     }
 
-    @Override public String toString() {
+    @Override
+    public String toString() {
       return "identity";
     }
   }
@@ -108,14 +108,14 @@ public final class Functions {
       this.map = checkNotNull(map);
     }
 
-    @Override
     public V apply(K key) {
       V result = map.get(key);
       checkArgument(result != null || map.containsKey(key), "Key '%s' not present in map", key);
       return result;
     }
 
-    @Override public boolean equals(@Nullable Object o) {
+    @Override
+    public boolean equals(@Nullable Object o) {
       if (o instanceof FunctionForMapNoDefault) {
         FunctionForMapNoDefault<?, ?> that = (FunctionForMapNoDefault<?, ?>) o;
         return map.equals(that.map);
@@ -123,11 +123,13 @@ public final class Functions {
       return false;
     }
 
-    @Override public int hashCode() {
+    @Override
+    public int hashCode() {
       return map.hashCode();
     }
 
-    @Override public String toString() {
+    @Override
+    public String toString() {
       return "forMap(" + map + ")";
     }
 
@@ -157,13 +159,13 @@ public final class Functions {
       this.defaultValue = defaultValue;
     }
 
-    @Override
     public V apply(K key) {
       V result = map.get(key);
       return (result != null || map.containsKey(key)) ? result : defaultValue;
     }
 
-    @Override public boolean equals(@Nullable Object o) {
+    @Override
+    public boolean equals(@Nullable Object o) {
       if (o instanceof ForMapWithDefault) {
         ForMapWithDefault<?, ?> that = (ForMapWithDefault<?, ?>) o;
         return map.equals(that.map) && Objects.equal(defaultValue, that.defaultValue);
@@ -171,11 +173,13 @@ public final class Functions {
       return false;
     }
 
-    @Override public int hashCode() {
+    @Override
+    public int hashCode() {
       return Objects.hashCode(map, defaultValue);
     }
 
-    @Override public String toString() {
+    @Override
+    public String toString() {
       return "forMap(" + map + ", defaultValue=" + defaultValue + ")";
     }
 
@@ -204,12 +208,12 @@ public final class Functions {
       this.f = checkNotNull(f);
     }
 
-    @Override
     public C apply(A a) {
       return g.apply(f.apply(a));
     }
 
-    @Override public boolean equals(@Nullable Object obj) {
+    @Override
+    public boolean equals(@Nullable Object obj) {
       if (obj instanceof FunctionComposition) {
         FunctionComposition<?, ?, ?> that = (FunctionComposition<?, ?, ?>) obj;
         return f.equals(that.f) && g.equals(that.g);
@@ -217,11 +221,13 @@ public final class Functions {
       return false;
     }
 
-    @Override public int hashCode() {
+    @Override
+    public int hashCode() {
       return f.hashCode() ^ g.hashCode();
     }
 
-    @Override public String toString() {
+    @Override
+    public String toString() {
       return g.toString() + "(" + f.toString() + ")";
     }
 
@@ -246,12 +252,12 @@ public final class Functions {
       this.predicate = checkNotNull(predicate);
     }
 
-    @Override
     public Boolean apply(T t) {
       return predicate.apply(t);
     }
 
-    @Override public boolean equals(@Nullable Object obj) {
+    @Override
+    public boolean equals(@Nullable Object obj) {
       if (obj instanceof PredicateFunction) {
         PredicateFunction<?> that = (PredicateFunction<?>) obj;
         return predicate.equals(that.predicate);
@@ -259,11 +265,13 @@ public final class Functions {
       return false;
     }
 
-    @Override public int hashCode() {
+    @Override
+    public int hashCode() {
       return predicate.hashCode();
     }
 
-    @Override public String toString() {
+    @Override
+    public String toString() {
       return "forPredicate(" + predicate + ")";
     }
 
@@ -287,12 +295,12 @@ public final class Functions {
       this.value = value;
     }
 
-    @Override
     public E apply(@Nullable Object from) {
       return value;
     }
 
-    @Override public boolean equals(@Nullable Object obj) {
+    @Override
+    public boolean equals(@Nullable Object obj) {
       if (obj instanceof ConstantFunction) {
         ConstantFunction<?> that = (ConstantFunction<?>) obj;
         return Objects.equal(value, that.value);
@@ -300,11 +308,13 @@ public final class Functions {
       return false;
     }
 
-    @Override public int hashCode() {
+    @Override
+    public int hashCode() {
       return (value == null) ? 0 : value.hashCode();
     }
 
-    @Override public String toString() {
+    @Override
+    public String toString() {
       return "constant(" + value + ")";
     }
 
@@ -331,11 +341,12 @@ public final class Functions {
       this.supplier = checkNotNull(supplier);
     }
 
-    @Override public T apply(@Nullable Object input) {
+    public T apply(@Nullable Object input) {
       return supplier.get();
     }
     
-    @Override public boolean equals(@Nullable Object obj) {
+    @Override
+    public boolean equals(@Nullable Object obj) {
       if (obj instanceof SupplierFunction) {
         SupplierFunction<?> that = (SupplierFunction<?>) obj;
         return this.supplier.equals(that.supplier);
@@ -343,11 +354,13 @@ public final class Functions {
       return false;
     }
     
-    @Override public int hashCode() {
+    @Override
+    public int hashCode() {
       return supplier.hashCode();
     }
     
-    @Override public String toString() {
+    @Override
+    public String toString() {
       return "forSupplier(" + supplier + ")";
     }
     

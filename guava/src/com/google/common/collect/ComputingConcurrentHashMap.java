@@ -214,33 +214,27 @@ class ComputingConcurrentHashMap<K, V> extends MapMakerInternalMap<K, V> {
       this.t = t;
     }
 
-    @Override
     public V get() {
       return null;
     }
 
-    @Override
     public ReferenceEntry<K, V> getEntry() {
       return null;
     }
 
-    @Override
     public ValueReference<K, V> copyFor(
         ReferenceQueue<V> queue, V value, ReferenceEntry<K, V> entry) {
       return this;
     }
 
-    @Override
     public boolean isComputingReference() {
       return false;
     }
 
-    @Override
     public V waitForValue() throws ExecutionException {
       throw new ExecutionException(t);
     }
 
-    @Override
     public void clear(ValueReference<K, V> newValue) {}
   }
 
@@ -254,33 +248,27 @@ class ComputingConcurrentHashMap<K, V> extends MapMakerInternalMap<K, V> {
       this.value = value;
     }
 
-    @Override
     public V get() {
       return value;
     }
 
-    @Override
     public ReferenceEntry<K, V> getEntry() {
       return null;
     }
 
-    @Override
     public ValueReference<K, V> copyFor(
         ReferenceQueue<V> queue, V value, ReferenceEntry<K, V> entry) {
       return this;
     }
 
-    @Override
     public boolean isComputingReference() {
       return false;
     }
 
-    @Override
     public V waitForValue() {
       return get();
     }
 
-    @Override
     public void clear(ValueReference<K, V> newValue) {}
   }
 
@@ -294,25 +282,21 @@ class ComputingConcurrentHashMap<K, V> extends MapMakerInternalMap<K, V> {
       this.computingFunction = computingFunction;
     }
 
-    @Override
     public V get() {
       // All computation lookups go through waitForValue. This method thus is
       // only used by put, to whom we always want to appear absent.
       return null;
     }
 
-    @Override
     public ReferenceEntry<K, V> getEntry() {
       return null;
     }
 
-    @Override
     public ValueReference<K, V> copyFor(
         ReferenceQueue<V> queue, V value, ReferenceEntry<K, V> entry) {
       return this;
     }
 
-    @Override
     public boolean isComputingReference() {
       return true;
     }
@@ -320,7 +304,6 @@ class ComputingConcurrentHashMap<K, V> extends MapMakerInternalMap<K, V> {
     /**
      * Waits for a computation to complete. Returns the result of the computation.
      */
-    @Override
     public V waitForValue() throws ExecutionException {
       if (computedReference == UNSET) {
         boolean interrupted = false;
@@ -343,7 +326,6 @@ class ComputingConcurrentHashMap<K, V> extends MapMakerInternalMap<K, V> {
       return computedReference.waitForValue();
     }
 
-    @Override
     public void clear(ValueReference<K, V> newValue) {
       // The pending computation was clobbered by a manual write. Unblock all
       // pending gets, and have them return the new value.
@@ -388,8 +370,8 @@ class ComputingConcurrentHashMap<K, V> extends MapMakerInternalMap<K, V> {
       super(mapMaker, computingFunction);
     }
 
-    @SuppressWarnings("unchecked") // unsafe, which is one advantage of Cache over Map
     @Override
+    @SuppressWarnings("unchecked") // unsafe, which is one advantage of Cache over Map
     public V get(Object key) {
       V value;
       try {
