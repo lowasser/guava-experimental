@@ -20,22 +20,27 @@ import com.google.common.annotations.GwtCompatible;
 
 import java.util.Comparator;
 import java.util.Iterator;
-import java.util.SortedSet;
+import java.util.NavigableSet;
+import java.util.Set;
 
 import javax.annotation.Nullable;
 
 /**
  * This class provides a skeletal implementation of the {@link SortedMultiset} interface.
- *
- * <p>The {@link #count} and {@link #size} implementations all iterate across the set returned by
+ * 
+ * <p>
+ * The {@link #count} and {@link #size} implementations all iterate across the set returned by
  * {@link Multiset#entrySet()}, as do many methods acting on the set returned by
  * {@link #elementSet()}. Override those methods for better performance.
- *
+ * 
  * @author Louis Wasserman
  */
 @GwtCompatible
 abstract class AbstractSortedMultiset<E> extends AbstractMultiset<E> implements SortedMultiset<E> {
-  @GwtTransient final Comparator<? super E> comparator;
+  
+
+  @GwtTransient
+  final Comparator<? super E> comparator;
 
   // needed for serialization
   @SuppressWarnings("unchecked")
@@ -48,16 +53,55 @@ abstract class AbstractSortedMultiset<E> extends AbstractMultiset<E> implements 
   }
 
   @Override
-  public SortedSet<E> elementSet() {
-    return (SortedSet<E>) super.elementSet();
+  public NavigableSet<E> elementSet() {
+    return (NavigableSet<E>) super.elementSet();
   }
 
   @Override
-  SortedSet<E> createElementSet() {
-    return new SortedMultisets.ElementSet<E>() {
+  NavigableSet<E> createElementSet() {
+    return new AbstractNavigableSet<E>() {
+
       @Override
-      SortedMultiset<E> multiset() {
-        return AbstractSortedMultiset.this;
+      public Iterator<E> iterator() {
+        return Multisets.elementIterator(entrySet().iterator());
+      }
+
+      @Override
+      public Iterator<E> descendingIterator() {
+        return Multisets.elementIterator(descendingEntryIterator());
+      }
+
+      @Override
+      public NavigableSet<E> subSet(
+          E fromElement,
+          boolean fromInclusive,
+          E toElement,
+          boolean toInclusive) {
+        return subMultiset(
+            fromElement,
+            BoundType.forBoolean(fromInclusive),
+            toElement,
+            BoundType.forBoolean(toInclusive)).elementSet();
+      }
+
+      @Override
+      public NavigableSet<E> headSet(E toElement, boolean inclusive) {
+        return headMultiset(toElement, BoundType.forBoolean(inclusive)).elementSet();
+      }
+
+      @Override
+      public NavigableSet<E> tailSet(E fromElement, boolean inclusive) {
+        return tailMultiset(fromElement, BoundType.forBoolean(inclusive)).elementSet();
+      }
+
+      @Override
+      public Comparator<? super E> comparator() {
+        return AbstractSortedMultiset.this.comparator();
+      }
+
+      @Override
+      public int size() {
+        return AbstractSortedMultiset.this.distinctElements();
       }
     };
   }
@@ -127,7 +171,7 @@ abstract class AbstractSortedMultiset<E> extends AbstractMultiset<E> implements 
   }
 
   SortedMultiset<E> createDescendingMultiset() {
-    return new SortedMultisets.DescendingMultiset<E>() {
+    return new AbstractSortedMultiset.DescendingMultiset<E>() {
       @Override
       SortedMultiset<E> forwardMultiset() {
         return AbstractSortedMultiset.this;
@@ -143,5 +187,112 @@ abstract class AbstractSortedMultiset<E> extends AbstractMultiset<E> implements 
         return descendingIterator();
       }
     };
+  }
+  
+  /**
+   * A skeleton implementation of a descending multiset.  Only needs
+   * {@code forwardMultiset()} and {@code entryIterator()}.
+   */
+  static abstract class DescendingMultiset<E> extends ForwardingMultiset<E>
+      implements SortedMultiset<E> {
+    abstract SortedMultiset<E> forwardMultiset();
+  
+    private transient Comparator<? super E> comparator;
+  
+    @Override public Comparator<? super E> comparator() {
+      Comparator<? super E> result = comparator;
+      if (result == null) {
+        return comparator =
+            Ordering.from(forwardMultiset().comparator()).<E>reverse();
+      }
+      return result;
+    }
+  
+    @Override public NavigableSet<E> elementSet() {
+      return forwardMultiset().elementSet().descendingSet();
+    }
+  
+    @Override public Entry<E> pollFirstEntry() {
+      return forwardMultiset().pollLastEntry();
+    }
+  
+    @Override public Entry<E> pollLastEntry() {
+      return forwardMultiset().pollFirstEntry();
+    }
+  
+    @Override public SortedMultiset<E> headMultiset(E toElement,
+        BoundType boundType) {
+      return forwardMultiset().tailMultiset(toElement, boundType)
+          .descendingMultiset();
+    }
+  
+    @Override public SortedMultiset<E> subMultiset(E fromElement,
+        BoundType fromBoundType, E toElement, BoundType toBoundType) {
+      return forwardMultiset().subMultiset(toElement, toBoundType, fromElement,
+          fromBoundType).descendingMultiset();
+    }
+  
+    @Override public SortedMultiset<E> tailMultiset(E fromElement,
+        BoundType boundType) {
+      return forwardMultiset().headMultiset(fromElement, boundType)
+          .descendingMultiset();
+    }
+  
+    @Override protected Multiset<E> delegate() {
+      return forwardMultiset();
+    }
+  
+    @Override public SortedMultiset<E> descendingMultiset() {
+      return forwardMultiset();
+    }
+  
+    @Override public Entry<E> firstEntry() {
+      return forwardMultiset().lastEntry();
+    }
+  
+    @Override public Entry<E> lastEntry() {
+      return forwardMultiset().firstEntry();
+    }
+  
+    abstract Iterator<Entry<E>> entryIterator();
+  
+    private transient Set<Entry<E>> entrySet;
+  
+    @Override public Set<Entry<E>> entrySet() {
+      Set<Entry<E>> result = entrySet;
+      return (result == null) ? entrySet = createEntrySet() : result;
+    }
+  
+    Set<Entry<E>> createEntrySet() {
+      return new Multisets.EntrySet<E>() {
+        @Override Multiset<E> multiset() {
+          return DescendingMultiset.this;
+        }
+  
+        @Override public Iterator<Entry<E>> iterator() {
+          return entryIterator();
+        }
+  
+        @Override public int size() {
+          return forwardMultiset().entrySet().size();
+        }
+      };
+    }
+  
+    @Override public Iterator<E> iterator() {
+      return Multisets.iteratorImpl(this);
+    }
+  
+    @Override public Object[] toArray() {
+      return standardToArray();
+    }
+  
+    @Override public <T> T[] toArray(T[] array) {
+      return standardToArray(array);
+    }
+  
+    @Override public String toString() {
+      return entrySet().toString();
+    }
   }
 }

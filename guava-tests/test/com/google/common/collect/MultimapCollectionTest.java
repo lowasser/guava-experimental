@@ -30,6 +30,7 @@ import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
 import com.google.common.collect.testing.CollectionTestSuiteBuilder;
 import com.google.common.collect.testing.ListTestSuiteBuilder;
+import com.google.common.collect.testing.NavigableSetTestSuiteBuilder;
 import com.google.common.collect.testing.SampleElements;
 import com.google.common.collect.testing.SetTestSuiteBuilder;
 import com.google.common.collect.testing.TestCollectionGenerator;
@@ -52,10 +53,6 @@ import com.google.common.collect.testing.google.TestStringMultisetGenerator;
 import com.google.common.collect.testing.google.TestStringSetMultimapGenerator;
 import com.google.common.collect.testing.testers.CollectionIteratorTester;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.util.Collection;
@@ -64,6 +61,10 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeSet;
+
+import junit.framework.Test;
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
 
 /**
  * Run collection tests on {@link Multimap} implementations.
@@ -417,6 +418,25 @@ public class MultimapCollectionTest extends TestCase {
           CollectionSize.ANY)
       .createTestSuite());
 
+    suite.addTest(NavigableSetTestSuiteBuilder.using(new TestStringSetGenerator() {
+          @Override protected Set<String> create(String[] elements) {
+            TreeMultimap<Integer, String> multimap
+                = TreeMultimap.create();
+            populateMultimapForGet(multimap, elements);
+            return multimap.get(3);
+          }
+
+          @Override
+          public List<String> order(List<String> insertionOrder) {
+            return Ordering.natural().sortedCopy(insertionOrder);
+          }
+        })
+        .named("TreeMultimap.get")
+        .withFeatures(CollectionSize.ANY,
+            CollectionFeature.KNOWN_ORDER,
+            CollectionFeature.GENERAL_PURPOSE)
+        .createTestSuite());
+
     suite.addTest(SetTestSuiteBuilder.using(
         new TestStringSetGenerator() {
           @Override protected Set<String> create(String[] elements) {
@@ -443,6 +463,25 @@ public class MultimapCollectionTest extends TestCase {
         .named("Multimaps.filterEntries.get")
         .withFeatures(COLLECTION_FEATURES_ORDER)
         .suppressing(CollectionIteratorTester.getIteratorKnownOrderRemoveSupportedMethod())
+        .createTestSuite());
+
+    suite.addTest(NavigableSetTestSuiteBuilder.using(
+        new TestStringSetGenerator() {
+          @Override protected Set<String> create(String[] elements) {
+            TreeMultimap<String, Integer> multimap = TreeMultimap.create();
+            populateMultimapForKeySet(multimap, elements);
+            return multimap.keySet();
+          }
+
+          @Override
+          public List<String> order(List<String> insertionOrder) {
+            return Ordering.natural().sortedCopy(insertionOrder);
+          }
+        })
+        .named("TreeMultimap.keySet")
+        .withFeatures(CollectionSize.ANY,
+            CollectionFeature.KNOWN_ORDER,
+            CollectionFeature.REMOVE_OPERATIONS)
         .createTestSuite());
 
     suite.addTest(SetTestSuiteBuilder.using(

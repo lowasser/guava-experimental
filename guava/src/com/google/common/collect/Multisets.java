@@ -31,9 +31,9 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
+import java.util.NavigableSet;
 import java.util.NoSuchElementException;
 import java.util.Set;
-import java.util.SortedSet;
 
 import javax.annotation.Nullable;
 
@@ -214,13 +214,13 @@ public final class Multisets {
     }
 
     @Override
-    SortedSet<E> createElementSet() {
-      return Collections.unmodifiableSortedSet(delegate().elementSet());
+    NavigableSet<E> createElementSet() {
+      return Sets.unmodifiableNavigableSet(delegate().elementSet());
     }
 
     @Override
-    public SortedSet<E> elementSet() {
-      return (SortedSet<E>) super.elementSet();
+    public NavigableSet<E> elementSet() {
+      return (NavigableSet<E>) super.elementSet();
     }
 
     private transient UnmodifiableSortedMultiset<E> descendingMultiset;
@@ -821,12 +821,7 @@ public final class Multisets {
     }
 
     @Override public Iterator<E> iterator() {
-      return new TransformedIterator<Entry<E>, E>(multiset().entrySet().iterator()) {
-        @Override
-        E transform(Entry<E> entry) {
-          return entry.getElement();
-        }
-      };
+      return elementIterator(multiset().entrySet().iterator());
     }
 
     @Override
@@ -842,6 +837,15 @@ public final class Multisets {
     @Override public int size() {
       return multiset().entrySet().size();
     }
+  }
+
+  static <E> Iterator<E> elementIterator(Iterator<Entry<E>> entryIterator) {
+    return new TransformedIterator<Entry<E>, E>(entryIterator) {
+      @Override
+      E transform(Entry<E> entry) {
+        return entry.getElement();
+      }
+    };
   }
 
   abstract static class EntrySet<E> extends Sets.ImprovedAbstractSet<Entry<E>> {

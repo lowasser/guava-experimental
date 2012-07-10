@@ -36,6 +36,15 @@ import java.util.SortedSet;
 @GwtCompatible
 final class SortedIterables {
   private SortedIterables() {}
+  
+  static <E> Comparator<? super E> comparator(SortedSet<E> set) {
+    Comparator<? super E> comparator = set.comparator();
+    if (comparator == null) {
+      return (Comparator) Ordering.natural();
+    } else {
+      return comparator;
+    }
+  }
 
   /**
    * Returns {@code true} if {@code elements} is a sorted collection using an ordering equivalent

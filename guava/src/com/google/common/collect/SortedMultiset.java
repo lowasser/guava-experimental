@@ -22,7 +22,7 @@ import com.google.common.annotations.GwtCompatible;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
-import java.util.SortedSet;
+import java.util.NavigableSet;
 
 /**
  * A {@link Multiset} which maintains the ordering of its elements, according to
@@ -77,9 +77,9 @@ public interface SortedMultiset<E> extends Multiset<E>, SortedIterable<E> {
   Entry<E> pollLastEntry();
 
   /**
-   * Returns a {@link SortedSet} view of the distinct elements in this multiset.
+   * Returns a {@link NavigableSet} view of the distinct elements in this multiset.
    */
-  @Override SortedSet<E> elementSet();
+  @Override NavigableSet<E> elementSet();
 
   /**
    * {@inheritDoc}

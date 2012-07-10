@@ -16,9 +16,12 @@
 
 package com.google.common.collect;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import com.google.common.annotations.GwtCompatible;
 
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.Map;
 import java.util.SortedSet;
 
@@ -48,6 +51,25 @@ abstract class AbstractSortedSetMultimap<K, V>
   @Override abstract SortedSet<V> createCollection();
 
   // Following Javadoc copied from Multimap and SortedSetMultimap.
+
+  /**
+   * Stores a key-value pair in the multimap.
+   *
+   * @param key key to store in the multimap
+   * @param value value to store in the multimap
+   * @return {@code true} if the method increased the size of the multimap, or
+   *     {@code false} if the multimap already contained the key-value pair
+   */
+  @Override public boolean put(K key, V value) {
+    // Do extra validation, because TreeSet and TreeMap can be finicky about nulls.
+    Comparator<? super V> valueComparator = valueComparator();
+    if (valueComparator == null) {
+      checkNotNull(value);
+    } else if (value == null) {
+      valueComparator.compare(value, value);
+    }
+    return super.put(key, value);
+  }
 
   /**
    * Returns a collection view of all values associated with a key. If no

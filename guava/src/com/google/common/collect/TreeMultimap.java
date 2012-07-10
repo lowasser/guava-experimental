@@ -26,7 +26,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.Collection;
 import java.util.Comparator;
-import java.util.SortedMap;
+import java.util.NavigableMap;
+import java.util.NavigableSet;
 import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
@@ -154,22 +155,27 @@ public class TreeMultimap<K, V> extends AbstractSortedSetMultimap<K, V> {
    * {@inheritDoc}
    *
    * <p>Because a {@code TreeMultimap} has unique sorted keys, this method
-   * returns a {@link SortedSet}, instead of the {@link java.util.Set} specified
+   * returns a {@link NavigableSet}, instead of the {@link java.util.Set} specified
    * in the {@link Multimap} interface.
    */
-  @Override public SortedSet<K> keySet() {
-    return (SortedSet<K>) super.keySet();
+  @Override public NavigableSet<K> keySet() {
+    return (NavigableSet<K>) super.keySet();
+  }
+
+  @Override
+  public NavigableSet<V> get(K key) {
+    return (NavigableSet<V>) super.get(key);
   }
 
   /**
    * {@inheritDoc}
    *
    * <p>Because a {@code TreeMultimap} has unique sorted keys, this method
-   * returns a {@link SortedMap}, instead of the {@link java.util.Map} specified
+   * returns a {@link NavigableMap}, instead of the {@link java.util.Map} specified
    * in the {@link Multimap} interface.
    */
-  @Override public SortedMap<K, Collection<V>> asMap() {
-    return (SortedMap<K, Collection<V>>) super.asMap();
+  @Override public NavigableMap<K, Collection<V>> asMap() {
+    return (NavigableMap<K, Collection<V>>) super.asMap();
   }
 
   /**
