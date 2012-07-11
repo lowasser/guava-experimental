@@ -72,6 +72,11 @@ final class EmptyImmutableSet extends ImmutableSet<Object> {
     return ImmutableList.of();
   }
 
+  @Override
+  int indexOf(@Nullable Object o) {
+    return -1;
+  }
+
   @Override public boolean equals(@Nullable Object object) {
     if (object instanceof Set) {
       Set<?> that = (Set<?>) object;

@@ -17,6 +17,7 @@
 package com.google.common.collect;
 
 import com.google.common.annotations.GwtCompatible;
+import com.google.common.primitives.Ints;
 
 /**
  * Static methods for implementing hash-based collections.
@@ -26,6 +27,7 @@ import com.google.common.annotations.GwtCompatible;
  */
 @GwtCompatible
 final class Hashing {
+
   private Hashing() {}
 
   /*
