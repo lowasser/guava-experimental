@@ -25,7 +25,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -88,17 +87,17 @@ public final class HashMultimap<K, V> extends AbstractSetMultimap<K, V> {
   }
 
   private HashMultimap() {
-    super(new HashMap<K, Collection<V>>());
+    super(CompactHashMap.<K, Collection<V>>create());
   }
 
   private HashMultimap(int expectedKeys, int expectedValuesPerKey) {
-    super(Maps.<K, Collection<V>>newHashMapWithExpectedSize(expectedKeys));
+    super(CompactHashMap.<K, Collection<V>>createWithExpectedSize(expectedKeys));
     Preconditions.checkArgument(expectedValuesPerKey >= 0);
     this.expectedValuesPerKey = expectedValuesPerKey;
   }
 
   private HashMultimap(Multimap<? extends K, ? extends V> multimap) {
-    super(Maps.<K, Collection<V>>newHashMapWithExpectedSize(
+    super(CompactHashMap.<K, Collection<V>>createWithExpectedSize(
         multimap.keySet().size()));
     putAll(multimap);
   }
@@ -111,7 +110,7 @@ public final class HashMultimap<K, V> extends AbstractSetMultimap<K, V> {
    * @return a new {@code HashSet} containing a collection of values for one key
    */
   @Override Set<V> createCollection() {
-    return Sets.<V>newHashSetWithExpectedSize(expectedValuesPerKey);
+    return CompactHashSet.createWithExpectedSize(expectedValuesPerKey);
   }
 
   /**

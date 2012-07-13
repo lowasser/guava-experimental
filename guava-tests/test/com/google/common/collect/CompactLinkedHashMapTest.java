@@ -12,23 +12,24 @@ import java.util.Map.Entry;
 import junit.framework.Test;
 import junit.framework.TestCase;
 
-public class CompactHashMapTest extends TestCase {
+public class CompactLinkedHashMapTest extends TestCase {
   public static Test suite() {
     return MapTestSuiteBuilder.using(new TestStringMapGenerator() {
   
         @Override
         protected Map<String, String> create(Entry<String, String>[] entries) {
-          CompactHashMap<String, String> map = new CompactHashMap<String, String>();
+          CompactLinkedHashMap<String, String> map = new CompactLinkedHashMap<String, String>();
           for (Entry<String, String> entry : entries) {
             map.put(entry.getKey(), entry.getValue());
           }
           return map;
         }
       })
-      .named("CompactHashMap")
+      .named("CompactLinkedHashMap")
       .withFeatures(CollectionSize.ANY,
-          CollectionFeature.FAILS_FAST_ON_CONCURRENT_MODIFICATION,
           MapFeature.GENERAL_PURPOSE,
+          CollectionFeature.FAILS_FAST_ON_CONCURRENT_MODIFICATION,
+          CollectionFeature.KNOWN_ORDER,
           CollectionFeature.SERIALIZABLE,
           MapFeature.ALLOWS_NULL_KEYS,
           MapFeature.ALLOWS_NULL_VALUES)

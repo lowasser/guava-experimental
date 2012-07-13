@@ -16,7 +16,9 @@
 
 package com.google.common.collect.testing.testers;
 
+import static com.google.common.collect.testing.features.CollectionFeature.KNOWN_ORDER;
 import static com.google.common.collect.testing.features.CollectionFeature.SERIALIZABLE;
+import static org.junit.contrib.truth.Truth.ASSERT;
 
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.collect.testing.AbstractCollectionTester;
@@ -37,5 +39,11 @@ public class CollectionSerializationTester<E> extends AbstractCollectionTester<E
     Helpers.assertEqualIgnoringOrder(
         actualContents(),
         SerializableTester.reserialize(actualContents()));
+  }
+  
+  @CollectionFeature.Require({SERIALIZABLE, KNOWN_ORDER})
+  public void testReserializePreservingOrder() {
+    ASSERT.that(SerializableTester.reserialize(actualContents()))
+      .hasContentsInOrder(actualContents().toArray());
   }
 }

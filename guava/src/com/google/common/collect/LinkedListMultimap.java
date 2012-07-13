@@ -164,14 +164,14 @@ public class LinkedListMultimap<K, V>
 
   LinkedListMultimap() {
     keyCount = LinkedHashMultiset.create();
-    keyToKeyHead = Maps.newHashMap();
-    keyToKeyTail = Maps.newHashMap();
+    keyToKeyHead = CompactHashMap.create();
+    keyToKeyTail = CompactHashMap.create();
   }
 
   private LinkedListMultimap(int expectedKeys) {
     keyCount = LinkedHashMultiset.create(expectedKeys);
-    keyToKeyHead = Maps.newHashMapWithExpectedSize(expectedKeys);
-    keyToKeyTail = Maps.newHashMapWithExpectedSize(expectedKeys);
+    keyToKeyHead = CompactHashMap.createWithExpectedSize(expectedKeys);
+    keyToKeyTail = CompactHashMap.createWithExpectedSize(expectedKeys);
   }
 
   private LinkedListMultimap(Multimap<? extends K, ? extends V> multimap) {
