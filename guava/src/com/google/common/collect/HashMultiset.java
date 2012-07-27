@@ -23,11 +23,15 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.util.HashMap;
 
 /**
- * Multiset implementation backed by a {@link HashMap}.
+ * Multiset implementation backed by an internal hash table.
+ * 
+ * <p>Operations such as {@link #count(Object)}, {@link #add(Object, int)}, and
+ * {@link #remove(Object, int)} take amortized constant time, assuming the hash
+ * function distributes the elements properly.
  *
+ * @author Louis Wasserman
  * @author Kevin Bourrillion
  * @author Jared Levy
  * @since 2.0 (imported from Google Collections Library)
@@ -93,7 +97,7 @@ public final class HashMultiset<E> extends HashBasedMultiset<E>
       throws IOException, ClassNotFoundException {
     stream.defaultReadObject();
     int distinctElements = Serialization.readCount(stream);
-    initHashTable(distinctElements);
+    initHashTable(Math.max(2, distinctElements));
     Serialization.populateMultiset(this, stream, distinctElements);
   }
 

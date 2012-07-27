@@ -58,6 +58,15 @@ public class MultisetCollectionTest extends TestCase {
         .named("HashMultiset")
         .createTestSuite());
 
+    suite.addTest(MultisetTestSuiteBuilder.using(linkedHashMultisetGenerator())
+        .withFeatures(CollectionSize.ANY,
+            CollectionFeature.ALLOWS_NULL_VALUES,
+            CollectionFeature.SERIALIZABLE,
+            CollectionFeature.KNOWN_ORDER,
+            CollectionFeature.GENERAL_PURPOSE)
+        .named("LinkedHashMultiset")
+        .createTestSuite());
+
     suite.addTest(MultisetTestSuiteBuilder.using(
         unmodifiableMultisetGenerator())
         .withFeatures(CollectionSize.ANY, CollectionFeature.KNOWN_ORDER,
@@ -154,6 +163,14 @@ public class MultisetCollectionTest extends TestCase {
     return new TestStringMultisetGenerator() {
       @Override protected Multiset<String> create(String[] elements) {
         return HashMultiset.create(asList(elements));
+      }
+    };
+  }
+  
+  private static TestStringMultisetGenerator linkedHashMultisetGenerator() {
+    return new TestStringMultisetGenerator() {
+      @Override protected Multiset<String> create(String[] elements) {
+        return LinkedHashMultiset.create(asList(elements));
       }
     };
   }

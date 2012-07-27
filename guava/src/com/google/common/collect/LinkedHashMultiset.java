@@ -18,16 +18,16 @@ package com.google.common.collect;
 
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.annotations.GwtIncompatible;
+import com.google.common.collect.Multiset.Entry;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-
-import javax.annotation.Nullable;
 
 /**
  * A {@code Multiset} implementation with predictable iteration order. Its iterator orders elements
@@ -36,11 +36,11 @@ import javax.annotation.Nullable;
  * occurrences of an element are removed, after which that element is added to the multiset, the
  * element will appear at the end of the iteration.
  * 
- * <p>
- * See the Guava User Guide article on <a href=
+ * <p>See the Guava User Guide article on <a href=
  * "http://code.google.com/p/guava-libraries/wiki/NewCollectionTypesExplained#Multiset">
  * {@code Multiset}</a>.
  * 
+ * @author Louis Wasserman
  * @author Kevin Bourrillion
  * @author Jared Levy
  * @since 2.0 (imported from Google Collections Library)
@@ -83,57 +83,110 @@ public final class LinkedHashMultiset<E> extends HashBasedMultiset<E> implements
     Iterables.addAll(multiset, elements);
     return multiset;
   }
+  
+  private static final int ENDPOINT = -2;
+  
+  private transient int firstEntry;
+  private transient int lastEntry;
+  // the high 32 bits is the predecessor, the low 32 is the successor
+  private transient long[] links;
 
-  private transient LinkedEntry<E> headerEntry;
-
-  LinkedHashMultiset(int expectedElements) {
-    super(expectedElements);
-    headerEntry = new LinkedEntry<E>(null, 0, 0, null);
+  LinkedHashMultiset() {
+    super();
   }
 
-  private static final class LinkedEntry<E> extends HashEntry<E> {
-    LinkedEntry<E> successor;
-    LinkedEntry<E> predecessor;
+  LinkedHashMultiset(int expectedSize) {
+    super(expectedSize);
+  }
+  
+  private static final long INT_MASK = 0xFFFFFFFFL;
 
-    LinkedEntry(E elem, int smearedHash, int count, @Nullable HashEntry<E> nextInBucket) {
-      super(elem, smearedHash, count, nextInBucket);
-      this.successor = this;
-      this.predecessor = this;
+  private void setSuccessor(int pred, int succ) {
+    if (pred == ENDPOINT) {
+      firstEntry = succ;
+    } else {
+      links[pred] = 
+          (links[pred] & (INT_MASK << 32)) | (succ & INT_MASK);
     }
   }
-
-  @Override
-  LinkedEntry<E> createEntry(
-      @Nullable E element,
-      int smearedHash,
-      int count,
-      HashEntry<E> nextInBucket) {
-    LinkedEntry<E> result = new LinkedEntry<E>(element, smearedHash, count, nextInBucket);
-    succeeds(headerEntry.predecessor, result);
-    succeeds(result, headerEntry);
-    return result;
+  
+  private void setPredecessor(int succ, int pred) {
+    if (succ == ENDPOINT) {
+      lastEntry = pred;
+    } else {
+      links[succ] = (links[succ] & INT_MASK)
+          | ((pred & INT_MASK) << 32);
+    }
+  }
+  
+  private int getPredecessor(int entryIndex) {
+    return (int) (links[entryIndex] >> 32);
+  }
+  
+  private int getSuccessor(int entryIndex) {
+    return (int) links[entryIndex];
+  }
+  
+  private void succeeds(int pred, int succ) {
+    setSuccessor(pred, succ);
+    setPredecessor(succ, pred);
   }
 
-  private static <E> void succeeds(LinkedEntry<E> pred, LinkedEntry<E> succ) {
-    pred.successor = succ;
-    succ.predecessor = pred;
+  @Override
+  void initHashTable(int expectedSize) {
+    expectedSize = Math.max(2, expectedSize);
+    firstEntry = ENDPOINT;
+    lastEntry = ENDPOINT;
+    super.initHashTable(expectedSize);
+    links = new long[expectedSize];
+    Arrays.fill(links, -1);
   }
 
   @Override
-  void deleteEntry(HashEntry<E> entry, HashEntry<E> prev) {
-    super.deleteEntry(entry, prev);
-    LinkedEntry<E> toDelete = (LinkedEntry<E>) entry;
-    succeeds(toDelete.predecessor, toDelete.successor);
+  void resizeEntries(int newEntries) {
+    int oldEntries = links.length;
+    links = Arrays.copyOf(links, newEntries);
+    if (oldEntries < newEntries) {
+      Arrays.fill(links, oldEntries, newEntries, -1);
+    }
+    super.resizeEntries(newEntries);
+  }
+
+  @Override
+  void initEntry(int newEntryIndex, E element, int hash, int occurrences, int nextInBucket) {
+    super.initEntry(newEntryIndex, element, hash, occurrences, nextInBucket);
+    succeeds(lastEntry, newEntryIndex);
+    succeeds(newEntryIndex, ENDPOINT);
+  }
+
+  @Override
+  void moveEntry(int dstEntry) {
+    int srcEntry = distinctElements() - 1;
+    succeeds(getPredecessor(dstEntry), getSuccessor(dstEntry));
+    if (dstEntry < srcEntry) {
+      succeeds(getPredecessor(srcEntry), dstEntry);
+      succeeds(dstEntry, getSuccessor(srcEntry));
+    }
+    links[srcEntry] = -1;
+    super.moveEntry(dstEntry);
+  }
+
+  @Override
+  public void clear() {
+    Arrays.fill(links, 0, distinctElements(), -1);
+    super.clear();
+    firstEntry = ENDPOINT;
+    lastEntry = ENDPOINT;
   }
 
   @Override
   Iterator<Entry<E>> entryIterator() {
     return new Iterator<Entry<E>>() {
-      LinkedEntry<E> next = headerEntry.successor;
-      LinkedEntry<E> toRemove = null;
+      int next = firstEntry;
+      int toRemove = -1;
       int expectedModCount = modCount;
       
-      private void checkForComodification() {
+      private void checkForConcurrentModification() {
         if (modCount != expectedModCount) {
           throw new ConcurrentModificationException();
         }
@@ -141,35 +194,35 @@ public final class LinkedHashMultiset<E> extends HashBasedMultiset<E> implements
 
       @Override
       public boolean hasNext() {
-        checkForComodification();
-        return next != headerEntry;
+        checkForConcurrentModification();
+        return next != ENDPOINT;
       }
 
       @Override
-      public Entry<E> next() {
+      public Multiset.Entry<E> next() {
         if (!hasNext()) {
           throw new NoSuchElementException();
         }
-        try {
-          toRemove = next;
-          return wrapEntry(next);
-        } finally {
-          next = next.successor;
-        }
+        toRemove = next;
+        Multiset.Entry<E> result = getEntry(next);
+        next = getSuccessor(next);
+        assert next != -1;
+        return result;
       }
 
       @Override
       public void remove() {
-        checkForComodification();
-        Iterators.checkRemove(toRemove != null);
-        setCount(toRemove.getElement(), 0);
-        toRemove = null;
+        checkForConcurrentModification();
+        Iterators.checkRemove(toRemove != -1);
+        removeAllOccurrences(elements[toRemove]);
+        if (next == distinctElements()) {
+          next = toRemove;
+        }
+        toRemove = -1;
         expectedModCount = modCount;
       }
     };
   }
-
-
 
   /**
    * @serialData the number of distinct elements, the first element, its count, the second element,
@@ -185,9 +238,8 @@ public final class LinkedHashMultiset<E> extends HashBasedMultiset<E> implements
   private void readObject(ObjectInputStream stream)
       throws IOException, ClassNotFoundException {
     stream.defaultReadObject();
-    this.headerEntry = new LinkedEntry<E>(null, 0, 0, null);
     int distinctElements = Serialization.readCount(stream);
-    initHashTable(distinctElements);
+    initHashTable(Math.max(2, distinctElements));
     Serialization.populateMultiset(this, stream, distinctElements);
   }
 

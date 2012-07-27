@@ -1,11 +1,9 @@
 package com.google.common.collect;
 
-import static com.google.common.base.Preconditions.checkArgument;
-
 import com.google.common.base.Objects;
-import com.google.common.math.IntMath;
 import com.google.common.primitives.Ints;
 
+import java.util.Arrays;
 import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -15,126 +13,92 @@ import javax.annotation.Nullable;
 /**
  * Skeleton superclass for {@code HashMultiset} and {@code LinkedHashMultiset}.
  * 
- * <p>We don't want to expose a public "is-a" relationship between them, so we extend them both from a superclass.
+ * <p>We don't want to expose a public "is-a" relationship between them, so we extend them both
+ * from a superclass.
  * 
  * @author Louis Wasserman
  */
 class HashBasedMultiset<E> extends AbstractMultiset<E> {
-  static class HashEntry<E> extends Multisets.AbstractEntry<E> {
-    private final E elem;
-    private final int smearedHash;
-    private int count;
-    @Nullable private HashEntry<E> nextInBucket;
+  transient Object[] elements;
+  private transient long[] metadata;
+  private transient int[] counts;
 
-    HashEntry(E elem, int smearedHash, int count, @Nullable HashEntry<E> nextInBucket) {
-      this.elem = elem;
-      this.smearedHash = smearedHash;
-      this.count = count;
-      this.nextInBucket = nextInBucket;
-    }
-
-    @Override
-    public final E getElement() {
-      return elem;
-    }
-
-    @Override
-    public final int getCount() {
-      return count;
-    }
-  }
-
-  private transient HashEntry<E>[] hashTable;
-  private transient int distinctElements;
   transient int modCount;
-  private transient long size;
+  private transient int[] hashTable;
+  private transient int distinctElements;
+  private transient long totalCount;
   
   HashBasedMultiset() {
     this(8);
   }
-
-  HashBasedMultiset(int expectedElements) {
-    initHashTable(expectedElements);
+  
+  HashBasedMultiset(int expectedSize) {
+    initHashTable(Math.max(2, expectedSize));
+  }
+  
+  void initHashTable(int expectedSize) {
+    elements = new Object[expectedSize];
+    metadata = new long[expectedSize];
+    Arrays.fill(metadata, -1);
+    counts = new int[expectedSize];
+    
+    int tableSize = Integer.highestOneBit(expectedSize - 1) << 1;
+    if (tableSize < 0) {
+      tableSize = Ints.MAX_POWER_OF_TWO;
+    }
+    hashTable = new int[tableSize];
+    Arrays.fill(hashTable, -1);
   }
 
-  void initHashTable(int expectedElements) {
-    checkArgument(
-        expectedElements >= 0,
-        "expectedElements must be >= 0 but was %s",
-        expectedElements);
-    expectedElements = Math.max(2, expectedElements);
-    int tableSize = Integer.highestOneBit(expectedElements - 1) << 1;
-    this.hashTable = createTable(tableSize);
+  private int getSmearedHash(int entryIndex) {
+    return (int) metadata[entryIndex];
   }
 
-  @SuppressWarnings("unchecked")
-  private HashEntry<E>[] createTable(int tableSize) {
-    return new HashEntry[tableSize];
+  private int getNextInBucket(int entryIndex) {
+    return (int) (metadata[entryIndex] >>> 32);
   }
 
-  @Override
-  public int size() {
-    return Ints.saturatedCast(size);
+  private void setNextInBucket(int entryIndex, int next) {
+    long entryMeta = metadata[entryIndex];
+    entryMeta &= 0xFFFFFFFFL;
+    entryMeta |= (long) next << 32;
+    metadata[entryIndex] = entryMeta;
+  }
+
+  private void setHashCode(int entryIndex, int hashCode) {
+    long entryMeta = metadata[entryIndex];
+    entryMeta &= 0xFFFFFFFF00000000L;
+    entryMeta |= hashCode & 0xFFFFFFFFL;
+    metadata[entryIndex] = entryMeta;
+  }
+
+  private int entryIndex(@Nullable Object element) {
+    Object[] elements = this.elements;
+
+    int hash = Hashing.smear((element == null) ? 0 : element.hashCode());
+    int bucket = hash & (hashTable.length - 1);
+    for (int next = hashTable[bucket]; next != -1; next = getNextInBucket(next)) {
+      if (getSmearedHash(next) == hash && Objects.equal(element, elements[next])) {
+        return next;
+      }
+    }
+    return -1;
   }
 
   @Override
   public int count(@Nullable Object element) {
-    int smearedHash = Hashing.smear((element == null) ? 0 : element.hashCode());
-    int bucket = smearedHash & (hashTable.length - 1);
-    for (HashEntry<E> entry = hashTable[bucket]; entry != null; entry = entry.nextInBucket) {
-      if (smearedHash == entry.smearedHash && Objects.equal(element, entry.elem)) {
-        return entry.getCount();
-      }
-    }
-    return 0;
+    int entryIndex = entryIndex(element);
+    return (entryIndex == -1) ? 0 : counts[entryIndex];
   }
 
-  private HashEntry<E> insertEntry(E element, int smearedHash, int count) {
-    distinctElements++;
-    modCount++;
-    size += count;
-    int bucket = smearedHash & (hashTable.length - 1);
-    HashEntry<E> newEntry = createEntry(element, smearedHash, count, hashTable[bucket]);
-    hashTable[bucket] = newEntry;
-    expandIfNecessary();
-    return newEntry;
-  }
-
-  HashEntry<E> createEntry(
-      @Nullable E element, int smearedHash, int count, HashEntry<E> nextInBucket) {
-    return new HashEntry<E>(element, smearedHash, count, nextInBucket);
-  }
-
-  private void expandIfNecessary() {
-    if (distinctElements > hashTable.length && hashTable.length < Ints.MAX_POWER_OF_TWO) {
-      HashEntry<E>[] newTable = createTable(hashTable.length * 2);
-      int mask = newTable.length - 1;
-      for (@Nullable HashEntry<E> bucketHead : hashTable) {
-        HashEntry<E> entry = bucketHead;
-        while (entry != null) {
-          HashEntry<E> next = entry.nextInBucket;
-          
-          int newBucket = entry.smearedHash & mask;
-          entry.nextInBucket = newTable[newBucket];
-          newTable[newBucket] = entry;
-          
-          entry = next;
-        }
-      }
-      this.hashTable = newTable;
-    }
-  }
-
-  void deleteEntry(HashEntry<E> entry, @Nullable HashEntry<E> prev) {
-    int bucket = entry.smearedHash & (hashTable.length - 1);
-    if (prev == null) { // first in the bucket
-      hashTable[bucket] = entry.nextInBucket;
-    } else {
-      prev.nextInBucket = entry.nextInBucket;
-    }
-    size -= entry.count;
-    entry.count = 0;
-    distinctElements--;
+  @Override
+  public void clear() {
+    Arrays.fill(elements, 0, distinctElements, null);
+    Arrays.fill(metadata, 0, distinctElements, -1);
+    Arrays.fill(counts, 0, distinctElements, 0);
+    Arrays.fill(hashTable, -1);
+    distinctElements = 0;
+    totalCount = 0;
     modCount++;
   }
 
@@ -144,24 +108,88 @@ class HashBasedMultiset<E> extends AbstractMultiset<E> {
     if (occurrences == 0) {
       return count(element);
     }
-    int smearedHash = Hashing.smear((element == null) ? 0 : element.hashCode());
-    int bucket = smearedHash & (hashTable.length - 1);
-    for (HashEntry<E> entry = hashTable[bucket]; entry != null; entry = entry.nextInBucket) {
-      if (smearedHash == entry.smearedHash && Objects.equal(element, entry.elem)) {
-        // entry already exists
-        int oldCount = entry.count;
-        try {
-          entry.count = IntMath.checkedAdd(occurrences, oldCount);
-          size += occurrences;
-        } catch (ArithmeticException e) {
-          throw new IllegalArgumentException("Overflow adding " + occurrences
-              + " occurrences to a count of " + oldCount);
+    Object[] elements = this.elements;
+    int hash = Hashing.smear((element == null) ? 0 : element.hashCode());
+    int bucket = hash & (hashTable.length - 1);
+    for (int next = hashTable[bucket]; next != -1; next = getNextInBucket(next)) {
+      if (getSmearedHash(next) == hash && Objects.equal(element, elements[next])) {
+        int oldCount = counts[next];
+        long newCount = (long) oldCount + occurrences;
+        if (newCount > Integer.MAX_VALUE) {
+          throw new IllegalArgumentException("Too many occurrences: " + newCount);
         }
+        counts[next] = (int) newCount;
+        totalCount += occurrences;
         return oldCount;
       }
     }
-    insertEntry(element, smearedHash, occurrences);
+
+    addEntry(element, hash, occurrences);
     return 0;
+  }
+
+  private void addEntry(
+      E element,
+      int hash,
+      int occurrences) {
+    resizeEntriesMaybe(distinctElements + 1);
+    int bucket = hash & (hashTable.length - 1);
+    int nextInBucket = hashTable[bucket];
+    int newEntryIndex = distinctElements;
+    initEntry(newEntryIndex, element, hash, occurrences, nextInBucket);
+    hashTable[bucket] = newEntryIndex;
+    distinctElements++;
+    totalCount += occurrences;
+    resizeHashTable();
+    modCount++;
+  }
+
+  void initEntry(int newEntryIndex, E element, int hash, int occurrences, int nextInBucket) {
+    elements[newEntryIndex] = element;
+    counts[newEntryIndex] = occurrences;
+    setHashCode(newEntryIndex, hash);
+    setNextInBucket(newEntryIndex, nextInBucket);
+  }
+
+  private void resizeEntriesMaybe(int minEntries) {
+    int oldEntries = elements.length;
+    if (minEntries > oldEntries) {
+      int newEntries = oldEntries;
+      do {
+        newEntries = newEntries + (newEntries >>> 1) + 1;
+        if (newEntries < 0) {
+          newEntries = Integer.MAX_VALUE;
+        }
+      } while (newEntries < minEntries);
+      resizeEntries(newEntries);
+    }
+  }
+
+  void resizeEntries(int newEntries) {
+    int oldEntries = elements.length;
+    elements = Arrays.copyOf(elements, newEntries);
+    metadata = Arrays.copyOf(metadata, newEntries);
+    if (oldEntries < newEntries) {
+      Arrays.fill(metadata, oldEntries, newEntries, -1);
+    }
+    counts = Arrays.copyOf(counts, newEntries);
+  }
+
+  private void resizeHashTable() {
+    int threshold = hashTable.length;
+    if (distinctElements > threshold && hashTable.length < Ints.MAX_POWER_OF_TWO) {
+      int newTableSize = hashTable.length * 2;
+      int mask = newTableSize - 1;
+      int[] newTable = new int[newTableSize];
+      Arrays.fill(newTable, -1);
+      for (int i = 0; i < distinctElements; i++) {
+        int smearedHash = getSmearedHash(i);
+        int newBucket = smearedHash & mask;
+        setNextInBucket(i, newTable[newBucket]);
+        newTable[newBucket] = i;
+      }
+      this.hashTable = newTable;
+    }
   }
 
   @Override
@@ -170,46 +198,109 @@ class HashBasedMultiset<E> extends AbstractMultiset<E> {
     if (occurrences == 0) {
       return count(element);
     }
-    int smearedHash = Hashing.smear((element == null) ? 0 : element.hashCode());
-    int bucket = smearedHash & (hashTable.length - 1);
-    HashEntry<E> prev = null;
-    for (HashEntry<E> entry = hashTable[bucket]; entry != null; prev = entry, entry = entry.nextInBucket) {
-      if (smearedHash == entry.smearedHash && Objects.equal(element, entry.elem)) {
-        int oldCount = entry.count;
-        if (oldCount > occurrences) {
-          entry.count -= occurrences;
-          size -= occurrences;
+    Object[] elements = this.elements;
+    int hash = Hashing.smear((element == null) ? 0 : element.hashCode());
+    int bucket = hash & (hashTable.length - 1);
+    int prev = -1;
+    for (int next = hashTable[bucket]; next != -1; prev = next, next = getNextInBucket(next)) {
+      if (hash == getSmearedHash(next) && Objects.equal(element, elements[next])) {
+        int oldCount = counts[next];
+        if (oldCount <= occurrences) {
+          removeEntry(bucket, prev, next);
         } else {
-          deleteEntry(entry, prev);
+          counts[next] = oldCount - occurrences;
+          totalCount -= occurrences;
         }
         return oldCount;
       }
     }
-    return 0; // not found
+    return 0;
+  }
+
+  int removeAllOccurrences(@Nullable Object element) {
+    Object[] elements = this.elements;
+    int hash = Hashing.smear((element == null) ? 0 : element.hashCode());
+    int bucket = hash & (hashTable.length - 1);
+    int prev = -1;
+    for (int next = hashTable[bucket]; next != -1; prev = next, next = getNextInBucket(next)) {
+      if (hash == getSmearedHash(next) && Objects.equal(element, elements[next])) {
+        int oldCount = counts[next];
+        removeEntry(bucket, prev, next);
+        return oldCount;
+      }
+    }
+    return 0;
+  }
+
+  private void removeEntry(int bucket, int prev, int toRemove) {
+    int oldCount = counts[toRemove];
+    // first, delete from the bucket linked list
+    if (prev == -1) { // first in bucket
+      hashTable[bucket] = getNextInBucket(toRemove);
+    } else {
+      setNextInBucket(prev, getNextInBucket(toRemove));
+    }
+
+    moveEntry(toRemove);
+    distinctElements--;
+    modCount++;
+    totalCount -= oldCount;
+  }
+
+  /**
+   * Moves the last entry to the specified index, and nulls out its old position.
+   */
+  void moveEntry(int dstEntry) {
+    int srcEntry = distinctElements - 1;
+    if (dstEntry < srcEntry) {
+      elements[dstEntry] = elements[srcEntry];
+      counts[dstEntry] = counts[srcEntry];
+      metadata[dstEntry] = metadata[srcEntry];
+
+      elements[srcEntry] = null;
+      counts[srcEntry] = 0;
+      metadata[srcEntry] = -1;
+
+      // update the moved entry's bucket links to point to its new location
+      int bucket = getSmearedHash(dstEntry) & (hashTable.length - 1);
+      int prev = -1;
+      int next = hashTable[bucket];
+      while (next != srcEntry) {
+        prev = next;
+        next = getNextInBucket(next);
+      }
+      if (prev == -1) {
+        hashTable[bucket] = dstEntry;
+      } else {
+        setNextInBucket(prev, dstEntry);
+      }
+    } else {
+      elements[dstEntry] = null;
+      counts[dstEntry] = 0;
+      metadata[dstEntry] = -1;
+    }
   }
 
   @Override
   public int setCount(@Nullable E element, int count) {
     Multisets.checkNonnegative(count, "count");
-    int smearedHash = Hashing.smear((element == null) ? 0 : element.hashCode());
-    int bucket = smearedHash & (hashTable.length - 1);
-    HashEntry<E> prev = null;
-    for (HashEntry<E> entry = hashTable[bucket]; entry != null; prev = entry, entry = entry.nextInBucket) {
-      if (smearedHash == entry.smearedHash && Objects.equal(element, entry.elem)) {
-        int oldCount = entry.count;
-        if (count == 0) {
-          deleteEntry(entry, prev);
-        } else {
-          entry.count = count;
-          size += count - oldCount;
-        }
+    if (count == 0) {
+      return removeAllOccurrences(element);
+    }
+
+    int hash = Hashing.smear((element == null) ? 0 : element.hashCode());
+    int bucket = hash & (hashTable.length - 1);
+    Object[] elements = this.elements;
+    for (int next = hashTable[bucket]; next != -1; next = getNextInBucket(next)) {
+      if (hash == getSmearedHash(next) && Objects.equal(element, elements[next])) {
+        int oldCount = counts[next];
+        counts[next] = count;
+        totalCount += count - oldCount;
         return oldCount;
       }
     }
 
-    if (count > 0) {
-      insertEntry(element, smearedHash, count);
-    }
+    addEntry(element, hash, count);
     return 0;
   }
 
@@ -219,92 +310,121 @@ class HashBasedMultiset<E> extends AbstractMultiset<E> {
     Multisets.checkNonnegative(newCount, "newCount");
     if (oldCount == newCount) {
       return count(element) == oldCount;
-    } else if (count(element) == oldCount) {
-      setCount(element, newCount);
+    }
+
+    Object[] elements = this.elements;
+    int hash = Hashing.smear((element == null) ? 0 : element.hashCode());
+    int bucket = hash & (hashTable.length - 1);
+    int prev = -1;
+    for (int next = hashTable[bucket]; next != -1; prev = next, next = getNextInBucket(next)) {
+      if (hash == getSmearedHash(next) && Objects.equal(element, elements[next])) {
+        if (oldCount == counts[next]) {
+          if (newCount == 0) {
+            removeEntry(bucket, prev, next);
+          } else {
+            counts[next] = newCount;
+            totalCount += newCount - oldCount;
+          }
+          return true;
+        } else {
+          return false;
+        }
+      }
+    }
+
+    if (oldCount == 0) {
+      addEntry(element, hash, newCount);
       return true;
     } else {
       return false;
     }
   }
 
-  @Override
-  public void clear() {
-    size = 0;
-    distinctElements = 0;
-    for (int i = 0; i < hashTable.length; i++) {
-      for (HashEntry<E> entry = hashTable[i]; entry != null; entry = entry.nextInBucket) {
-        entry.count = 0; // zero out the old entries
-      }
-      hashTable[i] = null;
-    }
-    modCount++;
-  }
-
-  @Override
-  Iterator<Entry<E>> entryIterator() {
-    return new Iterator<Entry<E>>() {
-      int bucket = -1;
-      HashEntry<E> next = null;
-
-      HashEntry<E> toRemove = null;
-
-      int expectedModCount = modCount;
-
-      private void checkForComodification() {
-        if (modCount != expectedModCount) {
-          throw new ConcurrentModificationException();
-        }
-      }
-
-      @Override
-      public boolean hasNext() {
-        checkForComodification();
-        while (next == null && bucket + 1 < hashTable.length) {
-          next = hashTable[++bucket];
-        }
-        return next != null;
-      }
-
-      @Override
-      public Entry<E> next() {
-        if (!hasNext()) {
-          throw new NoSuchElementException();
-        }
-        try {
-          toRemove = next;
-
-          return wrapEntry(next);
-        } finally {
-          next = next.nextInBucket;
-        }
-      }
-
-      @Override
-      public void remove() {
-        checkForComodification();
-        Iterators.checkRemove(toRemove != null);
-        setCount(toRemove.getElement(), 0);
-        toRemove = null;
-        expectedModCount = modCount;
-      }
-    };
-  }
-
   /**
-   * Returns a {@code Entry} that will always reflect the current count of the element in the
-   * backing multiset.
+   * View of the multiset entry for a given element. Reflects changes to the multiset since
+   * construction.
    */
-  Entry<E> wrapEntry(final HashEntry<E> backingEntry) {
-    return new Multisets.AbstractEntry<E>() {
-      @Override
-      public E getElement() {
-        return backingEntry.getElement();
-      }
+  private class Entry extends Multisets.AbstractEntry<E> {
+    @Nullable
+    private final E element;
+    private int entryIndex;
+    
+    @SuppressWarnings("unchecked")
+    Entry(int entryIndex) {
+      this.entryIndex = entryIndex;
+      this.element = (E) elements[entryIndex];
+    }
 
+    private void updateIndex() {
+      if (entryIndex == -1 || entryIndex > distinctElements
+          || !Objects.equal(element, elements[entryIndex])) {
+        entryIndex = entryIndex(element);
+      }
+    }
+
+    @Override
+    public E getElement() {
+      return element;
+    }
+
+    @Override
+    public int getCount() {
+      updateIndex();
+      return (entryIndex == -1) ? 0 : counts[entryIndex];
+    }
+  }
+  
+  Multiset.Entry<E> getEntry(int entryIndex) {
+    return new Entry(entryIndex);
+  }
+  
+  private abstract class Itr<T> implements Iterator<T> {
+    int next = 0;
+    int toRemove = -1;
+    int expectedModCount = modCount;
+    
+    private void checkForConcurrentModification() {
+      if (modCount != expectedModCount) {
+        throw new ConcurrentModificationException();
+      }
+    }
+    
+    abstract T resultForEntry(int entryIndex);
+
+    @Override
+    public boolean hasNext() {
+      checkForConcurrentModification();
+      return next < distinctElements;
+    }
+
+    @Override
+    public T next() {
+      if (!hasNext()) {
+        throw new NoSuchElementException();
+      }
+      T result = resultForEntry(next);
+      toRemove = next;
+      next++;
+      return result;
+    }
+
+    @Override
+    public void remove() {
+      checkForConcurrentModification();
+      Iterators.checkRemove(toRemove != -1);
+      removeAllOccurrences(elements[toRemove]);
+      next--;
+      toRemove = -1;
+      expectedModCount = modCount;
+    }
+  }
+
+  @Override
+  Iterator<Multiset.Entry<E>> entryIterator() {
+    return new Itr<Multiset.Entry<E>>() {
       @Override
-      public int getCount() {
-        int result = backingEntry.getCount();
-        return (result == 0) ? HashBasedMultiset.this.count(getElement()) : result;
+      Multiset.Entry<E> resultForEntry(int entryIndex) {
+        return getEntry(entryIndex);
       }
     };
   }
@@ -312,5 +432,10 @@ class HashBasedMultiset<E> extends AbstractMultiset<E> {
   @Override
   int distinctElements() {
     return distinctElements;
+  }
+
+  @Override
+  public int size() {
+    return Ints.saturatedCast(totalCount);
   }
 }
