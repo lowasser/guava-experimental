@@ -19,9 +19,13 @@ package com.google.common.primitives;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import com.google.common.annotations.Beta;
 import com.google.common.annotations.GwtCompatible;
+import com.google.common.annotations.GwtIncompatible;
 
 import java.util.Comparator;
+
+import javax.annotation.CheckForNull;
 
 /**
  * Static utility methods pertaining to {@code byte} primitives that
@@ -189,6 +193,37 @@ public final class SignedBytes {
         }
       }
       return left.length - right.length;
+    }
+  }
+  
+  /**
+   * Parses the specified string as a signed decimal byte value. The ASCII
+   * character {@code '-'} (<code>'&#92;u002D'</code>) is recognized as the
+   * minus sign.
+   *
+   * <p>Unlike {@link Byte#parseByte(String)}, this method returns
+   * {@code null} instead of throwing an exception if parsing fails.
+   *
+   * <p>Note that strings prefixed with ASCII {@code '+'} are rejected, even
+   * under JDK 7, despite the change to {@link Byte#parseByte(String)} for
+   * that version.
+   *
+   * @param string the string representation of a byte value
+   * @return the byte value represented by {@code string}, or {@code null} if
+   *     {@code string} has a length of zero or cannot be parsed as a byte
+   *     value
+   */
+  @Beta
+  @CheckForNull
+  @GwtIncompatible("TODO")
+  public static Byte tryParse(String string) {
+    Long result = Longs.tryParse(string);
+    if (result != null 
+        && result >= Byte.MIN_VALUE 
+        && result <= Byte.MAX_VALUE) {
+      return result.byteValue();
+    } else {
+      return null;
     }
   }
 }

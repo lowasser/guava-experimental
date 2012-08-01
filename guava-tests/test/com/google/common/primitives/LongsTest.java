@@ -24,6 +24,7 @@ import com.google.common.testing.SerializableTester;
 
 import junit.framework.TestCase;
 
+import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -390,6 +391,38 @@ public class LongsTest extends TestCase {
 
   public void testAsListEmpty() {
     assertSame(Collections.emptyList(), Longs.asList(EMPTY));
+  }
+
+  @GwtIncompatible("AndroidLong")
+  public void testTryParse() {
+    tryParseAndAssertEquals(0L, "-0");
+    tryParseAndAssertEquals(GREATEST, Long.toString(GREATEST));
+    tryParseAndAssertEquals(LEAST, Long.toString(LEAST));
+    for (int i = -100; i <= 100; i++) {
+      tryParseAndAssertEquals(i, Long.toString(i));
+    }
+    Random rng = new Random(314159);
+    for (int i = 0; i < 100; i++) {
+      long x = rng.nextLong();
+      tryParseAndAssertEquals(x, Long.toString(x));
+    }
+    assertNull(Longs.tryParse(""));
+    assertNull(Longs.tryParse("-"));
+    assertNull(Longs.tryParse("+1"));
+    assertNull(Longs.tryParse("999999999999999999999"));
+    BigInteger maxPlusOne = BigInteger.valueOf(GREATEST).add(BigInteger.ONE);
+    BigInteger minMinusOne = BigInteger.valueOf(LEAST).subtract(BigInteger.ONE);
+    assertNull("Max long + 1", Longs.tryParse(maxPlusOne.toString()));
+    assertNull("Min long - 1", Longs.tryParse(minMinusOne.toString()));
+  }
+
+  /**
+   * Applies {@link Longs#tryParse(String)} to the given string and asserts that
+   * the result is as expected.
+   */
+  @GwtIncompatible("AndroidLong")
+  private static void tryParseAndAssertEquals(long expected, String value) {
+    assertEquals(Long.valueOf(expected), Longs.tryParse(value));
   }
 
   @GwtIncompatible("NullPointerTester")

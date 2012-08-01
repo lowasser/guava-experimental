@@ -275,6 +275,36 @@ public class UnsignedLongsTest extends TestCase {
         UnsignedLongs.join("", -1, Long.MIN_VALUE));
   }
 
+  @GwtIncompatible("AndroidLong")
+  public void testTryParse() {
+    for (int i = 0; i <= 0xFF; i++) {
+      tryParseAndAssertEquals(i, UnsignedLongs.toString(i));
+    }
+    Random rng = new Random(314159);
+    for (int i = 0; i <= 100; i++) {
+      long x = rng.nextLong();
+      tryParseAndAssertEquals(x, UnsignedLongs.toString(x));
+    }
+    assertNull(UnsignedLongs.tryParse(""));
+    assertNull(UnsignedLongs.tryParse("-"));
+    assertNull(UnsignedLongs.tryParse("-0"));
+    assertNull(UnsignedLongs.tryParse("+1"));
+    assertNull(UnsignedLongs.tryParse("999999999999999999999"));
+    BigInteger maxPlusOne = UnsignedLong.asUnsigned(GREATEST).bigIntegerValue().add(BigInteger.ONE);
+    assertNull("Max ulong + 1",
+        UnsignedLongs.tryParse(maxPlusOne.toString()));
+    assertNull("Min ulong - 1", UnsignedLongs.tryParse("-1"));
+  }
+
+  /**
+   * Applies {@link UnsignedLongs#tryParse(String)} to the given string and asserts that
+   * the result is as expected.
+   */
+  @GwtIncompatible("AndroidLong")
+  private static void tryParseAndAssertEquals(long expected, String value) {
+    assertEquals(UnsignedLong.asUnsigned(expected), UnsignedLongs.tryParse(value));
+  }
+
   @GwtIncompatible("NullPointerTester")
   public void testNulls() {
     NullPointerTester tester = new NullPointerTester();

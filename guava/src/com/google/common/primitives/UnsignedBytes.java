@@ -20,6 +20,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.common.annotations.Beta;
+import com.google.common.annotations.GwtIncompatible;
 import com.google.common.annotations.VisibleForTesting;
 
 import sun.misc.Unsafe;
@@ -29,6 +30,8 @@ import java.nio.ByteOrder;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.Comparator;
+
+import javax.annotation.CheckForNull;
 
 /**
  * Static utility methods pertaining to {@code byte} primitives that interpret
@@ -433,6 +436,35 @@ public final class UnsignedBytes {
       } catch (Throwable t) { // ensure we really catch *everything*
         return lexicographicalComparatorJavaImpl();
       }
+    }
+  }
+  
+  /**
+   * Parses the specified string as an unsigned decimal byte value.
+   *
+   * <p>Unlike {@link UnsignedBytes#parseUnsignedByte(String)}, this method returns
+   * {@code null} instead of throwing an exception if parsing fails.
+   *
+   * <p>Note that strings prefixed with ASCII {@code '+'} are rejected, even
+   * under JDK 7, despite the change to {@link Byte#parseByte(String)} for
+   * that version.
+   *
+   * @param string the string representation of an unsigned byte value
+   * @return the byte value represented by {@code string}, or {@code null} if
+   *     {@code string} has a length of zero or cannot be parsed as a byte
+   *     value
+   */
+  @Beta
+  @CheckForNull
+  @GwtIncompatible("TODO")
+  public static Byte tryParse(String string) {
+    Long result = Longs.tryParse(string);
+    if (result != null 
+        && result >= 0
+        && result <= toInt(MAX_VALUE)) {
+      return result.byteValue();
+    } else {
+      return null;
     }
   }
 }

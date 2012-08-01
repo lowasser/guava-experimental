@@ -615,6 +615,13 @@ public final class Ints {
   @CheckForNull
   @GwtIncompatible("TODO")
   public static Integer tryParse(String string) {
-    return AndroidInteger.tryParse(string, 10);
+    Long result = Longs.tryParse(string);
+    if (result != null 
+        && result >= Integer.MIN_VALUE 
+        && result <= Integer.MAX_VALUE) {
+      return result.intValue();
+    } else {
+      return null;
+    }
   }
 }

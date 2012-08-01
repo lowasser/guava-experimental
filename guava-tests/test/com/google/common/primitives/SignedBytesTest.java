@@ -154,6 +154,31 @@ public class SignedBytesTest extends TestCase {
     assertSame(comparator, SerializableTester.reserialize(comparator));
   }
 
+  @GwtIncompatible("AndroidLong")
+  public void testTryParse() {
+    tryParseAndAssertEquals(0, "-0");
+    for (int i = Byte.MIN_VALUE; i <= Byte.MAX_VALUE; i++) {
+      tryParseAndAssertEquals(i, Integer.toString(i));
+    }
+    assertNull(SignedBytes.tryParse(""));
+    assertNull(SignedBytes.tryParse("-"));
+    assertNull(SignedBytes.tryParse("+1"));
+    assertNull(SignedBytes.tryParse("9999999999999999"));
+    assertNull("Max byte + 1",
+        SignedBytes.tryParse(Integer.toString(GREATEST + 1)));
+    assertNull("Min byte - 1",
+        SignedBytes.tryParse(Integer.toString(LEAST - 1)));
+  }
+
+  /**
+   * Applies {@link SignedBytes#tryParse(String)} to the given string and asserts that
+   * the result is as expected.
+   */
+  @GwtIncompatible("AndroidLong")
+  private static void tryParseAndAssertEquals(int expected, String value) {
+    assertEquals(Byte.valueOf((byte) expected), SignedBytes.tryParse(value));
+  }
+
   @GwtIncompatible("NullPointerTester")
   public void testNulls() {
     NullPointerTester tester = new NullPointerTester();

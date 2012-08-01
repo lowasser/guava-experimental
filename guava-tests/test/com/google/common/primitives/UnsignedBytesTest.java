@@ -16,6 +16,7 @@
 
 package com.google.common.primitives;
 
+import com.google.common.annotations.GwtIncompatible;
 import com.google.common.collect.testing.Helpers;
 import com.google.common.testing.NullPointerTester;
 import com.google.common.testing.SerializableTester;
@@ -252,6 +253,31 @@ public class UnsignedBytesTest extends TestCase {
     Comparator<byte[]> javaImpl = UnsignedBytes.lexicographicalComparatorJavaImpl();
     Helpers.testComparator(javaImpl, ordered);
     assertSame(javaImpl, SerializableTester.reserialize(javaImpl));
+  }
+
+  @GwtIncompatible("AndroidLong")
+  public void testTryParse() {
+    tryParseAndAssertEquals(0, "-0");
+    for (int i = UnsignedBytes.toInt(LEAST); i <= UnsignedBytes.toInt(GREATEST); i++) {
+      tryParseAndAssertEquals(i, Integer.toString(i));
+    }
+    assertNull(UnsignedBytes.tryParse(""));
+    assertNull(UnsignedBytes.tryParse("-"));
+    assertNull(UnsignedBytes.tryParse("+1"));
+    assertNull(UnsignedBytes.tryParse("9999999999999999"));
+    assertNull("Max byte + 1",
+        UnsignedBytes.tryParse(Integer.toString(UnsignedBytes.toInt(GREATEST) + 1)));
+    assertNull("Min byte - 1",
+        UnsignedBytes.tryParse(Integer.toString(UnsignedBytes.toInt(LEAST) - 1)));
+  }
+
+  /**
+   * Applies {@link UnsignedBytes#tryParse(String)} to the given string and asserts that
+   * the result is as expected.
+   */
+  @GwtIncompatible("AndroidLong")
+  private static void tryParseAndAssertEquals(int expected, String value) {
+    assertEquals(Byte.valueOf((byte) expected), UnsignedBytes.tryParse(value));
   }
 
   public void testNulls() {

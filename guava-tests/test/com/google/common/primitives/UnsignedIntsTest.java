@@ -273,6 +273,36 @@ public class UnsignedIntsTest extends TestCase {
     return UnsignedInts.join(",", values);
   }
 
+  @GwtIncompatible("AndroidLong")
+  public void testTryParse() {
+    for (int i = 0; i <= 0xFF; i++) {
+      tryParseAndAssertEquals(i, UnsignedInts.toString(i));
+    }
+    Random rng = new Random(314159);
+    for (int i = 0; i <= 100; i++) {
+      int x = rng.nextInt();
+      tryParseAndAssertEquals(x, UnsignedInts.toString(x));
+    }
+    assertNull(UnsignedInts.tryParse(""));
+    assertNull(UnsignedInts.tryParse("-"));
+    assertNull(UnsignedInts.tryParse("-0"));
+    assertNull(UnsignedInts.tryParse("+1"));
+    assertNull(UnsignedInts.tryParse("9999999999999999"));
+    assertNull("Max uint + 1",
+        UnsignedInts.tryParse(Long.toString(UnsignedInts.toLong(GREATEST) + 1)));
+    assertNull("Min uint - 1",
+        UnsignedInts.tryParse(Long.toString(UnsignedInts.toLong(LEAST) - 1)));
+  }
+
+  /**
+   * Applies {@link UnsignedInts#tryParse(String)} to the given string and asserts that
+   * the result is as expected.
+   */
+  @GwtIncompatible("AndroidLong")
+  private static void tryParseAndAssertEquals(int expected, String value) {
+    assertEquals(UnsignedInteger.asUnsigned(expected), UnsignedInts.tryParse(value));
+  }
+
   @GwtIncompatible("NullPointerTester")
   public void testNulls() {
     NullPointerTester tester = new NullPointerTester();

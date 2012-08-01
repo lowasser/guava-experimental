@@ -417,16 +417,21 @@ public class IntsTest extends TestCase {
     tester.testAllPublicStaticMethods(Ints.class);
   }
 
-  @GwtIncompatible("AndroidInteger")
+  @GwtIncompatible("AndroidLong")
   public void testTryParse() {
-    tryParseAndAssertEquals(0, "0");
     tryParseAndAssertEquals(0, "-0");
-    tryParseAndAssertEquals(1, "1");
-    tryParseAndAssertEquals(-1, "-1");
     tryParseAndAssertEquals(8900, "8900");
     tryParseAndAssertEquals(-8900, "-8900");
     tryParseAndAssertEquals(GREATEST, Integer.toString(GREATEST));
     tryParseAndAssertEquals(LEAST, Integer.toString(LEAST));
+    for (int i = -256; i <= 256; i++) {
+      tryParseAndAssertEquals(i, Integer.toString(i));
+    }
+    Random rng = new Random(314159);
+    for (int i = 0; i < 100; i++) {
+      int x = rng.nextInt();
+      tryParseAndAssertEquals(x, Integer.toString(x));
+    }
     assertNull(Ints.tryParse(""));
     assertNull(Ints.tryParse("-"));
     assertNull(Ints.tryParse("+1"));
@@ -441,7 +446,7 @@ public class IntsTest extends TestCase {
    * Applies {@link Ints#tryParse(String)} to the given string and asserts that
    * the result is as expected.
    */
-  @GwtIncompatible("AndroidInteger")
+  @GwtIncompatible("AndroidLong")
   private static void tryParseAndAssertEquals(Integer expected, String value) {
     assertEquals(expected, Ints.tryParse(value));
   }

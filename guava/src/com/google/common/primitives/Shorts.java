@@ -21,6 +21,7 @@ import static com.google.common.base.Preconditions.checkElementIndex;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkPositionIndexes;
 
+import com.google.common.annotations.Beta;
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.annotations.GwtIncompatible;
 
@@ -32,6 +33,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.RandomAccess;
+
+import javax.annotation.CheckForNull;
 
 /**
  * Static utility methods pertaining to {@code short} primitives, that are not
@@ -589,5 +592,36 @@ public final class Shorts {
     }
 
     private static final long serialVersionUID = 0;
+  }
+  
+  /**
+   * Parses the specified string as a signed decimal short value. The ASCII
+   * character {@code '-'} (<code>'&#92;u002D'</code>) is recognized as the
+   * minus sign.
+   *
+   * <p>Unlike {@link Short#parseShort(String)}, this method returns
+   * {@code null} instead of throwing an exception if parsing fails.
+   *
+   * <p>Note that strings prefixed with ASCII {@code '+'} are rejected, even
+   * under JDK 7, despite the change to {@link Short#parseShort(String)} for
+   * that version.
+   *
+   * @param string the string representation of a short value
+   * @return the short value represented by {@code string}, or {@code null} if
+   *     {@code string} has a length of zero or cannot be parsed as a short
+   *     value
+   */
+  @Beta
+  @CheckForNull
+  @GwtIncompatible("TODO")
+  public static Short tryParse(String string) {
+    Long result = Longs.tryParse(string);
+    if (result != null 
+        && result >= Short.MIN_VALUE 
+        && result <= Short.MAX_VALUE) {
+      return result.shortValue();
+    } else {
+      return null;
+    }
   }
 }

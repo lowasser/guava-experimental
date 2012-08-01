@@ -23,27 +23,31 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import javax.annotation.CheckForNull;
 
 /**
- * Static utility methods derived from Android's {@code Integer.java}.
+ * Static utility methods derived from Android's {@code Long.java}.
  */
-final class AndroidInteger {
+final class AndroidLong {
   /**
-   * See {@link Ints#tryParse(String)} for the public interface.
+   * See {@link Longs#tryParse(String)} for the public interface.
    */
   @CheckForNull
-  static Integer tryParse(String string) {
+  static Long tryParse(String string) {
     return tryParse(string, 10);
   }
-
-  /**
-   * See {@link Ints#tryParse(String, int)} for the public interface.
-   */
-  @CheckForNull
-  static Integer tryParse(String string, int radix) {
-    checkNotNull(string);
+  
+  static void checkRadix(int radix) {
     checkArgument(radix >= Character.MIN_RADIX,
         "Invalid radix %s, min radix is %s", radix, Character.MIN_RADIX);
     checkArgument(radix <= Character.MAX_RADIX,
         "Invalid radix %s, max radix is %s", radix, Character.MAX_RADIX);
+  }
+
+  /**
+   * See {@link Longs#tryParse(String, int)} for the public interface.
+   */
+  @CheckForNull
+  static Long tryParse(String string, int radix) {
+    checkNotNull(string);
+    checkRadix(radix);
     int length = string.length(), i = 0;
     if (length == 0) {
       return null;
@@ -56,10 +60,13 @@ final class AndroidInteger {
   }
 
   @CheckForNull
-  private static Integer tryParse(String string, int offset, int radix,
+  private static Long tryParse(String string, int offset, int radix,
       boolean negative) {
-    int max = Integer.MIN_VALUE / radix;
-    int result = 0, length = string.length();
+    long max = Long.MIN_VALUE / radix;
+    int length = string.length();
+    
+    long result = 0;
+    // We compute the negative value to avoid overflow conditions on e.g. MIN_VALUE.
     while (offset < length) {
       int digit = Character.digit(string.charAt(offset++), radix);
       if (digit == -1) {
@@ -68,7 +75,7 @@ final class AndroidInteger {
       if (max > result) {
         return null;
       }
-      int next = result * radix - digit;
+      long next = result * radix - digit;
       if (next > result) {
         return null;
       }
@@ -80,12 +87,30 @@ final class AndroidInteger {
         return null;
       }
     }
-    // For GWT where ints do not overflow
-    if (result > Integer.MAX_VALUE || result < Integer.MIN_VALUE) {
-      return null;
-    }
     return result;
   }
 
-  private AndroidInteger() {}
+  @CheckForNull
+  static UnsignedLong tryParseUnsigned(String string, int radix) {
+    checkNotNull(string);
+    checkRadix(radix);
+    int length = string.length();
+    if (length == 0) {
+      return null;
+    }
+    long result = 0;
+    for (int offset = 0; offset < length; offset++) {
+      int digit = Character.digit(string.charAt(offset), radix);
+      if (digit == -1) {
+        return null;
+      }
+      if (UnsignedLongs.overflowInParse(result, digit, radix)) {
+        return null;
+      }
+      result = result * radix + digit;
+    }
+    return UnsignedLong.asUnsigned(result);
+  }
+
+  private AndroidLong() {}
 }

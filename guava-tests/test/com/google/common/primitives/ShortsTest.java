@@ -417,6 +417,31 @@ public class ShortsTest extends TestCase {
     assertSame(Collections.emptyList(), Shorts.asList(EMPTY));
   }
 
+  @GwtIncompatible("AndroidLong")
+  public void testTryParse() {
+    tryParseAndAssertEquals((short) 0, "-0");
+    for (int i = LEAST; i <= GREATEST; i++) {
+      tryParseAndAssertEquals((short) i, Integer.toString(i));
+    }
+    assertNull(Shorts.tryParse(""));
+    assertNull(Shorts.tryParse("-"));
+    assertNull(Shorts.tryParse("+1"));
+    assertNull(Shorts.tryParse("9999999999999999"));
+    assertNull("Max short + 1",
+        Shorts.tryParse(Long.toString(((long) GREATEST) + 1)));
+    assertNull("Min short - 1",
+        Shorts.tryParse(Long.toString(((long) LEAST) - 1)));
+  }
+
+  /**
+   * Applies {@link Shorts#tryParse(String)} to the given string and asserts that
+   * the result is as expected.
+   */
+  @GwtIncompatible("AndroidLong")
+  private static void tryParseAndAssertEquals(short expected, String value) {
+    assertEquals(Short.valueOf(expected), Shorts.tryParse(value));
+  }
+
   @GwtIncompatible("NullPointerTester")
   public void testNulls() {
     NullPointerTester tester = new NullPointerTester();

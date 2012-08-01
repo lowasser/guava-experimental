@@ -19,9 +19,12 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.common.annotations.Beta;
 import com.google.common.annotations.GwtCompatible;
+import com.google.common.annotations.GwtIncompatible;
 
 import java.util.Arrays;
 import java.util.Comparator;
+
+import javax.annotation.CheckForNull;
 
 /**
  * Static utility methods pertaining to {@code int} primitives that interpret values as
@@ -271,5 +274,34 @@ public final class UnsignedInts {
   public static String toString(int x, int radix) {
     long asLong = x & INT_MASK;
     return Long.toString(asLong, radix);
+  }
+  
+  /**
+   * Parses the specified string as an unsigned decimal integer value.
+   *
+   * <p>Unlike {@link UnsignedInts#parseUnsignedInt(String)}, this method
+   * returns {@code null} instead of throwing an exception if parsing fails.
+   *
+   * <p>Note that strings prefixed with ASCII {@code '+'} are rejected, even
+   * under JDK 7, despite the change to {@link Integer#parseInt(String)} for
+   * that version.
+   *
+   * @param string the string representation of an unsigned integer value
+   * @return the integer value represented by {@code string}, or {@code null} if
+   *     {@code string} has a length of zero or cannot be parsed as an integer
+   *     value
+   */
+  @Beta
+  @CheckForNull
+  @GwtIncompatible("TODO")
+  public static UnsignedInteger tryParse(String string) {
+    UnsignedLong result = UnsignedLongs.tryParse(string);
+    if (result != null
+        && result.longValue() >= 0
+        && result.longValue() <= UnsignedInteger.MAX_VALUE.longValue()) {
+      return UnsignedInteger.asUnsigned(result.intValue());
+    } else {
+      return null;
+    }
   }
 }

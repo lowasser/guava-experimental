@@ -19,10 +19,13 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.common.annotations.Beta;
 import com.google.common.annotations.GwtCompatible;
+import com.google.common.annotations.GwtIncompatible;
 
 import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Comparator;
+
+import javax.annotation.CheckForNull;
 
 /**
  * Static utility methods pertaining to {@code long} primitives that interpret values as
@@ -317,7 +320,7 @@ public final class UnsignedLongs {
    * a number. Does not verify whether supplied radix is valid, passing an invalid radix will give
    * undefined results or an ArrayIndexOutOfBoundsException.
    */
-  private static boolean overflowInParse(long current, int digit, int radix) {
+  static boolean overflowInParse(long current, int digit, int radix) {
     if (current >= 0) {
       if (current < maxValueDivs[radix]) {
         return false;
@@ -387,5 +390,27 @@ public final class UnsignedLongs {
       maxValueMods[i] = (int) remainder(MAX_VALUE, i);
       maxSafeDigits[i] = overflow.toString(i).length() - 1;
     }
+  }
+  
+  /**
+   * Parses the specified string as an unsigned decimal long value.
+   *
+   * <p>Unlike {@link UnsignedLongs#parseUnsignedLong(String)}, this method
+   * returns {@code null} instead of throwing an exception if parsing fails.
+   *
+   * <p>Note that strings prefixed with ASCII {@code '+'} are rejected, even
+   * under JDK 7, despite the change to {@link Long#parseLong(String)} for
+   * that version.
+   *
+   * @param string the string representation of an unsigned long value
+   * @return the long value represented by {@code string}, or {@code null} if
+   *     {@code string} has a length of zero or cannot be parsed as a long
+   *     value
+   */
+  @Beta
+  @CheckForNull
+  @GwtIncompatible("TODO")
+  public static UnsignedLong tryParse(String string) {
+    return AndroidLong.tryParseUnsigned(string, 10);
   }
 }
