@@ -16,8 +16,6 @@
 
 package com.google.common.collect;
 
-import static com.google.common.base.Preconditions.checkElementIndex;
-
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.base.Preconditions;
 
@@ -70,12 +68,6 @@ final class SingletonImmutableSet<E> extends ImmutableSet<E> {
 
   @Override public UnmodifiableIterator<E> iterator() {
     return Iterators.singletonIterator(element);
-  }
-
-  @Override
-  E get(int index) {
-    checkElementIndex(index, 1);
-    return element;
   }
 
   @Override

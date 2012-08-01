@@ -21,6 +21,10 @@ import static org.junit.contrib.truth.Truth.ASSERT;
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.annotations.GwtIncompatible;
 import com.google.common.collect.ImmutableSet.Builder;
+import com.google.common.collect.testing.SetTestSuiteBuilder;
+import com.google.common.collect.testing.TestStringSetGenerator;
+import com.google.common.collect.testing.features.CollectionFeature;
+import com.google.common.collect.testing.features.CollectionSize;
 import com.google.common.testing.NullPointerTester;
 import com.google.common.testing.SerializableTester;
 
@@ -28,6 +32,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.Set;
+
+import junit.framework.Test;
+import junit.framework.TestSuite;
 
 /**
  * Unit test for {@link ImmutableSet}.
@@ -38,6 +45,88 @@ import java.util.Set;
  */
 @GwtCompatible(emulated = true)
 public class ImmutableSetTest extends AbstractImmutableSetTest {
+  
+  public static Test suite() {
+    TestSuite suite = new TestSuite();
+    suite.addTestSuite(ImmutableSetTest.class);
+    suite.addTest(SetTestSuiteBuilder.using(new TestStringSetGenerator() {
+        @Override
+        protected Set<String> create(String[] elements) {
+          ImmutableSet.Builder<String> builder = ImmutableSet.builder();
+          for (String s : elements) {
+            builder.add(s);
+          }
+          return builder.build();
+        }
+      })
+      .named("ImmutableSet")
+      .withFeatures(
+          CollectionSize.ANY,
+          CollectionFeature.ALLOWS_NULL_QUERIES,
+          CollectionFeature.KNOWN_ORDER,
+          CollectionFeature.SERIALIZABLE)
+      .createTestSuite());
+    suite.addTest(SetTestSuiteBuilder.using(new TestStringSetGenerator() {
+        @Override
+        protected Set<String> create(String[] elements) {
+          return RegularImmutableSet.create(
+              elements.length, elements, RegularImmutableSet.Strategy.TINY);
+        }
+      })
+      .named("TinyImmutableSet")
+      .withFeatures(
+          CollectionSize.SEVERAL,
+          CollectionFeature.ALLOWS_NULL_QUERIES,
+          CollectionFeature.KNOWN_ORDER,
+          CollectionFeature.SERIALIZABLE)
+      .createTestSuite());
+
+    suite.addTest(SetTestSuiteBuilder.using(new TestStringSetGenerator() {
+        @Override
+        protected Set<String> create(String[] elements) {
+          return RegularImmutableSet.create(
+              elements.length, elements, RegularImmutableSet.Strategy.SMALL);
+        }
+      })
+      .named("SmallImmutableSet")
+      .withFeatures(
+          CollectionSize.SEVERAL,
+          CollectionFeature.ALLOWS_NULL_QUERIES,
+          CollectionFeature.KNOWN_ORDER,
+          CollectionFeature.SERIALIZABLE)
+      .createTestSuite());
+
+    suite.addTest(SetTestSuiteBuilder.using(new TestStringSetGenerator() {
+        @Override
+        protected Set<String> create(String[] elements) {
+          return RegularImmutableSet.create(
+              elements.length, elements, RegularImmutableSet.Strategy.MEDIUM);
+        }
+      })
+      .named("MediumImmutableSet")
+      .withFeatures(
+          CollectionSize.SEVERAL,
+          CollectionFeature.ALLOWS_NULL_QUERIES,
+          CollectionFeature.KNOWN_ORDER,
+          CollectionFeature.SERIALIZABLE)
+      .createTestSuite());
+
+    suite.addTest(SetTestSuiteBuilder.using(new TestStringSetGenerator() {
+        @Override
+        protected Set<String> create(String[] elements) {
+          return RegularImmutableSet.create(
+              elements.length, elements, RegularImmutableSet.Strategy.LARGE);
+        }
+      })
+      .named("LargeImmutableSet")
+      .withFeatures(
+          CollectionSize.SEVERAL,
+          CollectionFeature.ALLOWS_NULL_QUERIES,
+          CollectionFeature.KNOWN_ORDER,
+          CollectionFeature.SERIALIZABLE)
+      .createTestSuite());
+    return suite;
+  }
 
   @Override protected Set<String> of() {
     return ImmutableSet.of();
@@ -118,48 +207,6 @@ public class ImmutableSetTest extends AbstractImmutableSetTest {
   public void testNullPointers() {
     NullPointerTester tester = new NullPointerTester();
     tester.testAllPublicStaticMethods(ImmutableSet.class);
-  }
-
-  @GwtIncompatible("ImmutableSet.chooseTableSize")
-  public void testChooseTableSize() {
-    assertEquals(8, ImmutableSet.chooseTableSize(3));
-    assertEquals(8, ImmutableSet.chooseTableSize(4));
-
-    assertEquals(1 << 29, ImmutableSet.chooseTableSize(1 << 28));
-    assertEquals(1 << 29, ImmutableSet.chooseTableSize(1 << 29 - 1));
-
-    // Now we hit the cap
-    assertEquals(1 << 30, ImmutableSet.chooseTableSize(1 << 29));
-    assertEquals(1 << 30, ImmutableSet.chooseTableSize(1 << 30 - 1));
-
-    // Now we've gone too far
-    try {
-      ImmutableSet.chooseTableSize(1 << 30);
-      fail();
-    } catch (IllegalArgumentException expected) {
-    }
-  }
-
-  @GwtIncompatible("RegularImmutableSet.table not in emulation")
-  public void testResizeTable() {
-    verifyTableSize(100, 2, 4);
-    verifyTableSize(100, 5, 8);
-    verifyTableSize(100, 33, 64);
-    verifyTableSize(17, 17, 32);
-    verifyTableSize(17, 16, 32);
-    verifyTableSize(17, 15, 32);
-  }
-
-  @GwtIncompatible("RegularImmutableSet.table not in emulation")
-  private void verifyTableSize(int inputSize, int setSize, int tableSize) {
-    Builder<Integer> builder = ImmutableSet.builder();
-    for (int i = 0; i < inputSize; i++) {
-      builder.add(i % setSize);
-    }
-    ImmutableSet<Integer> set = builder.build();
-    assertTrue(set instanceof RegularImmutableSet);
-    assertEquals("Input size " + inputSize + " and set size " + setSize,
-        tableSize, ((RegularImmutableSet<Integer>) set).table.length);
   }
 
   public void testCopyOf_copiesImmutableSortedSet() {

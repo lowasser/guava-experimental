@@ -17,6 +17,7 @@
 package com.google.common.collect;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.annotations.VisibleForTesting;
@@ -34,13 +35,10 @@ import javax.annotation.Nullable;
  */
 @GwtCompatible(serializable = true, emulated = true)
 @SuppressWarnings("serial") // uses writeReplace(), not default serialization
-final class RegularImmutableSet<E> extends ImmutableSet<E> {
-  final Object[] elements;
-  final int[] table;
-  private final transient int hashCode;
+abstract class RegularImmutableSet<E> extends ImmutableSet<E> {
 
   // We use power-of-2 tables, and this is the highest int that's a power of 2
-  static final int MAX_TABLE_SIZE = Ints.MAX_POWER_OF_TWO;
+  private static final int MAX_TABLE_SIZE = Ints.MAX_POWER_OF_TWO;
 
   // Represents how tightly we can pack things, as a maximum.
   private static final double DESIRED_LOAD_FACTOR = 0.7;
@@ -57,7 +55,7 @@ final class RegularImmutableSet<E> extends ImmutableSet<E> {
    *
    * <p>Do not call this method with setSize < 2.
    */
-  @VisibleForTesting static int chooseTableSize(int setSize) {
+  @VisibleForTesting private static int chooseTableSize(int setSize) {
     // Correct the size for open addressing to match desired load factor.
     setSize = Math.max(2, setSize);
     if (setSize < CUTOFF) {
@@ -66,7 +64,7 @@ final class RegularImmutableSet<E> extends ImmutableSet<E> {
       while (tableSize * DESIRED_LOAD_FACTOR < setSize) {
         tableSize <<= 1;
       }
-      return tableSize;
+      return Math.max(tableSize, TinyImmutableSet.TABLE_SIZE);
     }
 
     // The table can't be completely full or we'll get infinite reprobes
@@ -75,41 +73,80 @@ final class RegularImmutableSet<E> extends ImmutableSet<E> {
     return MAX_TABLE_SIZE;
   }
   
-  static <E> ImmutableSet<E> create(int n, Object[] elements) {
+  /**
+   * We make this pluggable so we can substitute different implementations for testing.
+   */
+  @VisibleForTesting 
+  enum Strategy {
+    TINY {
+      @Override
+      <E> ImmutableSet<E> create(Object[] elements, int[] hashTable, int hashCode) {
+        return new TinyImmutableSet<E>(elements, hashTable, hashCode);
+      }
+    },
+    SMALL {
+      @Override
+      <E> ImmutableSet<E> create(Object[] elements, int[] hashTable, int hashCode) {
+        return new SmallImmutableSet<E>(elements, hashTable, hashCode);
+      }
+    },
+    MEDIUM {
+      @Override
+      <E> ImmutableSet<E> create(Object[] elements, int[] hashTable, int hashCode) {
+        return new MediumImmutableSet<E>(elements, hashTable, hashCode);
+      }
+    },
+    LARGE {
+      @Override
+      <E> ImmutableSet<E> create(Object[] elements, int[] hashTable, int hashCode) {
+        return new LargeImmutableSet<E>(elements, hashTable, hashCode);
+      }
+    },
+    SMART {
+      @Override
+      <E> ImmutableSet<E> create(Object[] elements, int[] hashTable, int hashCode) {
+        if (hashTable.length <= TinyImmutableSet.TABLE_SIZE) {
+          return new TinyImmutableSet<E>(elements, hashTable, hashCode);
+        } else if (elements.length <= SmallImmutableSet.MAX_SIZE) {
+          return new SmallImmutableSet<E>(elements, hashTable, hashCode);
+        } else if (elements.length <= MediumImmutableSet.MAX_SIZE) {
+          return new MediumImmutableSet<E>(elements, hashTable, hashCode);
+        } else {
+          return new LargeImmutableSet<E>(elements, hashTable, hashCode);
+        }
+      }
+    };
+
+    abstract <E> ImmutableSet<E> create(Object[] elements, int[] hashTable, int hashCode);
+  }
+  
+  static <E> ImmutableSet<E> create(int n, Object[] elements, Strategy strategy) {
     int tableSize = chooseTableSize(n);
     int mask = tableSize - 1;
     
     int[] hashTable = new int[tableSize];
-    Arrays.fill(hashTable, -1);
-    
-    int nUnique = 0;
     int hashCode = 0;
+    Arrays.fill(hashTable, -1);
+    int nUnique = 0;
     for (int i = 0; i < n; i++) {
-      Object o = elements[i];
+      Object o = checkNotNull(elements[i]);
       int hash = o.hashCode();
-      
-      for (int index = Hashing.smear(hash);; index++) {
-        int tableIndex = index & mask;
-        // we rotate tableIndex cyclically around the hash table
-        // TODO: experiment with different probing algorithms?
-        int tableValue = hashTable[tableIndex];
-        
-        if (tableValue == -1) {
-          // open space; insert the new unique element
-          int newIndex = nUnique;
-          hashTable[tableIndex] = newIndex;
-          elements[newIndex] = o;
-          nUnique++;
+      for (int j = Hashing.smear(hash);; j++) {
+        int tableIndex = j & mask;
+        int tableEntry = hashTable[tableIndex];
+        if (tableEntry == -1) {
+          // new, unique element; add it!
+          hashTable[tableIndex] = nUnique;
+          elements[nUnique] = o;
           hashCode += hash;
+          nUnique++;
           break;
-        } else if (elements[tableValue].equals(o)) {
-          // duplicate element; skip it
+        } else if (o.equals(elements[tableEntry])) {
           break;
         }
       }
     }
     Arrays.fill(elements, nUnique, n, null);
-    
     switch (nUnique) {
       case 0:
         return of();
@@ -120,23 +157,22 @@ final class RegularImmutableSet<E> extends ImmutableSet<E> {
       }
       default:
         if (chooseTableSize(nUnique) < tableSize) {
-          return create(nUnique, elements);
-        }
-        
-        Object[] uniques;
-        if (nUnique < elements.length) {
-          uniques = ObjectArrays.arraysCopyOf(elements, nUnique);
+          return create(nUnique, elements, strategy);
         } else {
-          uniques = elements;
-        }
-        
-        return new RegularImmutableSet<E>(uniques, hashTable, hashCode);
+          Object[] uniques = elements;
+          if (nUnique < uniques.length) {
+            uniques = Arrays.copyOf(uniques, nUnique);
+          }
+          return strategy.create(uniques, hashTable, hashCode);
+        }   
     }
   }
+  
+  final Object[] elements;
+  private final transient int hashCode;
 
-  RegularImmutableSet(Object[] elements, int[] table, int hashCode) {
+  RegularImmutableSet(Object[] elements, int hashCode) {
     this.elements = elements;
-    this.table = table;
     this.hashCode = hashCode;
   }
 

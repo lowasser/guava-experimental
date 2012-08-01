@@ -183,7 +183,7 @@ public abstract class ImmutableSet<E> extends ImmutableCollection<E>
         return of(elem);
       }
       default:
-        return RegularImmutableSet.create(n, elements);
+        return RegularImmutableSet.create(n, elements, RegularImmutableSet.Strategy.SMART);
     }
   }
 
@@ -196,16 +196,7 @@ public abstract class ImmutableSet<E> extends ImmutableCollection<E>
    * @since 3.0
    */
   public static <E> ImmutableSet<E> copyOf(E[] elements) {
-    // TODO(benyu): could we delegate to
-    // copyFromCollection(Arrays.asList(elements))?
-    switch (elements.length) {
-      case 0:
-        return of();
-      case 1:
-        return of(elements[0]);
-      default:
-        return RegularImmutableSet.create(elements.length, elements.clone());
-    }
+    return construct(elements.length, elements);
   }
 
   /**
