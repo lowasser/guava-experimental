@@ -16,6 +16,8 @@
 
 package com.google.common.collect;
 
+import static com.google.common.base.Preconditions.checkElementIndex;
+
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.base.Preconditions;
 
@@ -68,6 +70,11 @@ final class SingletonImmutableSet<E> extends ImmutableSet<E> {
 
   @Override public UnmodifiableIterator<E> iterator() {
     return Iterators.singletonIterator(element);
+  }
+
+  @Override
+  int indexOf(@Nullable Object o) {
+    return element.equals(o) ? 0 : -1;
   }
 
   @Override boolean isPartialView() {

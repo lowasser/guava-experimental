@@ -24,7 +24,6 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.primitives.Ints;
 
 import java.io.Serializable;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -183,79 +182,9 @@ public abstract class ImmutableSet<E> extends ImmutableCollection<E>
         E elem = (E) elements[0];
         return of(elem);
       }
+      default:
+        return RegularImmutableSet.create(n, elements);
     }
-    int tableSize = chooseTableSize(n);
-    Object[] table = new Object[tableSize];
-    int mask = tableSize - 1;
-    int hashCode = 0;
-    int uniques = 0;
-    for (int i = 0; i < n; i++) {
-      Object element = ObjectArrays.checkElementNotNull(elements[i], i);
-      int hash = element.hashCode();
-      for (int j = Hashing.smear(hash); ; j++) {
-        int index = j & mask;
-        Object value = table[index];
-        if (value == null) {
-          // Came to an empty slot. Put the element here.
-          elements[uniques++] = element;
-          table[index] = element;
-          hashCode += hash;
-          break;
-        } else if (value.equals(element)) {
-          break;
-        }
-      }
-    }
-    Arrays.fill(elements, uniques, n, null);
-    if (uniques == 1) {
-      // There is only one element or elements are all duplicates
-      @SuppressWarnings("unchecked") // we are careful to only pass in E
-      E element = (E) elements[0];
-      return new SingletonImmutableSet<E>(element, hashCode);
-    } else if (tableSize != chooseTableSize(uniques)) {
-      // Resize the table when the array includes too many duplicates.
-      // when this happens, we have already made a copy
-      return construct(uniques, elements);
-    } else {
-      Object[] uniqueElements = (uniques < elements.length)
-          ? ObjectArrays.arraysCopyOf(elements, uniques)
-          : elements;
-      return new RegularImmutableSet<E>(uniqueElements, hashCode, table, mask);
-    }
-  }
-
-  // We use power-of-2 tables, and this is the highest int that's a power of 2
-  static final int MAX_TABLE_SIZE = Ints.MAX_POWER_OF_TWO;
-
-  // Represents how tightly we can pack things, as a maximum.
-  private static final double DESIRED_LOAD_FACTOR = 0.7;
-
-  // If the set has this many elements, it will "max out" the table size
-  private static final int CUTOFF =
-      (int) Math.floor(MAX_TABLE_SIZE * DESIRED_LOAD_FACTOR);
-
-  /**
-   * Returns an array size suitable for the backing array of a hash table that
-   * uses open addressing with linear probing in its implementation.  The
-   * returned size is the smallest power of two that can hold setSize elements
-   * with the desired load factor.
-   *
-   * <p>Do not call this method with setSize < 2.
-   */
-  @VisibleForTesting static int chooseTableSize(int setSize) {
-    // Correct the size for open addressing to match desired load factor.
-    if (setSize < CUTOFF) {
-      // Round up to the next highest power of 2.
-      int tableSize = Integer.highestOneBit(setSize - 1) << 1;
-      while (tableSize * DESIRED_LOAD_FACTOR < setSize) {
-        tableSize <<= 1;
-      }
-      return tableSize;
-    }
-
-    // The table can't be completely full or we'll get infinite reprobes
-    checkArgument(setSize < MAX_TABLE_SIZE, "collection too large");
-    return MAX_TABLE_SIZE;
   }
 
   /**
@@ -275,7 +204,7 @@ public abstract class ImmutableSet<E> extends ImmutableCollection<E>
       case 1:
         return of(elements[0]);
       default:
-        return construct(elements.length, elements.clone());
+        return RegularImmutableSet.create(elements.length, elements.clone());
     }
   }
 
@@ -391,6 +320,15 @@ public abstract class ImmutableSet<E> extends ImmutableCollection<E>
   boolean isHashCodeFast() {
     return false;
   }
+  
+  int indexOf(@Nullable Object o) {
+    return Lists.indexOfImpl(asList(), o);
+  }
+
+  @Override
+  public boolean contains(@Nullable Object object) {
+    return indexOf(object) != -1;
+  }
 
   @Override public boolean equals(@Nullable Object object) {
     if (object == this) {
@@ -412,62 +350,6 @@ public abstract class ImmutableSet<E> extends ImmutableCollection<E>
   // This declaration is needed to make Set.iterator() and
   // ImmutableCollection.iterator() consistent.
   @Override public abstract UnmodifiableIterator<E> iterator();
-
-  abstract static class ArrayImmutableSet<E> extends ImmutableSet<E> {
-    // the elements (two or more) in the desired order.
-    final transient Object[] elements;
-
-    ArrayImmutableSet(Object[] elements) {
-      this.elements = elements;
-    }
-
-    @Override
-    public int size() {
-      return elements.length;
-    }
-
-    @Override public boolean isEmpty() {
-      return false;
-    }
-
-    @Override public UnmodifiableIterator<E> iterator() {
-      return asList().iterator();
-    }
-
-    @Override public Object[] toArray() {
-      return asList().toArray();
-    }
-
-    @Override public <T> T[] toArray(T[] array) {
-      return asList().toArray(array);
-    }
-
-    @Override public boolean containsAll(Collection<?> targets) {
-      if (targets == this) {
-        return true;
-      }
-      if (!(targets instanceof ArrayImmutableSet)) {
-        return super.containsAll(targets);
-      }
-      if (targets.size() > size()) {
-        return false;
-      }
-      for (Object target : ((ArrayImmutableSet<?>) targets).elements) {
-        if (!contains(target)) {
-          return false;
-        }
-      }
-      return true;
-    }
-
-    @Override boolean isPartialView() {
-      return false;
-    }
-
-    @Override ImmutableList<E> createAsList() {
-      return new RegularImmutableAsList<E>(this, elements);
-    }
-  }
 
   /*
    * This class is used to serialize all ImmutableSet instances, except for
