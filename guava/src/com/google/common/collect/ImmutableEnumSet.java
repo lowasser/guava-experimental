@@ -22,6 +22,8 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.EnumSet;
 
+import javax.annotation.Nullable;
+
 /**
  * Implementation of {@link ImmutableSet} backed by a non-empty {@link
  * java.util.EnumSet}.
@@ -87,6 +89,21 @@ final class ImmutableEnumSet<E extends Enum<E>> extends ImmutableSet<E> {
   @Override public int hashCode() {
     int result = hashCode;
     return (result == 0) ? hashCode = delegate.hashCode() : result;
+  }
+
+  @Override
+  int indexOf(@Nullable Object o) {
+    if (delegate.contains(o)) {
+      int index = 0;
+      for (E e : delegate) {
+        if (e.equals(o)) {
+          return index;
+        } else {
+          index++;
+        }
+      }
+    }
+    return -1;
   }
 
   @Override public String toString() {
