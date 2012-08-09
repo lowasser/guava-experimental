@@ -591,6 +591,15 @@ public abstract class ImmutableList<E> extends ImmutableCollection<E>
   @Override public int hashCode() {
     return Lists.hashCodeImpl(this);
   }
+  
+  /**
+   * Override for implementations that can e.g. do System.arraycopy.
+   */
+  void copyInto(Object[] dst, int index) {
+    for (int i = 0; i < size(); i++) {
+      dst[index + i] = get(i);
+    }
+  }
 
   /*
    * Serializes ImmutableLists as their logical contents. This ensures that

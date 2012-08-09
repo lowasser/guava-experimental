@@ -302,7 +302,6 @@ public abstract class ImmutableMultimap<K, V>
     return ImmutableListMultimap.copyOf(multimap);
   }
 
-  final transient ImmutableMap<K, ? extends ImmutableCollection<V>> map;
   final transient int size;
 
   // These constants allow the deserialization code to set final fields. This
@@ -311,16 +310,11 @@ public abstract class ImmutableMultimap<K, V>
   @GwtIncompatible("java serialization is not supported")
   static class FieldSettersHolder {
     static final Serialization.FieldSetter<ImmutableMultimap>
-        MAP_FIELD_SETTER = Serialization.getFieldSetter(
-        ImmutableMultimap.class, "map");
-    static final Serialization.FieldSetter<ImmutableMultimap>
         SIZE_FIELD_SETTER = Serialization.getFieldSetter(
         ImmutableMultimap.class, "size");
   }
 
-  ImmutableMultimap(ImmutableMap<K, ? extends ImmutableCollection<V>> map,
-      int size) {
-    this.map = map;
+  ImmutableMultimap(int size) {
     this.size = size;
   }
 
@@ -430,26 +424,24 @@ public abstract class ImmutableMultimap<K, V>
     throw new UnsupportedOperationException();
   }
 
-  boolean isPartialView() {
-    return map.isPartialView();
-  }
+  abstract boolean isPartialView();
 
   // accessors
 
   @Override
   public boolean containsEntry(@Nullable Object key, @Nullable Object value) {
-    Collection<V> values = map.get(key);
+    Collection<V> values = asMap().get(key);
     return values != null && values.contains(value);
   }
 
   @Override
   public boolean containsKey(@Nullable Object key) {
-    return map.containsKey(key);
+    return asMap().containsKey(key);
   }
 
   @Override
   public boolean containsValue(@Nullable Object value) {
-    for (Collection<V> valueCollection : map.values()) {
+    for (Collection<V> valueCollection : asMap().values()) {
       if (valueCollection.contains(value)) {
         return true;
       }
@@ -470,17 +462,17 @@ public abstract class ImmutableMultimap<K, V>
   @Override public boolean equals(@Nullable Object object) {
     if (object instanceof Multimap) {
       Multimap<?, ?> that = (Multimap<?, ?>) object;
-      return this.map.equals(that.asMap());
+      return this.asMap().equals(that.asMap());
     }
     return false;
   }
 
   @Override public int hashCode() {
-    return map.hashCode();
+    return asMap().hashCode();
   }
 
   @Override public String toString() {
-    return map.toString();
+    return asMap().toString();
   }
 
   // views
@@ -492,7 +484,7 @@ public abstract class ImmutableMultimap<K, V>
    */
   @Override
   public ImmutableSet<K> keySet() {
-    return map.keySet();
+    return asMap().keySet();
   }
 
   /**
@@ -501,9 +493,7 @@ public abstract class ImmutableMultimap<K, V>
    */
   @Override
   @SuppressWarnings("unchecked") // a widening cast
-  public ImmutableMap<K, Collection<V>> asMap() {
-    return (ImmutableMap) map;
-  }
+  public abstract ImmutableMap<K, Collection<V>> asMap();
 
   private transient ImmutableCollection<Entry<K, V>> entries;
 
@@ -528,8 +518,8 @@ public abstract class ImmutableMultimap<K, V>
     }
 
     @Override public UnmodifiableIterator<Entry<K, V>> iterator() {
-      final Iterator<? extends Entry<K, ? extends ImmutableCollection<V>>>
-          mapIterator = this.multimap.map.entrySet().iterator();
+      final Iterator<? extends Entry<K, ? extends Collection<V>>>
+          mapIterator = this.multimap.asMap().entrySet().iterator();
 
       return new UnmodifiableIterator<Entry<K, V>>() {
         K key;
@@ -544,7 +534,7 @@ public abstract class ImmutableMultimap<K, V>
         @Override
         public Entry<K, V> next() {
           if (key == null || !valueIterator.hasNext()) {
-            Entry<K, ? extends ImmutableCollection<V>> entry
+            Entry<K, ? extends Collection<V>> entry
                 = mapIterator.next();
             key = entry.getKey();
             valueIterator = entry.getValue().iterator();
@@ -588,7 +578,7 @@ public abstract class ImmutableMultimap<K, V>
     return (result == null) ? (keys = createKeys()) : result;
   }
 
-  private ImmutableMultiset<K> createKeys() {
+  ImmutableMultiset<K> createKeys() {
     return new Keys();
   }
 
@@ -601,7 +591,7 @@ public abstract class ImmutableMultimap<K, V>
 
     @Override
     public int count(@Nullable Object element) {
-      Collection<V> values = map.get(element);
+      Collection<V> values = asMap().get(element);
       return (values == null) ? 0 : values.size();
     }
 
@@ -634,7 +624,7 @@ public abstract class ImmutableMultimap<K, V>
       @Override
       ImmutableList<Entry<K>> createAsList() {
         final ImmutableList<? extends Map.Entry<K, ? extends Collection<V>>> mapEntries =
-            map.entrySet().asList();
+            asMap().entrySet().asList();
         return new ImmutableAsList<Entry<K>>() {
           @Override
           public Entry<K> get(int index) {

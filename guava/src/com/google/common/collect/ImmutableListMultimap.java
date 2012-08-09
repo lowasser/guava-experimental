@@ -24,8 +24,10 @@ import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Map.Entry;
 
 import javax.annotation.Nullable;
@@ -57,12 +59,16 @@ import javax.annotation.Nullable;
 public class ImmutableListMultimap<K, V>
     extends ImmutableMultimap<K, V>
     implements ListMultimap<K, V> {
+  
+  private static final ImmutableListMultimap<Object, Object> EMPTY =
+      new ImmutableListMultimap<Object, Object>(
+          ImmutableSet.of(), ImmutableList.of(), new int[] {0});
 
   /** Returns the empty multimap. */
   // Casting is safe because the multimap will never hold any elements.
   @SuppressWarnings("unchecked")
   public static <K, V> ImmutableListMultimap<K, V> of() {
-    return (ImmutableListMultimap<K, V>) EmptyImmutableListMultimap.INSTANCE;
+    return (ImmutableListMultimap<K, V>) EMPTY;
   }
 
   /**
@@ -225,6 +231,32 @@ public class ImmutableListMultimap<K, V>
       return (ImmutableListMultimap<K, V>) super.build();
     }
   }
+  
+  // These constants allow the deserialization code to set final fields. This
+  // holder class makes sure they are not initialized unless an instance is
+  // deserialized.
+  @GwtIncompatible("java serialization is not supported")
+  static class FieldSettersHolder {
+    static final Serialization.FieldSetter<ImmutableListMultimap>
+        KEY_SET_FIELD_SETTER = Serialization.getFieldSetter(
+        ImmutableListMultimap.class, "keySet");
+    static final Serialization.FieldSetter<ImmutableListMultimap>
+        VALUES_FIELD_SETTER = Serialization.getFieldSetter(
+        ImmutableListMultimap.class, "values");
+    static final Serialization.FieldSetter<ImmutableListMultimap>
+        KEY_OFFSETS_FIELD_SETTER = Serialization.getFieldSetter(
+        ImmutableListMultimap.class, "keyOffsets");
+  }
+  
+  /**
+   * We pack all the value lists into one big list.  The values associated with
+   * keySet.asList().get(i) are stored in values.subList(keyOffsets[i], keyOffsets[i+1]).
+   * This reduces the per-key overhead by approximately half, and limits the number of
+   * objects created in the ImmutableListMultimap implementation to a constant.
+   */
+  private transient final ImmutableSet<K> keySet;
+  private transient final ImmutableList<V> values;
+  private transient final int[] keyOffsets;
 
   /**
    * Returns an immutable multimap containing the same mappings as {@code
@@ -244,7 +276,6 @@ public class ImmutableListMultimap<K, V>
       return of();
     }
 
-    // TODO(user): copy ImmutableSetMultimap by using asList() on the sets
     if (multimap instanceof ImmutableListMultimap) {
       @SuppressWarnings("unchecked") // safe since multimap is not writable
       ImmutableListMultimap<K, V> kvMultimap
@@ -254,25 +285,32 @@ public class ImmutableListMultimap<K, V>
       }
     }
 
-    ImmutableMap.Builder<K, ImmutableList<V>> builder = ImmutableMap.builder();
-    int size = 0;
-
+    int nKeys = multimap.asMap().size();
+    ImmutableSet.Builder<K> keySetBuilder = new ImmutableSet.Builder<K>(nKeys);
+    int[] keyOffsets = new int[nKeys + 1];
+    List<V> values = Lists.newArrayListWithCapacity(multimap.size());
+    int keyIndex = 0;
     for (Entry<? extends K, ? extends Collection<? extends V>> entry
         : multimap.asMap().entrySet()) {
-      ImmutableList<V> list = ImmutableList.copyOf(entry.getValue());
-      if (!list.isEmpty()) {
-        builder.put(entry.getKey(), list);
-        size += list.size();
-      }
+      keySetBuilder.add(entry.getKey());
+      keyOffsets[keyIndex++] = values.size();
+      values.addAll(entry.getValue());
     }
-
-    return new ImmutableListMultimap<K, V>(builder.build(), size);
+    keyOffsets[nKeys] = values.size();
+    return new ImmutableListMultimap<K, V>(
+        keySetBuilder.build(), ImmutableList.copyOf(values), keyOffsets);
   }
 
-  ImmutableListMultimap(ImmutableMap<K, ImmutableList<V>> map, int size) {
-    super(map, size);
+  ImmutableListMultimap(
+      ImmutableSet<K> keySet,
+      ImmutableList<V> values,
+      int[] keyOffsets) {
+    super(values.size());
+    this.keySet = keySet;
+    this.values = values;
+    this.keyOffsets = keyOffsets;
   }
-
+  
   // views
 
   /**
@@ -282,9 +320,113 @@ public class ImmutableListMultimap<K, V>
    * this multimap.
    */
   @Override public ImmutableList<V> get(@Nullable K key) {
-    // This cast is safe as its type is known in constructor.
-    ImmutableList<V> list = (ImmutableList<V>) map.get(key);
-    return (list == null) ? ImmutableList.<V>of() : list;
+    int keyIndex = keySet.indexOf(key);
+    if (keyIndex == -1) {
+      return ImmutableList.of();
+    } else {
+      return values.subList(keyOffsets[keyIndex], keyOffsets[keyIndex + 1]);
+    }
+  }
+
+  @Override
+  boolean isPartialView() {
+    return keySet.isPartialView() || values.isPartialView();
+  }
+
+  @Override
+  public boolean containsKey(@Nullable Object key) {
+    return keySet.contains(key);
+  }
+
+  @Override
+  public boolean containsValue(@Nullable Object value) {
+    return values.contains(value);
+  }
+  
+  @Override
+  public ImmutableSet<K> keySet() {
+    return keySet;
+  }
+
+  @Override
+  public ImmutableCollection<V> values() {
+    return values;
+  }
+  
+  // TODO(lowasser): consider writing specialized keys() multiset
+
+  private transient ImmutableMap<K, Collection<V>> asMap;
+
+  @Override
+  public ImmutableMap<K, Collection<V>> asMap() {
+    ImmutableMap<K, Collection<V>> result = asMap;
+    return (result == null) ? asMap = new AsMap() : result;
+  }
+  
+  private final class AsMap extends ImmutableMap<K, Collection<V>> {
+    @Override
+    public int size() {
+      return keySet.size();
+    }
+
+    @Override
+    public Collection<V> get(@Nullable Object key) {
+      int keyIndex = keySet.indexOf(key);
+      if (keyIndex == -1) {
+        return null;
+      } else {
+        return values.subList(keyOffsets[keyIndex], keyOffsets[keyIndex + 1]);
+      }
+    }
+
+    @Override
+    ImmutableSet<Entry<K, Collection<V>>> createEntrySet() {
+      return new ImmutableMapEntrySet<K, Collection<V>>() {
+        @Override
+        ImmutableMap<K, Collection<V>> map() {
+          return AsMap.this;
+        }
+
+        @Override
+        public UnmodifiableIterator<Entry<K, Collection<V>>> iterator() {
+          final ImmutableList<K> keyList = keySet.asList();
+          return new AbstractIndexedListIterator<Entry<K, Collection<V>>>(size()) {
+            @Override
+            protected Entry<K, Collection<V>> get(int index) {
+              return Maps.immutableEntry(
+                  keyList.get(index),
+                  (Collection<V>) values.subList(keyOffsets[index], keyOffsets[index + 1]));
+            }
+          };
+        }
+      };
+    }
+
+    @Override
+    public ImmutableSet<K> keySet() {
+      return keySet;
+    }
+
+    @Override
+    boolean isPartialView() {
+      return ImmutableListMultimap.this.isPartialView();
+    }
+    
+    Object writeReplace() {
+      return new AsMapSerializedForm(ImmutableListMultimap.this);
+    }
+  }
+  
+  private static final class AsMapSerializedForm implements Serializable {
+    private final ImmutableListMultimap<?, ?> multimap;
+    
+    AsMapSerializedForm(ImmutableListMultimap<?, ?> multimap) {
+      this.multimap = multimap;
+    }
+
+    Object readResolve() {
+      return multimap.asMap();
+    }
   }
 
   private transient ImmutableListMultimap<V, K> inverse;
@@ -355,9 +497,11 @@ public class ImmutableListMultimap<K, V>
     if (keyCount < 0) {
       throw new InvalidObjectException("Invalid key count " + keyCount);
     }
-    ImmutableMap.Builder<Object, ImmutableList<Object>> builder
-        = ImmutableMap.builder();
-    int tmpSize = 0;
+    ImmutableSet.Builder<Object> keySetBuilder =
+        new ImmutableSet.Builder<Object>(keyCount);
+    int[] keyOffsets = new int[keyCount + 1];
+    ImmutableList.Builder<Object> valuesBuilder = ImmutableList.builder();
+    int offset = 0;
 
     for (int i = 0; i < keyCount; i++) {
       Object key = stream.readObject();
@@ -366,24 +510,26 @@ public class ImmutableListMultimap<K, V>
         throw new InvalidObjectException("Invalid value count " + valueCount);
       }
 
-      Object[] array = new Object[valueCount];
+      keySetBuilder.add(key);
+      keyOffsets[i] = offset;
       for (int j = 0; j < valueCount; j++) {
-        array[j] = stream.readObject();
+        valuesBuilder.add(stream.readObject());
       }
-      builder.put(key, ImmutableList.copyOf(array));
-      tmpSize += valueCount;
+      offset += valueCount;
     }
-
-    ImmutableMap<Object, ImmutableList<Object>> tmpMap;
-    try {
-      tmpMap = builder.build();
-    } catch (IllegalArgumentException e) {
-      throw (InvalidObjectException)
-          new InvalidObjectException(e.getMessage()).initCause(e);
+    keyOffsets[keyCount] = offset;
+    FieldSettersHolder.KEY_SET_FIELD_SETTER.set(this, keySetBuilder.build());
+    FieldSettersHolder.KEY_OFFSETS_FIELD_SETTER.set(this, keyOffsets);
+    FieldSettersHolder.VALUES_FIELD_SETTER.set(this, valuesBuilder.build());
+    ImmutableMultimap.FieldSettersHolder.SIZE_FIELD_SETTER.set(this, offset);
+  }
+  
+  Object readResolve() {
+    if (keySet.isEmpty()) {
+      return of();
+    } else {
+      return this;
     }
-
-    FieldSettersHolder.MAP_FIELD_SETTER.set(this, tmpMap);
-    FieldSettersHolder.SIZE_FIELD_SETTER.set(this, tmpSize);
   }
 
   @GwtIncompatible("Not needed in emulated source")

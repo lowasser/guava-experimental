@@ -141,6 +141,16 @@ public class ImmutableSetMultimap<K, V>
   }
 
   // looking for of() with > 5 entries? Use the builder instead.
+  
+  //These constants allow the deserialization code to set final fields. This
+  // holder class makes sure they are not initialized unless an instance is
+  // deserialized.
+  @GwtIncompatible("java serialization is not supported")
+  static class FieldSettersHolder {
+    static final Serialization.FieldSetter<ImmutableSetMultimap>
+        MAP_FIELD_SETTER = Serialization.getFieldSetter(
+        ImmutableSetMultimap.class, "map");
+  }
 
   /**
    * Returns a new {@link Builder}.
@@ -359,17 +369,30 @@ public class ImmutableSetMultimap<K, V>
         builder.build(), size, valueComparator);
   }
 
+  private final transient ImmutableMap<K, ImmutableSet<V>> map;
   // Returned by get() when values are sorted and a missing key is provided.
   private final transient ImmutableSortedSet<V> emptySet;
 
   ImmutableSetMultimap(ImmutableMap<K, ImmutableSet<V>> map, int size,
       @Nullable Comparator<? super V> valueComparator) {
-    super(map, size);
+    super(size);
+    this.map = map;
     this.emptySet = (valueComparator == null)
         ? null : ImmutableSortedSet.<V>emptySet(valueComparator);
   }
 
+  @Override
+  boolean isPartialView() {
+    return false;
+  }
+
   // views
+
+  @SuppressWarnings("unchecked") // safe cast
+  @Override
+  public ImmutableMap<K, Collection<V>> asMap() {
+    return (ImmutableMap) map;
+  }
 
   /**
    * Returns an immutable set of the values for the given key.  If no mappings
@@ -504,7 +527,7 @@ public class ImmutableSetMultimap<K, V>
     }
 
     FieldSettersHolder.MAP_FIELD_SETTER.set(this, tmpMap);
-    FieldSettersHolder.SIZE_FIELD_SETTER.set(this, tmpSize);
+    ImmutableMultimap.FieldSettersHolder.SIZE_FIELD_SETTER.set(this, tmpSize);
   }
 
   @GwtIncompatible("not needed in emulated source.")

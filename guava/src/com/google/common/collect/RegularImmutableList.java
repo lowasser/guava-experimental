@@ -128,6 +128,11 @@ class RegularImmutableList<E> extends ImmutableList<E> {
     return true;
   }
 
+  @Override
+  void copyInto(Object[] dst, int index) {
+    System.arraycopy(array, offset, dst, index, size());
+  }
+
   @Override public String toString() {
     StringBuilder sb = Collections2.newStringBuilderForCollection(size())
         .append('[').append(array[offset]);

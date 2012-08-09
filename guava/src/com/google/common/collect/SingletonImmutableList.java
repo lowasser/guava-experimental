@@ -110,6 +110,11 @@ final class SingletonImmutableList<E> extends ImmutableList<E> {
     return false;
   }
 
+  @Override
+  void copyInto(Object[] dst, int index) {
+    dst[index] = element;
+  }
+
   @Override public Object[] toArray() {
     return new Object[] { element };
   }

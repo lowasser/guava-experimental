@@ -123,6 +123,11 @@ final class EmptyImmutableList extends ImmutableList<Object> {
     return "[]";
   }
 
+  @Override
+  void copyInto(Object[] dst, int index) {
+    // no-op
+  }
+
   Object readResolve() {
     return INSTANCE; // preserve singleton property
   }
