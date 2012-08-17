@@ -69,11 +69,11 @@ public final class HashMultiset<E> extends AbstractMapBasedMultiset<E> {
   }
 
   private HashMultiset() {
-    super(new HashMap<E, Count>());
+    super(CompactHashMap.<E, Count>create());
   }
 
   private HashMultiset(int distinctElements) {
-    super(Maps.<E, Count>newHashMapWithExpectedSize(distinctElements));
+    super(CompactHashMap.<E, Count>createWithExpectedSize(distinctElements));
   }
 
   /**

@@ -28,7 +28,7 @@ import java.util.Map;
 import javax.annotation.Nullable;
 
 /**
- * A {@link BiMap} backed by two {@link HashMap} instances. This implementation
+ * A {@link BiMap} backed by two hash tables. This implementation
  * allows null keys and values. A {@code HashBiMap} and its inverse are both
  * serializable.
  * 
@@ -74,13 +74,13 @@ public final class HashBiMap<K, V> extends AbstractBiMap<K, V> {
   }
 
   private HashBiMap() {
-    super(new HashMap<K, V>(), new HashMap<V, K>());
+    super(CompactHashMap.<K, V>create(), CompactHashMap.<V, K>create());
   }
 
   private HashBiMap(int expectedSize) {
     super(
-        Maps.<K, V>newHashMapWithExpectedSize(expectedSize),
-        Maps.<V, K>newHashMapWithExpectedSize(expectedSize));
+        CompactHashMap.<K, V>createWithExpectedSize(expectedSize),
+        CompactHashMap.<V, K>createWithExpectedSize(expectedSize));
   }
 
   // Override these two methods to show that keys and values may be null

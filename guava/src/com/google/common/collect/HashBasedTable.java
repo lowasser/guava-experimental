@@ -62,7 +62,7 @@ public class HashBasedTable<R, C, V> extends StandardTable<R, C, V> {
     }
     @Override
     public Map<C, V> get() {
-      return Maps.newHashMapWithExpectedSize(expectedSize);
+      return CompactHashMap.createWithExpectedSize(expectedSize);
     }
     private static final long serialVersionUID = 0;
   }
@@ -72,7 +72,7 @@ public class HashBasedTable<R, C, V> extends StandardTable<R, C, V> {
    */
   public static <R, C, V> HashBasedTable<R, C, V> create() {
     return new HashBasedTable<R, C, V>(
-        new HashMap<R, Map<C, V>>(), new Factory<C, V>(0));
+        CompactHashMap.<R, Map<C, V>>create(), new Factory<C, V>(0));
   }
 
   /**
@@ -88,7 +88,7 @@ public class HashBasedTable<R, C, V> extends StandardTable<R, C, V> {
       int expectedRows, int expectedCellsPerRow) {
     checkArgument(expectedCellsPerRow >= 0);
     Map<R, Map<C, V>> backingMap =
-        Maps.newHashMapWithExpectedSize(expectedRows);
+        CompactHashMap.createWithExpectedSize(expectedRows);
     return new HashBasedTable<R, C, V>(
         backingMap, new Factory<C, V>(expectedCellsPerRow));
   }
