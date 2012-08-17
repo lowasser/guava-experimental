@@ -63,6 +63,11 @@ public interface Cache<K, V> {
    * {@code valueLoader} if necessary. No observable state associated with this cache is modified
    * until loading completes. This method provides a simple substitute for the conventional
    * "if cached, return; otherwise create, cache and return" pattern.
+   * 
+   * <p>If another call to {@code get(K, Callable)}, {@link LoadingCache#get(Object)}, or
+   * {@link LoadingCache#getUnchecked(Object)} is currently loading the value for {@code key},
+   * simply waits for that thread to finish and returns that loaded value.  Note that multiple
+   * threads can concurrently load values for distinct keys.
    *
    * <p><b>Warning:</b> as with {@link CacheLoader#load}, {@code valueLoader} <b>must not</b> return
    * {@code null}; it may either return a non-null value or throw an exception.
@@ -128,8 +133,15 @@ public interface Cache<K, V> {
   long size();
 
   /**
-   * Returns a current snapshot of this cache's cumulative statistics. All stats are initialized
-   * to zero, and are monotonically increasing over the lifetime of the cache.
+   * If this implementation records statistics, returns a current snapshot of cache statistics
+   * accumulated over the cache's entire lifetime.  All statistics are initialized to zero, and
+   * accumulate monotonically.
+   * 
+   * <p>To measure cache statistics in the interval from time <i>a</i> to <i>b</i>, use
+   * {@code stats()} to take snapshots at those times and use {@link
+   * CacheStats#minus(CacheStats) statsB.minus(statsA)} to compute the statistics for that interval.
+   * 
+   * <p>Implementations that do not record statistics will return an all-zero {@code CacheStats}.
    */
   CacheStats stats();
 
