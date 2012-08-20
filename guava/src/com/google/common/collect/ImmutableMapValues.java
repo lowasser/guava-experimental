@@ -34,35 +34,40 @@ abstract class ImmutableMapValues<K, V> extends ImmutableCollection<V> {
 
   abstract ImmutableMap<K, V> map();
 
-  @Override
+  
   public int size() {
     return map().size();
   }
 
+  
   @Override
   public UnmodifiableIterator<V> iterator() {
     return Maps.valueIterator(map().entrySet().iterator());
   }
 
+  
   @Override
   public boolean contains(Object object) {
     return map().containsValue(object);
   }
 
+  
   @Override
   boolean isPartialView() {
     return true;
   }
 
+  
   @Override
   ImmutableList<V> createAsList() {
     final ImmutableList<Entry<K, V>> entryList = map().entrySet().asList();
     return new ImmutableAsList<V>() {
-      @Override
+      
       public V get(int index) {
         return entryList.get(index).getValue();
       }
 
+      
       @Override
       ImmutableCollection<V> delegateCollection() {
         return ImmutableMapValues.this;
@@ -70,8 +75,9 @@ abstract class ImmutableMapValues<K, V> extends ImmutableCollection<V> {
     };
   }
 
+  @Override
   @GwtIncompatible("serialization")
-  @Override Object writeReplace() {
+  Object writeReplace() {
     return new SerializedForm<V>(map());
   }
 

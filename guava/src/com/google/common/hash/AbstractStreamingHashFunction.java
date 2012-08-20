@@ -33,31 +33,31 @@ import java.nio.charset.Charset;
  * @author Kevin Bourrillion
  */
 abstract class AbstractStreamingHashFunction implements HashFunction {
-  @Override public HashCode hashString(CharSequence input) {
+  public HashCode hashString(CharSequence input) {
     return newHasher().putString(input).hash();
   }
 
-  @Override public HashCode hashString(CharSequence input, Charset charset) {
+  public HashCode hashString(CharSequence input, Charset charset) {
     return newHasher().putString(input, charset).hash();
   }
 
-  @Override public HashCode hashInt(int input) {
+  public HashCode hashInt(int input) {
     return newHasher().putInt(input).hash();
   }
 
-  @Override public HashCode hashLong(long input) {
+  public HashCode hashLong(long input) {
     return newHasher().putLong(input).hash();
   }
 
-  @Override public HashCode hashBytes(byte[] input) {
+  public HashCode hashBytes(byte[] input) {
     return newHasher().putBytes(input).hash();
   }
 
-  @Override public HashCode hashBytes(byte[] input, int off, int len) {
+  public HashCode hashBytes(byte[] input, int off, int len) {
     return newHasher().putBytes(input, off, len).hash();
   }
 
-  @Override public Hasher newHasher(int expectedInputSize) {
+  public Hasher newHasher(int expectedInputSize) {
     Preconditions.checkArgument(expectedInputSize >= 0);
     return newHasher();
   }
@@ -136,12 +136,10 @@ abstract class AbstractStreamingHashFunction implements HashFunction {
       process(bb);
     }
 
-    @Override
     public final Hasher putBytes(byte[] bytes) {
       return putBytes(bytes, 0, bytes.length);
     }
 
-    @Override
     public final Hasher putBytes(byte[] bytes, int off, int len) {
       return putBytes(ByteBuffer.wrap(bytes, off, len).order(ByteOrder.LITTLE_ENDIAN));
     }
@@ -171,6 +169,7 @@ abstract class AbstractStreamingHashFunction implements HashFunction {
       return this;
     }
 
+    
     @Override
     public final Hasher putString(CharSequence charSequence) {
       for (int i = 0; i < charSequence.length(); i++) {
@@ -179,48 +178,41 @@ abstract class AbstractStreamingHashFunction implements HashFunction {
       return this;
     }
 
-    @Override
     public final Hasher putByte(byte b) {
       buffer.put(b);
       munchIfFull();
       return this;
     }
 
-    @Override
     public final Hasher putShort(short s) {
       buffer.putShort(s);
       munchIfFull();
       return this;
     }
 
-    @Override
     public final Hasher putChar(char c) {
       buffer.putChar(c);
       munchIfFull();
       return this;
     }
 
-    @Override
     public final Hasher putInt(int i) {
       buffer.putInt(i);
       munchIfFull();
       return this;
     }
 
-    @Override
     public final Hasher putLong(long l) {
       buffer.putLong(l);
       munchIfFull();
       return this;
     }
 
-    @Override
     public final <T> Hasher putObject(T instance, Funnel<? super T> funnel) {
       funnel.funnel(instance, this);
       return this;
     }
 
-    @Override
     public final HashCode hash() {
       munch();
       buffer.flip();

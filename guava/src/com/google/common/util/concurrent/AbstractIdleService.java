@@ -36,9 +36,11 @@ public abstract class AbstractIdleService implements Service {
 
   /* use AbstractService for state management */
   private final Service delegate = new AbstractService() {
-    @Override protected final void doStart() {
+    
+    @Override
+    protected final void doStart() {
       executor(State.STARTING).execute(new Runnable() {
-        @Override public void run() {
+        public void run() {
           try {
             startUp();
             notifyStarted();
@@ -50,9 +52,11 @@ public abstract class AbstractIdleService implements Service {
       });
     }
 
-    @Override protected final void doStop() {
+    
+    @Override
+    protected final void doStop() {
       executor(State.STOPPING).execute(new Runnable() {
-        @Override public void run() {
+        public void run() {
           try {
             shutDown();
             notifyStopped();
@@ -85,44 +89,45 @@ public abstract class AbstractIdleService implements Service {
    */
   protected Executor executor(final State state) {
     return new Executor() {
-      @Override
       public void execute(Runnable command) {
         new Thread(command, getServiceName() + " " + state).start();
       }
     };
   }
 
-  @Override public String toString() {
+  
+  @Override
+  public String toString() {
     return getServiceName() + " [" + state() + "]";
   }
 
   // We override instead of using ForwardingService so that these can be final.
 
-  @Override public final ListenableFuture<State> start() {
+  public final ListenableFuture<State> start() {
     return delegate.start();
   }
 
-  @Override public final State startAndWait() {
+  public final State startAndWait() {
     return delegate.startAndWait();
   }
 
-  @Override public final boolean isRunning() {
+  public final boolean isRunning() {
     return delegate.isRunning();
   }
 
-  @Override public final State state() {
+  public final State state() {
     return delegate.state();
   }
 
-  @Override public final ListenableFuture<State> stop() {
+  public final ListenableFuture<State> stop() {
     return delegate.stop();
   }
 
-  @Override public final State stopAndWait() {
+  public final State stopAndWait() {
     return delegate.stopAndWait();
   }
 
-  @Override public final void addListener(Listener listener, Executor executor) {
+  public final void addListener(Listener listener, Executor executor) {
     delegate.addListener(listener, executor);
   }
 

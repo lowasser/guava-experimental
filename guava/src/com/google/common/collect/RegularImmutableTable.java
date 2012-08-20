@@ -50,7 +50,7 @@ abstract class RegularImmutableTable<R, C, V> extends ImmutableTable<R, C, V> {
   private static final Function<Cell<Object, Object, Object>, Object>
       GET_VALUE_FUNCTION =
           new Function<Cell<Object, Object, Object>, Object>() {
-            @Override public Object apply(Cell<Object, Object, Object> from) {
+            public Object apply(Cell<Object, Object, Object> from) {
               return from.getValue();
             }
           };
@@ -62,7 +62,7 @@ abstract class RegularImmutableTable<R, C, V> extends ImmutableTable<R, C, V> {
 
   @Nullable private transient volatile ImmutableList<V> valueList;
 
-  @Override public final ImmutableCollection<V> values() {
+  public final ImmutableCollection<V> values() {
     ImmutableList<V> result = valueList;
     if (result == null) {
       valueList = result = ImmutableList.copyOf(
@@ -71,19 +71,21 @@ abstract class RegularImmutableTable<R, C, V> extends ImmutableTable<R, C, V> {
     return result;
   }
 
-  @Override public final int size() {
+  public final int size() {
     return cellSet().size();
   }
 
-  @Override public final boolean containsValue(@Nullable Object value) {
+  public final boolean containsValue(@Nullable Object value) {
     return values().contains(value);
   }
 
-  @Override public final boolean isEmpty() {
+  public final boolean isEmpty() {
     return false;
   }
 
-  @Override public final ImmutableSet<Cell<R, C, V>> cellSet() {
+  
+  @Override
+  public final ImmutableSet<Cell<R, C, V>> cellSet() {
     return cellSet;
   }
 
@@ -102,7 +104,7 @@ abstract class RegularImmutableTable<R, C, V> extends ImmutableTable<R, C, V> {
        * first column, the rows in the second column, etc.
        */
       Comparator<Cell<R, C, V>> comparator = new Comparator<Cell<R, C, V>>() {
-        @Override public int compare(Cell<R, C, V> cell1, Cell<R, C, V> cell2) {
+        public int compare(Cell<R, C, V> cell1, Cell<R, C, V> cell2) {
           int rowCompare = (rowComparator == null) ? 0
             : rowComparator.compare(cell1.getRowKey(), cell2.getRowKey());
           if (rowCompare != 0) {
@@ -193,7 +195,7 @@ abstract class RegularImmutableTable<R, C, V> extends ImmutableTable<R, C, V> {
         Map<A, ImmutableMap.Builder<B, V>> indexBuilder) {
       return ImmutableMap.copyOf(Maps.transformValues(indexBuilder,
           new Function<ImmutableMap.Builder<B, V>, Map<B, V>>() {
-            @Override public Map<B, V> apply(ImmutableMap.Builder<B, V> from) {
+            public Map<B, V> apply(ImmutableMap.Builder<B, V> from) {
               return from.build();
             }
           }));
@@ -217,51 +219,63 @@ abstract class RegularImmutableTable<R, C, V> extends ImmutableTable<R, C, V> {
       this.columnMap = buildIndex(columnIndexBuilder);
     }
 
-    @Override public ImmutableMap<R, V> column(C columnKey) {
+    
+    @Override
+    public ImmutableMap<R, V> column(C columnKey) {
       checkNotNull(columnKey);
       // value maps are guaranteed to be immutable maps
       return Objects.firstNonNull((ImmutableMap<R, V>) columnMap.get(columnKey),
           ImmutableMap.<R, V>of());
     }
 
-    @Override public ImmutableSet<C> columnKeySet() {
+    
+    @Override
+    public ImmutableSet<C> columnKeySet() {
       return columnMap.keySet();
     }
 
-    @Override public ImmutableMap<C, Map<R, V>> columnMap() {
+    
+    @Override
+    public ImmutableMap<C, Map<R, V>> columnMap() {
       return columnMap;
     }
 
-    @Override public ImmutableMap<C, V> row(R rowKey) {
+    
+    @Override
+    public ImmutableMap<C, V> row(R rowKey) {
       checkNotNull(rowKey);
       // value maps are guaranteed to be immutable maps
       return Objects.firstNonNull((ImmutableMap<C, V>) rowMap.get(rowKey),
           ImmutableMap.<C, V>of());
     }
 
-    @Override public ImmutableSet<R> rowKeySet() {
+    
+    @Override
+    public ImmutableSet<R> rowKeySet() {
       return rowMap.keySet();
     }
 
-    @Override public ImmutableMap<R, Map<C, V>> rowMap() {
+    
+    @Override
+    public ImmutableMap<R, Map<C, V>> rowMap() {
       return rowMap;
     }
 
-    @Override public boolean contains(@Nullable Object rowKey,
+    public boolean contains(@Nullable Object rowKey,
         @Nullable Object columnKey) {
       Map<C, V> row = rowMap.get(rowKey);
       return (row != null) && row.containsKey(columnKey);
     }
 
-    @Override public boolean containsColumn(@Nullable Object columnKey) {
+    public boolean containsColumn(@Nullable Object columnKey) {
       return columnMap.containsKey(columnKey);
     }
 
-    @Override public boolean containsRow(@Nullable Object rowKey) {
+    public boolean containsRow(@Nullable Object rowKey) {
       return rowMap.containsKey(rowKey);
     }
 
-    @Override public V get(@Nullable Object rowKey,
+    public V get(@Nullable Object rowKey,
         @Nullable Object columnKey) {
       Map<C, V> row = rowMap.get(rowKey);
       return (row == null) ? null : row.get(columnKey);
@@ -292,33 +306,39 @@ abstract class RegularImmutableTable<R, C, V> extends ImmutableTable<R, C, V> {
 
     @Nullable abstract V getValue(int keyIndex);
 
+    
     @Override
     ImmutableSet<K> createKeySet() {
       return isFull() ? keyToIndex().keySet() : super.createKeySet();
     }
 
-    @Override
+    
     public int size() {
       return size;
     }
 
+    
     @Override
     public V get(@Nullable Object key) {
       Integer keyIndex = keyToIndex().get(key);
       return (keyIndex == null) ? null : getValue(keyIndex);
     }
 
+    
     @Override
     ImmutableSet<Entry<K, V>> createEntrySet() {
       if (isFull()) {
         return new ImmutableMapEntrySet<K, V>() {
-          @Override ImmutableMap<K, V> map() {
+          @Override
+          ImmutableMap<K, V> map() {
             return ImmutableArrayMap.this;
           }
 
+          
           @Override
           public UnmodifiableIterator<Entry<K, V>> iterator() {
             return new AbstractIndexedListIterator<Entry<K, V>>(size()) {
+              
               @Override
               protected Entry<K, V> get(int index) {
                 return Maps.immutableEntry(getKey(index), getValue(index));
@@ -328,16 +348,19 @@ abstract class RegularImmutableTable<R, C, V> extends ImmutableTable<R, C, V> {
         };
       } else {
         return new ImmutableMapEntrySet<K, V>() {
-          @Override ImmutableMap<K, V> map() {
+          @Override
+          ImmutableMap<K, V> map() {
             return ImmutableArrayMap.this;
           }
 
+          
           @Override
           public UnmodifiableIterator<Entry<K, V>> iterator() {
             return new AbstractIterator<Entry<K, V>>() {
               private int index = -1;
               private final int maxIndex = keyToIndex().size();
 
+              
               @Override
               protected Entry<K, V> computeNext() {
                 for (index++; index < maxIndex; index++) {
@@ -417,16 +440,19 @@ abstract class RegularImmutableTable<R, C, V> extends ImmutableTable<R, C, V> {
         this.rowIndex = rowIndex;
       }
 
+      
       @Override
       ImmutableMap<C, Integer> keyToIndex() {
         return columnKeyToIndex;
       }
 
+      
       @Override
       V getValue(int keyIndex) {
         return values[rowIndex][keyIndex];
       }
 
+      
       @Override
       boolean isPartialView() {
         return true;
@@ -441,16 +467,19 @@ abstract class RegularImmutableTable<R, C, V> extends ImmutableTable<R, C, V> {
         this.columnIndex = columnIndex;
       }
 
+      
       @Override
       ImmutableMap<R, Integer> keyToIndex() {
         return rowKeyToIndex;
       }
 
+      
       @Override
       V getValue(int keyIndex) {
         return values[keyIndex][columnIndex];
       }
 
+      
       @Override
       boolean isPartialView() {
         return true;
@@ -462,16 +491,19 @@ abstract class RegularImmutableTable<R, C, V> extends ImmutableTable<R, C, V> {
         super(rowCounts.length);
       }
 
+      
       @Override
       ImmutableMap<R, Integer> keyToIndex() {
         return rowKeyToIndex;
       }
 
+      
       @Override
       Map<C, V> getValue(int keyIndex) {
         return new Row(keyIndex);
       }
 
+      
       @Override
       boolean isPartialView() {
         return false;
@@ -483,23 +515,27 @@ abstract class RegularImmutableTable<R, C, V> extends ImmutableTable<R, C, V> {
         super(columnCounts.length);
       }
 
+      
       @Override
       ImmutableMap<C, Integer> keyToIndex() {
         return columnKeyToIndex;
       }
 
+      
       @Override
       Map<R, V> getValue(int keyIndex) {
         return new Column(keyIndex);
       }
 
+      
       @Override
       boolean isPartialView() {
         return false;
       }
     }
 
-    @Override public ImmutableMap<R, V> column(C columnKey) {
+    @Override
+    public ImmutableMap<R, V> column(C columnKey) {
       Integer columnIndex = columnKeyToIndex.get(checkNotNull(columnKey));
       if (columnIndex == null) {
         return ImmutableMap.of();
@@ -508,28 +544,31 @@ abstract class RegularImmutableTable<R, C, V> extends ImmutableTable<R, C, V> {
       }
     }
 
-    @Override public ImmutableSet<C> columnKeySet() {
+    
+    @Override
+    public ImmutableSet<C> columnKeySet() {
       return columnKeyToIndex.keySet();
     }
 
-    @Override public ImmutableMap<C, Map<R, V>> columnMap() {
+    @Override
+    public ImmutableMap<C, Map<R, V>> columnMap() {
       return columnMap;
     }
 
-    @Override public boolean contains(@Nullable Object rowKey,
+    public boolean contains(@Nullable Object rowKey,
         @Nullable Object columnKey) {
       return (get(rowKey, columnKey) != null);
     }
 
-    @Override public boolean containsColumn(@Nullable Object columnKey) {
+    public boolean containsColumn(@Nullable Object columnKey) {
       return columnKeyToIndex.containsKey(columnKey);
     }
 
-    @Override public boolean containsRow(@Nullable Object rowKey) {
+    public boolean containsRow(@Nullable Object rowKey) {
       return rowKeyToIndex.containsKey(rowKey);
     }
 
-    @Override public V get(@Nullable Object rowKey,
+    public V get(@Nullable Object rowKey,
         @Nullable Object columnKey) {
       Integer rowIndex = rowKeyToIndex.get(rowKey);
       Integer columnIndex = columnKeyToIndex.get(columnKey);
@@ -537,7 +576,9 @@ abstract class RegularImmutableTable<R, C, V> extends ImmutableTable<R, C, V> {
           : values[rowIndex][columnIndex];
     }
 
-    @Override public ImmutableMap<C, V> row(R rowKey) {
+    
+    @Override
+    public ImmutableMap<C, V> row(R rowKey) {
       checkNotNull(rowKey);
       Integer rowIndex = rowKeyToIndex.get(rowKey);
       if (rowIndex == null) {
@@ -547,10 +588,13 @@ abstract class RegularImmutableTable<R, C, V> extends ImmutableTable<R, C, V> {
       }
     }
 
-    @Override public ImmutableSet<R> rowKeySet() {
+    
+    @Override
+    public ImmutableSet<R> rowKeySet() {
       return rowKeyToIndex.keySet();
     }
 
+    
     @Override
     public ImmutableMap<R, Map<C, V>> rowMap() {
       return rowMap;

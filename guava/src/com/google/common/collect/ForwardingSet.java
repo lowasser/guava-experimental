@@ -54,13 +54,19 @@ public abstract class ForwardingSet<E> extends ForwardingCollection<E>
   /** Constructor for use by subclasses. */
   protected ForwardingSet() {}
 
-  @Override protected abstract Set<E> delegate();
+  
+  @Override
+  protected abstract Set<E> delegate();
 
-  @Override public boolean equals(@Nullable Object object) {
+  
+  @Override
+  public boolean equals(@Nullable Object object) {
     return object == this || delegate().equals(object);
   }
 
-  @Override public int hashCode() {
+  
+  @Override
+  public int hashCode() {
     return delegate().hashCode();
   }
 
@@ -72,6 +78,7 @@ public abstract class ForwardingSet<E> extends ForwardingCollection<E>
    *
    * @since 7.0 (this version overrides the {@code ForwardingCollection} version as of 12.0)
    */
+  
   @Override
   protected boolean standardRemoveAll(Collection<?> collection) {
     return Sets.removeAllImpl(this, checkNotNull(collection)); // for GWT

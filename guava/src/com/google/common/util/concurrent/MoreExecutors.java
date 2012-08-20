@@ -137,7 +137,6 @@ public final class MoreExecutors {
       final ExecutorService service, final long terminationTimeout,
       final TimeUnit timeUnit) {
     Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
-      @Override
       public void run() {
         try {
           // We'd like to log progress and failures that may arise in the
@@ -255,7 +254,6 @@ public final class MoreExecutors {
     private int runningTasks = 0;
     private boolean shutdown = false;
 
-    @Override
     public void execute(Runnable command) {
       startTask();
       try {
@@ -265,7 +263,6 @@ public final class MoreExecutors {
       }
     }
 
-    @Override
     public boolean isShutdown() {
       lock.lock();
       try {
@@ -275,7 +272,6 @@ public final class MoreExecutors {
       }
     }
 
-    @Override
     public void shutdown() {
       lock.lock();
       try {
@@ -286,13 +282,11 @@ public final class MoreExecutors {
     }
 
     // See sameThreadExecutor javadoc for unusual behavior of this method.
-    @Override
     public List<Runnable> shutdownNow() {
       shutdown();
       return Collections.emptyList();
     }
 
-    @Override
     public boolean isTerminated() {
       lock.lock();
       try {
@@ -302,7 +296,6 @@ public final class MoreExecutors {
       }
     }
 
-    @Override
     public boolean awaitTermination(long timeout, TimeUnit unit)
         throws InterruptedException {
       long nanos = unit.toNanos(timeout);
@@ -418,33 +411,27 @@ public final class MoreExecutors {
       this.delegate = checkNotNull(delegate);
     }
 
-    @Override
     public boolean awaitTermination(long timeout, TimeUnit unit)
         throws InterruptedException {
       return delegate.awaitTermination(timeout, unit);
     }
 
-    @Override
     public boolean isShutdown() {
       return delegate.isShutdown();
     }
 
-    @Override
     public boolean isTerminated() {
       return delegate.isTerminated();
     }
 
-    @Override
     public void shutdown() {
       delegate.shutdown();
     }
 
-    @Override
     public List<Runnable> shutdownNow() {
       return delegate.shutdownNow();
     }
 
-    @Override
     public void execute(Runnable command) {
       delegate.execute(command);
     }
@@ -460,25 +447,21 @@ public final class MoreExecutors {
       this.delegate = checkNotNull(delegate);
     }
 
-    @Override
     public ScheduledFuture<?> schedule(
         Runnable command, long delay, TimeUnit unit) {
       return delegate.schedule(command, delay, unit);
     }
 
-    @Override
     public <V> ScheduledFuture<V> schedule(
         Callable<V> callable, long delay, TimeUnit unit) {
       return delegate.schedule(callable, delay, unit);
     }
 
-    @Override
     public ScheduledFuture<?> scheduleAtFixedRate(
         Runnable command, long initialDelay, long period, TimeUnit unit) {
       return delegate.scheduleAtFixedRate(command, initialDelay, period, unit);
     }
 
-    @Override
     public ScheduledFuture<?> scheduleWithFixedDelay(
         Runnable command, long initialDelay, long delay, TimeUnit unit) {
       return delegate.scheduleWithFixedDelay(
@@ -578,7 +561,7 @@ public final class MoreExecutors {
       final BlockingQueue<Future<T>> queue) {
     final ListenableFuture<T> future = executorService.submit(task);
     future.addListener(new Runnable() {
-      @Override public void run() {
+      public void run() {
         queue.add(future);
       }
     }, MoreExecutors.sameThreadExecutor());

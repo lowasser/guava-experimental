@@ -90,7 +90,6 @@ public abstract class AbstractFuture<V> implements ListenableFuture<V> {
    *     or during the call (optional but recommended).
    * @throws CancellationException {@inheritDoc}
    */
-  @Override
   public V get(long timeout, TimeUnit unit) throws InterruptedException,
       TimeoutException, ExecutionException {
     return sync.get(unit.toNanos(timeout));
@@ -111,22 +110,18 @@ public abstract class AbstractFuture<V> implements ListenableFuture<V> {
    *     or during the call (optional but recommended).
    * @throws CancellationException {@inheritDoc}
    */
-  @Override
   public V get() throws InterruptedException, ExecutionException {
     return sync.get();
   }
 
-  @Override
   public boolean isDone() {
     return sync.isDone();
   }
 
-  @Override
   public boolean isCancelled() {
     return sync.isCancelled();
   }
 
-  @Override
   public boolean cancel(boolean mayInterruptIfRunning) {
     if (!sync.cancel()) {
       return false;
@@ -155,7 +150,6 @@ public abstract class AbstractFuture<V> implements ListenableFuture<V> {
    *
    * @since 10.0
    */
-  @Override
   public void addListener(Runnable listener, Executor exec) {
     executionList.add(listener, exec);
   }
@@ -233,6 +227,7 @@ public abstract class AbstractFuture<V> implements ListenableFuture<V> {
     /*
      * Acquisition succeeds if the future is done, otherwise it fails.
      */
+    
     @Override
     protected int tryAcquireShared(int ignored) {
       if (isDone()) {
@@ -245,6 +240,7 @@ public abstract class AbstractFuture<V> implements ListenableFuture<V> {
      * We always allow a release to go through, this means the state has been
      * successfully changed and the result is available.
      */
+    
     @Override
     protected boolean tryReleaseShared(int finalState) {
       setState(finalState);

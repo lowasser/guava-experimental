@@ -392,7 +392,9 @@ public abstract class ImmutableSet<E> extends ImmutableCollection<E>
     return false;
   }
 
-  @Override public boolean equals(@Nullable Object object) {
+  
+  @Override
+  public boolean equals(@Nullable Object object) {
     if (object == this) {
       return true;
     }
@@ -405,13 +407,17 @@ public abstract class ImmutableSet<E> extends ImmutableCollection<E>
     return Sets.equalsImpl(this, object);
   }
 
-  @Override public int hashCode() {
+  
+  @Override
+  public int hashCode() {
     return Sets.hashCodeImpl(this);
   }
 
   // This declaration is needed to make Set.iterator() and
   // ImmutableCollection.iterator() consistent.
-  @Override public abstract UnmodifiableIterator<E> iterator();
+  
+  @Override
+  public abstract UnmodifiableIterator<E> iterator();
 
   abstract static class ArrayImmutableSet<E> extends ImmutableSet<E> {
     // the elements (two or more) in the desired order.
@@ -421,28 +427,34 @@ public abstract class ImmutableSet<E> extends ImmutableCollection<E>
       this.elements = elements;
     }
 
-    @Override
     public int size() {
       return elements.length;
     }
 
-    @Override public boolean isEmpty() {
+    
+    @Override
+    public boolean isEmpty() {
       return false;
     }
 
-    @Override public UnmodifiableIterator<E> iterator() {
+    @Override
+    public UnmodifiableIterator<E> iterator() {
       return asList().iterator();
     }
 
-    @Override public Object[] toArray() {
+    @Override
+    public Object[] toArray() {
       return asList().toArray();
     }
 
-    @Override public <T> T[] toArray(T[] array) {
+    @Override
+    public <T> T[] toArray(T[] array) {
       return asList().toArray(array);
     }
 
-    @Override public boolean containsAll(Collection<?> targets) {
+    
+    @Override
+    public boolean containsAll(Collection<?> targets) {
       if (targets == this) {
         return true;
       }
@@ -460,11 +472,14 @@ public abstract class ImmutableSet<E> extends ImmutableCollection<E>
       return true;
     }
 
-    @Override boolean isPartialView() {
+    
+    @Override
+    boolean isPartialView() {
       return false;
     }
 
-    @Override ImmutableList<E> createAsList() {
+    @Override
+    ImmutableList<E> createAsList() {
       return new RegularImmutableAsList<E>(this, elements);
     }
   }
@@ -487,7 +502,9 @@ public abstract class ImmutableSet<E> extends ImmutableCollection<E>
     private static final long serialVersionUID = 0;
   }
 
-  @Override Object writeReplace() {
+  
+  @Override
+  Object writeReplace() {
     return new SerializedForm(toArray());
   }
 
@@ -554,7 +571,8 @@ public abstract class ImmutableSet<E> extends ImmutableCollection<E>
      * @return this {@code Builder} object
      * @throws NullPointerException if {@code element} is null
      */
-    @Override public Builder<E> add(E element) {
+    @Override
+    public Builder<E> add(E element) {
       expandFor(1);
       contents[size++] = checkNotNull(element);
       return this;
@@ -569,7 +587,8 @@ public abstract class ImmutableSet<E> extends ImmutableCollection<E>
      * @throws NullPointerException if {@code elements} is null or contains a
      *     null element
      */
-    @Override public Builder<E> add(E... elements) {
+    @Override
+    public Builder<E> add(E... elements) {
       for (int i = 0; i < elements.length; i++) {
         ObjectArrays.checkElementNotNull(elements[i], i);
       }
@@ -588,7 +607,9 @@ public abstract class ImmutableSet<E> extends ImmutableCollection<E>
      * @throws NullPointerException if {@code elements} is null or contains a
      *     null element
      */
-    @Override public Builder<E> addAll(Iterable<? extends E> elements) {
+    
+    @Override
+    public Builder<E> addAll(Iterable<? extends E> elements) {
       if (elements instanceof Collection) {
         Collection<?> collection = (Collection<?>) elements;
         expandFor(collection.size());
@@ -606,7 +627,9 @@ public abstract class ImmutableSet<E> extends ImmutableCollection<E>
      * @throws NullPointerException if {@code elements} is null or contains a
      *     null element
      */
-    @Override public Builder<E> addAll(Iterator<? extends E> elements) {
+    
+    @Override
+    public Builder<E> addAll(Iterator<? extends E> elements) {
       super.addAll(elements);
       return this;
     }
@@ -615,7 +638,8 @@ public abstract class ImmutableSet<E> extends ImmutableCollection<E>
      * Returns a newly-created {@code ImmutableSet} based on the contents of
      * the {@code Builder}.
      */
-    @Override public ImmutableSet<E> build() {
+    @Override
+    public ImmutableSet<E> build() {
       ImmutableSet<E> result = construct(size, contents);
       // construct has the side effect of deduping contents, so we update size
       // accordingly.

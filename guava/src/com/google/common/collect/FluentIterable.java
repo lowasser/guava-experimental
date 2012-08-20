@@ -88,7 +88,6 @@ public abstract class FluentIterable<E> implements Iterable<E> {
   public static <E> FluentIterable<E> from(final Iterable<E> iterable) {
     return (iterable instanceof FluentIterable) ? (FluentIterable<E>) iterable
         : new FluentIterable<E>(iterable) {
-          @Override
           public Iterator<E> iterator() {
             return iterable.iterator();
           }
@@ -112,6 +111,7 @@ public abstract class FluentIterable<E> implements Iterable<E> {
    * Returns a string representation of this fluent iterable, with the format
    * {@code [e1, e2, ..., en]}.
    */
+  
   @Override
   public String toString() {
     return Iterables.toString(iterable);
@@ -391,7 +391,6 @@ public abstract class FluentIterable<E> implements Iterable<E> {
    */
   private static class FromIterableFunction<E>
       implements Function<Iterable<E>, FluentIterable<E>> {
-    @Override
     public FluentIterable<E> apply(Iterable<E> fromObject) {
       return FluentIterable.from(fromObject);
     }

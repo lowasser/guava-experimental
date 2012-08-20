@@ -203,17 +203,14 @@ public class ArbitraryInstancesTest extends TestCase {
     assertTrue(ArbitraryInstances.get(MapDifference.class).areEqual());
     assertTrue(ArbitraryInstances.get(SortedMapDifference.class).areEqual());
     assertEquals(Ranges.all(), ArbitraryInstances.get(Range.class));
-    assertTrue(ArbitraryInstances.get(NavigableSet.class).isEmpty());
-    assertTrue(ArbitraryInstances.get(NavigableMap.class).isEmpty());
     assertTrue(ArbitraryInstances.get(LinkedList.class).isEmpty());
-    assertTrue(ArbitraryInstances.get(Deque.class).isEmpty());
     assertTrue(ArbitraryInstances.get(Queue.class).isEmpty());
     assertTrue(ArbitraryInstances.get(PriorityQueue.class).isEmpty());
     assertTrue(ArbitraryInstances.get(BitSet.class).isEmpty());
     assertTrue(ArbitraryInstances.get(TreeSet.class).isEmpty());
     assertTrue(ArbitraryInstances.get(TreeMap.class).isEmpty());
     assertFreshInstanceReturned(
-        LinkedList.class, Deque.class, Queue.class, PriorityQueue.class, BitSet.class, 
+        LinkedList.class, Queue.class, PriorityQueue.class, BitSet.class, 
         TreeSet.class, TreeMap.class);
   }
 
@@ -234,19 +231,17 @@ public class ArbitraryInstancesTest extends TestCase {
   }
 
   public void testGet_concurrent() {
-    assertTrue(ArbitraryInstances.get(BlockingDeque.class).isEmpty());
     assertTrue(ArbitraryInstances.get(BlockingQueue.class).isEmpty());
     assertTrue(ArbitraryInstances.get(DelayQueue.class).isEmpty());
     assertTrue(ArbitraryInstances.get(SynchronousQueue.class).isEmpty());
     assertTrue(ArbitraryInstances.get(PriorityBlockingQueue.class).isEmpty());
     assertTrue(ArbitraryInstances.get(ConcurrentMap.class).isEmpty());
-    assertTrue(ArbitraryInstances.get(ConcurrentNavigableMap.class).isEmpty());
     ArbitraryInstances.get(Executor.class).execute(ArbitraryInstances.get(Runnable.class));
     assertNotNull(ArbitraryInstances.get(ThreadFactory.class));
     assertFreshInstanceReturned(
-        BlockingQueue.class, BlockingDeque.class, PriorityBlockingQueue.class,
+        BlockingQueue.class, PriorityBlockingQueue.class,
         DelayQueue.class, SynchronousQueue.class,
-        ConcurrentMap.class, ConcurrentNavigableMap.class,
+        ConcurrentMap.class,
         AtomicReference.class, AtomicBoolean.class,
         AtomicInteger.class, AtomicLong.class, AtomicDouble.class);
   }

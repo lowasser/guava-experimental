@@ -547,6 +547,7 @@ public final class InternetDomainName {
   }
 
   // TODO: specify this to return the same as name(); remove name()
+  
   @Override
   public String toString() {
     return Objects.toStringHelper(this).add("name", name).toString();
@@ -559,6 +560,7 @@ public final class InternetDomainName {
    * of the same domain name would not be considered equal.
    *
    */
+  
   @Override
   public boolean equals(@Nullable Object object) {
     if (object == this) {
@@ -573,6 +575,7 @@ public final class InternetDomainName {
     return false;
   }
 
+  
   @Override
   public int hashCode() {
     return name.hashCode();

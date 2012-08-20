@@ -47,14 +47,17 @@ abstract class AbstractSortedMultiset<E> extends AbstractMultiset<E> implements 
     this.comparator = checkNotNull(comparator);
   }
 
+  
   @Override
   public SortedSet<E> elementSet() {
     return (SortedSet<E>) super.elementSet();
   }
 
+  
   @Override
   SortedSet<E> createElementSet() {
     return new SortedMultisets.ElementSet<E>() {
+      
       @Override
       SortedMultiset<E> multiset() {
         return AbstractSortedMultiset.this;
@@ -62,24 +65,20 @@ abstract class AbstractSortedMultiset<E> extends AbstractMultiset<E> implements 
     };
   }
 
-  @Override
   public Comparator<? super E> comparator() {
     return comparator;
   }
 
-  @Override
   public Entry<E> firstEntry() {
     Iterator<Entry<E>> entryIterator = entryIterator();
     return entryIterator.hasNext() ? entryIterator.next() : null;
   }
 
-  @Override
   public Entry<E> lastEntry() {
     Iterator<Entry<E>> entryIterator = descendingEntryIterator();
     return entryIterator.hasNext() ? entryIterator.next() : null;
   }
 
-  @Override
   public Entry<E> pollFirstEntry() {
     Iterator<Entry<E>> entryIterator = entryIterator();
     if (entryIterator.hasNext()) {
@@ -91,7 +90,6 @@ abstract class AbstractSortedMultiset<E> extends AbstractMultiset<E> implements 
     return null;
   }
 
-  @Override
   public Entry<E> pollLastEntry() {
     Iterator<Entry<E>> entryIterator = descendingEntryIterator();
     if (entryIterator.hasNext()) {
@@ -103,7 +101,7 @@ abstract class AbstractSortedMultiset<E> extends AbstractMultiset<E> implements 
     return null;
   }
 
-  @Override
+  
   public SortedMultiset<E> subMultiset(@Nullable E fromElement, BoundType fromBoundType,
       @Nullable E toElement, BoundType toBoundType) {
     // These are checked elsewhere, but NullPointerTester wants them checked eagerly.
@@ -120,7 +118,6 @@ abstract class AbstractSortedMultiset<E> extends AbstractMultiset<E> implements 
 
   private transient SortedMultiset<E> descendingMultiset;
 
-  @Override
   public SortedMultiset<E> descendingMultiset() {
     SortedMultiset<E> result = descendingMultiset;
     return (result == null) ? descendingMultiset = createDescendingMultiset() : result;
@@ -128,16 +125,19 @@ abstract class AbstractSortedMultiset<E> extends AbstractMultiset<E> implements 
 
   SortedMultiset<E> createDescendingMultiset() {
     return new SortedMultisets.DescendingMultiset<E>() {
+      
       @Override
       SortedMultiset<E> forwardMultiset() {
         return AbstractSortedMultiset.this;
       }
 
+      
       @Override
       Iterator<Entry<E>> entryIterator() {
         return descendingEntryIterator();
       }
 
+      
       @Override
       public Iterator<E> iterator() {
         return descendingIterator();

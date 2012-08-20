@@ -36,24 +36,22 @@ public abstract class ForwardingConcurrentMap<K, V> extends ForwardingMap<K, V>
   /** Constructor for use by subclasses. */
   protected ForwardingConcurrentMap() {}
 
-  @Override protected abstract ConcurrentMap<K, V> delegate();
-
+  
   @Override
+  protected abstract ConcurrentMap<K, V> delegate();
+
   public V putIfAbsent(K key, V value) {
     return delegate().putIfAbsent(key, value);
   }
 
-  @Override
   public boolean remove(Object key, Object value) {
     return delegate().remove(key, value);
   }
 
-  @Override
   public V replace(K key, V value) {
     return delegate().replace(key, value);
   }
 
-  @Override
   public boolean replace(K key, V oldValue, V newValue) {
     return delegate().replace(key, oldValue, newValue);
   }

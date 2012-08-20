@@ -39,6 +39,7 @@ class RegularImmutableAsList<E> extends ImmutableAsList<E> {
     this(delegate, ImmutableList.<E>asImmutableList(array));
   }
 
+  
   @Override
   ImmutableCollection<E> delegateCollection() {
     return delegate;
@@ -48,43 +49,50 @@ class RegularImmutableAsList<E> extends ImmutableAsList<E> {
     return delegateList;
   }
 
-  @SuppressWarnings("unchecked")  // safe covariant cast!
   @Override
+  @SuppressWarnings("unchecked")  // safe covariant cast!
+  
   public UnmodifiableListIterator<E> listIterator(int index) {
     return (UnmodifiableListIterator<E>) delegateList.listIterator(index);
   }
 
+  
   @Override
   public Object[] toArray() {
     return delegateList.toArray();
   }
 
+  
   @Override
   public <T> T[] toArray(T[] other) {
     return delegateList.toArray(other);
   }
 
+  
   @Override
   public int indexOf(Object object) {
     return delegateList.indexOf(object);
   }
 
+  
   @Override
   public int lastIndexOf(Object object) {
     return delegateList.lastIndexOf(object);
   }
 
+  
   @Override
   public boolean equals(Object obj) {
     return delegateList.equals(obj);
   }
 
+  
   @Override
   public int hashCode() {
     return delegateList.hashCode();
   }
 
-  @Override
+  
   public E get(int index) {
     return delegateList.get(index);
   }

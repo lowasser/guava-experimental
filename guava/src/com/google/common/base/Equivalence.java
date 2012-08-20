@@ -190,7 +190,9 @@ public abstract class Equivalence<T> {
      * references is {@code true} and both wrappers use the {@link Object#equals(Object) same}
      * equivalence.
      */
-    @Override public boolean equals(@Nullable Object obj) {
+    
+    @Override
+    public boolean equals(@Nullable Object obj) {
       if (obj == this) {
         return true;
       } else if (obj instanceof Wrapper) {
@@ -212,7 +214,9 @@ public abstract class Equivalence<T> {
     /**
      * Returns the result of {@link Equivalence#hash(Object)} applied to the the wrapped reference.
      */
-    @Override public int hashCode() {
+    
+    @Override
+    public int hashCode() {
       return equivalence.hash(reference);
     }
 
@@ -220,7 +224,9 @@ public abstract class Equivalence<T> {
      * Returns a string representation for this equivalence wrapper. The form of this string
      * representation is not specified.
      */
-    @Override public String toString() {
+    
+    @Override
+    public String toString() {
       return equivalence + ".wrap(" + reference + ")";
     }
 
@@ -266,11 +272,13 @@ public abstract class Equivalence<T> {
       this.target = target;
     }
 
-    @Override public boolean apply(@Nullable T input) {
+    public boolean apply(@Nullable T input) {
       return equivalence.equivalent(input, target);
     }
 
-    @Override public boolean equals(@Nullable Object obj) {
+    
+    @Override
+    public boolean equals(@Nullable Object obj) {
       if (this == obj) {
         return true;
       }
@@ -282,11 +290,15 @@ public abstract class Equivalence<T> {
       return false;
     }
 
-    @Override public int hashCode() {
+    
+    @Override
+    public int hashCode() {
       return Objects.hashCode(equivalence, target);
     }
 
-    @Override public String toString() {
+    
+    @Override
+    public String toString() {
       return equivalence + ".equivalentTo(" + target + ")";
     }
 
@@ -324,10 +336,12 @@ public abstract class Equivalence<T> {
     
     static final Equals INSTANCE = new Equals();
 
-    @Override protected boolean doEquivalent(Object a, Object b) {
+    @Override
+    protected boolean doEquivalent(Object a, Object b) {
       return a.equals(b);
     }
-    @Override public int doHash(Object o) {
+    @Override
+    public int doHash(Object o) {
       return o.hashCode();
     }
 
@@ -342,11 +356,13 @@ public abstract class Equivalence<T> {
     
     static final Identity INSTANCE = new Identity();
     
-    @Override protected boolean doEquivalent(Object a, Object b) {
+    @Override
+    protected boolean doEquivalent(Object a, Object b) {
       return false;
     }
 
-    @Override protected int doHash(Object o) {
+    @Override
+    protected int doHash(Object o) {
       return System.identityHashCode(o);
     }
  

@@ -216,6 +216,7 @@ final class GeneralRange<T> implements Serializable {
     return new GeneralRange<T>(comparator, hasLowBound, lowEnd, lowType, hasUpBound, upEnd, upType);
   }
 
+  
   @Override
   public boolean equals(@Nullable Object obj) {
     if (obj instanceof GeneralRange) {
@@ -229,6 +230,7 @@ final class GeneralRange<T> implements Serializable {
     return false;
   }
 
+  
   @Override
   public int hashCode() {
     return Objects.hashCode(comparator, getLowerEndpoint(), getLowerBoundType(), getUpperEndpoint(),
@@ -252,6 +254,7 @@ final class GeneralRange<T> implements Serializable {
     return result;
   }
 
+  
   @Override
   public String toString() {
     StringBuilder builder = new StringBuilder();

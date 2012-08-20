@@ -37,24 +37,31 @@ final class ComparatorOrdering<T> extends Ordering<T> implements Serializable {
     this.comparator = checkNotNull(comparator);
   }
 
-  @Override public int compare(T a, T b) {
+  
+  @Override
+  public int compare(T a, T b) {
     return comparator.compare(a, b);
   }
 
   // Override just to remove a level of indirection from inner loops
-  @Override public int binarySearch(List<? extends T> sortedList, T key) {
+  
+  @Override
+  public int binarySearch(List<? extends T> sortedList, T key) {
     return Collections.binarySearch(sortedList, key, comparator);
   }
 
   // Override just to remove a level of indirection from inner loops
-  @Override public <E extends T> List<E> sortedCopy(Iterable<E> iterable) {
+  
+  @Override
+  public <E extends T> List<E> sortedCopy(Iterable<E> iterable) {
     List<E> list = Lists.newArrayList(iterable);
     Collections.sort(list, comparator);
     return list;
   }
 
   // Override just to remove a level of indirection from inner loops
-  @Override public <E extends T> ImmutableList<E> immutableSortedCopy(Iterable<E> iterable) {
+  @Override
+  public <E extends T> ImmutableList<E> immutableSortedCopy(Iterable<E> iterable) {
     @SuppressWarnings("unchecked") // we'll only ever have E's in here
     E[] elements = (E[]) Iterables.toArray(iterable);
     for (E e : elements) {
@@ -64,7 +71,8 @@ final class ComparatorOrdering<T> extends Ordering<T> implements Serializable {
     return ImmutableList.asImmutableList(elements);
   }
 
-  @Override public boolean equals(@Nullable Object object) {
+  @Override
+  public boolean equals(@Nullable Object object) {
     if (object == this) {
       return true;
     }
@@ -75,11 +83,15 @@ final class ComparatorOrdering<T> extends Ordering<T> implements Serializable {
     return false;
   }
 
-  @Override public int hashCode() {
+  
+  @Override
+  public int hashCode() {
     return comparator.hashCode();
   }
 
-  @Override public String toString() {
+  
+  @Override
+  public String toString() {
     return comparator.toString();
   }
 

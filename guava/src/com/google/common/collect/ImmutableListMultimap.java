@@ -164,7 +164,9 @@ public class ImmutableListMultimap<K, V>
      */
     public Builder() {}
 
-    @Override public Builder<K, V> put(K key, V value) {
+    
+    @Override
+    public Builder<K, V> put(K key, V value) {
       super.put(key, value);
       return this;
     }
@@ -174,23 +176,31 @@ public class ImmutableListMultimap<K, V>
      *
      * @since 11.0
      */
-    @Override public Builder<K, V> put(
+    
+    @Override
+    public Builder<K, V> put(
         Entry<? extends K, ? extends V> entry) {
       super.put(entry);
       return this;
     }
 
-    @Override public Builder<K, V> putAll(K key, Iterable<? extends V> values) {
+    
+    @Override
+    public Builder<K, V> putAll(K key, Iterable<? extends V> values) {
       super.putAll(key, values);
       return this;
     }
 
-    @Override public Builder<K, V> putAll(K key, V... values) {
+    
+    @Override
+    public Builder<K, V> putAll(K key, V... values) {
       super.putAll(key, values);
       return this;
     }
 
-    @Override public Builder<K, V> putAll(
+    
+    @Override
+    public Builder<K, V> putAll(
         Multimap<? extends K, ? extends V> multimap) {
       super.putAll(multimap);
       return this;
@@ -221,7 +231,9 @@ public class ImmutableListMultimap<K, V>
     /**
      * Returns a newly-created immutable list multimap.
      */
-    @Override public ImmutableListMultimap<K, V> build() {
+    
+    @Override
+    public ImmutableListMultimap<K, V> build() {
       return (ImmutableListMultimap<K, V>) super.build();
     }
   }
@@ -281,7 +293,9 @@ public class ImmutableListMultimap<K, V>
    * returned. The values are in the same order as the parameters used to build
    * this multimap.
    */
-  @Override public ImmutableList<V> get(@Nullable K key) {
+  
+  @Override
+  public ImmutableList<V> get(@Nullable K key) {
     // This cast is safe as its type is known in constructor.
     ImmutableList<V> list = (ImmutableList<V>) map.get(key);
     return (list == null) ? ImmutableList.<V>of() : list;
@@ -299,6 +313,8 @@ public class ImmutableListMultimap<K, V>
    *
    * @since 11
    */
+  
+  @Override
   @Beta
   public ImmutableListMultimap<V, K> inverse() {
     ImmutableListMultimap<V, K> result = inverse;
@@ -320,7 +336,9 @@ public class ImmutableListMultimap<K, V>
    *
    * @throws UnsupportedOperationException always
    */
-  @Override public ImmutableList<V> removeAll(Object key) {
+  
+  @Override
+  public ImmutableList<V> removeAll(Object key) {
     throw new UnsupportedOperationException();
   }
 
@@ -329,7 +347,9 @@ public class ImmutableListMultimap<K, V>
    *
    * @throws UnsupportedOperationException always
    */
-  @Override public ImmutableList<V> replaceValues(
+  
+  @Override
+  public ImmutableList<V> replaceValues(
       K key, Iterable<? extends V> values) {
     throw new UnsupportedOperationException();
   }

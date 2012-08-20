@@ -92,16 +92,19 @@ import javax.annotation.Nullable;
       this.positive = positive;
     }
 
+    
     @Override
     public boolean contains(C value) {
       return !positive.contains(value);
     }
 
+    
     @Override
     public void add(Range<C> range) {
       positive.remove(range);
     }
 
+    
     @Override
     public void remove(Range<C> range) {
       positive.add(range);
@@ -109,6 +112,7 @@ import javax.annotation.Nullable;
 
     private transient Set<Range<C>> asRanges;
 
+    
     @Override
     public final Set<Range<C>> asRanges() {
       Set<Range<C>> result = asRanges;
@@ -118,12 +122,14 @@ import javax.annotation.Nullable;
     Set<Range<C>> createAsRanges() {
       return new AbstractSet<Range<C>>() {
 
+        
         @Override
         public Iterator<Range<C>> iterator() {
           final Iterator<Range<C>> positiveIterator = positive.asRanges().iterator();
           return new AbstractIterator<Range<C>>() {
             Cut<C> prevCut = Cut.belowAll();
 
+            
             @Override
             protected Range<C> computeNext() {
               while (positiveIterator.hasNext()) {
@@ -145,6 +151,7 @@ import javax.annotation.Nullable;
           };
         }
 
+        
         @Override
         public int size() {
           return Iterators.size(iterator());
@@ -152,6 +159,7 @@ import javax.annotation.Nullable;
       };
     }
 
+    
     @Override
     public RangeSet<C> complement() {
       return positive;
@@ -257,6 +265,7 @@ import javax.annotation.Nullable;
    * Returns {@code true} if {@code obj} is another {@code RangeSet} that contains the same ranges
    * according to {@link Range#equals(Object)}.
    */
+  
   @Override
   public boolean equals(@Nullable Object obj) {
     if (obj instanceof RangeSet) {
@@ -266,6 +275,7 @@ import javax.annotation.Nullable;
     return false;
   }
 
+  
   @Override
   public final int hashCode() {
     return asRanges().hashCode();
@@ -276,6 +286,7 @@ import javax.annotation.Nullable;
    * {@code RangeSet} consisted of {@code Ranges.closed(1, 3)} and {@code Ranges.greaterThan(4)},
    * this might return {@code " [1‥3](4‥+∞)}"}.
    */
+  
   @Override
   public final String toString() {
     StringBuilder builder = new StringBuilder();

@@ -301,7 +301,6 @@ public abstract class ImmutableMap<K, V> implements Map<K, V>, Serializable {
    *
    * @throws UnsupportedOperationException always
    */
-  @Override
   public final V put(K k, V v) {
     throw new UnsupportedOperationException();
   }
@@ -311,7 +310,6 @@ public abstract class ImmutableMap<K, V> implements Map<K, V>, Serializable {
    *
    * @throws UnsupportedOperationException always
    */
-  @Override
   public final V remove(Object o) {
     throw new UnsupportedOperationException();
   }
@@ -321,7 +319,6 @@ public abstract class ImmutableMap<K, V> implements Map<K, V>, Serializable {
    *
    * @throws UnsupportedOperationException always
    */
-  @Override
   public final void putAll(Map<? extends K, ? extends V> map) {
     throw new UnsupportedOperationException();
   }
@@ -331,28 +328,24 @@ public abstract class ImmutableMap<K, V> implements Map<K, V>, Serializable {
    *
    * @throws UnsupportedOperationException always
    */
-  @Override
   public final void clear() {
     throw new UnsupportedOperationException();
   }
 
-  @Override
   public boolean isEmpty() {
     return size() == 0;
   }
 
-  @Override
   public boolean containsKey(@Nullable Object key) {
     return get(key) != null;
   }
 
-  @Override
+  
   public boolean containsValue(@Nullable Object value) {
     return value != null && Maps.containsValueImpl(this, value);
   }
 
   // Overriding to mark it Nullable
-  @Override
   public abstract V get(@Nullable Object key);
 
   private transient ImmutableSet<Entry<K, V>> entrySet;
@@ -361,7 +354,6 @@ public abstract class ImmutableMap<K, V> implements Map<K, V>, Serializable {
    * Returns an immutable set of the mappings in this map. The entries are in
    * the same order as the parameters used to build this map.
    */
-  @Override
   public ImmutableSet<Entry<K, V>> entrySet() {
     ImmutableSet<Entry<K, V>> result = entrySet;
     return (result == null) ? entrySet = createEntrySet() : result;
@@ -375,7 +367,6 @@ public abstract class ImmutableMap<K, V> implements Map<K, V>, Serializable {
    * Returns an immutable set of the keys in this map. These keys are in
    * the same order as the parameters used to build this map.
    */
-  @Override
   public ImmutableSet<K> keySet() {
     ImmutableSet<K> result = keySet;
     return (result == null) ? keySet = createKeySet() : result;
@@ -383,7 +374,8 @@ public abstract class ImmutableMap<K, V> implements Map<K, V>, Serializable {
 
   ImmutableSet<K> createKeySet() {
     return new ImmutableMapKeySet<K, V>(entrySet()) {
-      @Override ImmutableMap<K, V> map() {
+      @Override
+      ImmutableMap<K, V> map() {
         return ImmutableMap.this;
       }
     };
@@ -395,7 +387,6 @@ public abstract class ImmutableMap<K, V> implements Map<K, V>, Serializable {
    * Returns an immutable collection of the values in this map. The values are
    * in the same order as the parameters used to build this map.
    */
-  @Override
   public ImmutableCollection<V> values() {
     ImmutableCollection<V> result = values;
     return (result == null) ? values = createValues() : result;
@@ -403,25 +394,31 @@ public abstract class ImmutableMap<K, V> implements Map<K, V>, Serializable {
 
   ImmutableCollection<V> createValues() {
     return new ImmutableMapValues<K, V>() {
-      @Override ImmutableMap<K, V> map() {
+      @Override
+      ImmutableMap<K, V> map() {
         return ImmutableMap.this;
       }
     };
   }
 
-  @Override public boolean equals(@Nullable Object object) {
+  @Override
+  public boolean equals(@Nullable Object object) {
     return Maps.equalsImpl(this, object);
   }
 
   abstract boolean isPartialView();
 
-  @Override public int hashCode() {
+  
+  @Override
+  public int hashCode() {
     // not caching hash code since it could change if map values are mutable
     // in a way that modifies their hash codes
     return entrySet().hashCode();
   }
 
-  @Override public String toString() {
+  
+  @Override
+  public String toString() {
     return Maps.toStringImpl(this);
   }
 

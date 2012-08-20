@@ -57,16 +57,19 @@ final class Count implements Serializable {
     return result;
   }
 
+  
   @Override
   public int hashCode() {
     return value;
   }
 
+  
   @Override
   public boolean equals(@Nullable Object obj) {
     return obj instanceof Count && ((Count) obj).value == value;
   }
 
+  
   @Override
   public String toString() {
     return Integer.toString(value);

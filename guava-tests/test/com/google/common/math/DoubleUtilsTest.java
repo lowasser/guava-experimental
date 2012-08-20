@@ -17,14 +17,14 @@
 package com.google.common.math;
 
 import static com.google.common.math.MathTesting.ALL_BIGINTEGER_CANDIDATES;
+import static com.google.common.math.MathTesting.ALL_DOUBLE_CANDIDATES;
 import static com.google.common.math.MathTesting.FINITE_DOUBLE_CANDIDATES;
 import static com.google.common.math.MathTesting.POSITIVE_FINITE_DOUBLE_CANDIDATES;
 
-import junit.framework.TestCase;
-
-import sun.misc.FpUtils;
-
 import java.math.BigInteger;
+
+import junit.framework.TestCase;
+import sun.misc.FpUtils;
 
 /**
  * Tests for {@link DoubleUtils}.
@@ -32,9 +32,23 @@ import java.math.BigInteger;
  * @author Louis Wasserman
  */
 public class DoubleUtilsTest extends TestCase {
+  public void testNextUp() {
+    for (double d : FINITE_DOUBLE_CANDIDATES) {
+      assertEquals(FpUtils.nextUp(d), DoubleUtils.nextUp(d));
+    }
+  }
+  
   public void testNextDown() {
     for (double d : FINITE_DOUBLE_CANDIDATES) {
       assertEquals(FpUtils.nextDown(d), DoubleUtils.nextDown(d));
+    }
+  }
+  
+  public void testCopySign() {
+    for (double magnitude : ALL_DOUBLE_CANDIDATES) {
+      for (double sgn : FINITE_DOUBLE_CANDIDATES) {
+        assertEquals(FpUtils.copySign(magnitude, sgn), DoubleUtils.copySign(magnitude, sgn));
+      }
     }
   }
   

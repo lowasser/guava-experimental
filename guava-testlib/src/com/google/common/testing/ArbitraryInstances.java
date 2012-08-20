@@ -62,7 +62,6 @@ import com.google.common.collect.Range;
 import com.google.common.collect.Ranges;
 import com.google.common.collect.RowSortedTable;
 import com.google.common.collect.SetMultimap;
-import com.google.common.collect.Sets;
 import com.google.common.collect.SortedMapDifference;
 import com.google.common.collect.SortedMultiset;
 import com.google.common.collect.SortedSetMultimap;
@@ -104,31 +103,25 @@ import java.nio.IntBuffer;
 import java.nio.LongBuffer;
 import java.nio.ShortBuffer;
 import java.nio.charset.Charset;
-import java.util.ArrayDeque;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Currency;
-import java.util.Deque;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Locale;
 import java.util.Map;
-import java.util.NavigableMap;
-import java.util.NavigableSet;
 import java.util.Queue;
 import java.util.Random;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.SortedSet;
-import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.ConcurrentNavigableMap;
-import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.Executor;
-import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
@@ -234,12 +227,10 @@ public final class ArbitraryInstances {
       .put(ImmutableSet.class, ImmutableSet.of())
       .put(SortedSet.class, ImmutableSortedSet.of())
       .put(ImmutableSortedSet.class, ImmutableSortedSet.of())
-      .put(NavigableSet.class, Sets.unmodifiableNavigableSet(Sets.newTreeSet()))
       .put(Map.class, ImmutableMap.of())
       .put(ImmutableMap.class, ImmutableMap.of())
       .put(SortedMap.class, ImmutableSortedMap.of())
       .put(ImmutableSortedMap.class, ImmutableSortedMap.of())
-      .put(NavigableMap.class, Maps.unmodifiableNavigableMap(Maps.newTreeMap()))
       .put(Multimap.class, ImmutableMultimap.of())
       .put(ImmutableMultimap.class, ImmutableMultimap.of())
       .put(ListMultimap.class, ImmutableListMultimap.of())
@@ -300,12 +291,9 @@ public final class ArbitraryInstances {
 
   static {
     setImplementation(Appendable.class, StringBuilder.class);
-    setImplementation(Queue.class, ArrayDeque.class);
-    setImplementation(Deque.class, ArrayDeque.class);
-    setImplementation(BlockingQueue.class, LinkedBlockingDeque.class);
-    setImplementation(BlockingDeque.class, LinkedBlockingDeque.class);
+    setImplementation(Queue.class, LinkedList.class);
+    setImplementation(BlockingQueue.class, LinkedBlockingQueue.class);
     setImplementation(ConcurrentMap.class, ConcurrentHashMap.class);
-    setImplementation(ConcurrentNavigableMap.class, ConcurrentSkipListMap.class);
     setImplementation(OutputStream.class, ByteArrayOutputStream.class);
     setImplementation(Writer.class, StringWriter.class);
     setImplementation(PrintStream.class, Mutable.InMemoryPrintStream.class);

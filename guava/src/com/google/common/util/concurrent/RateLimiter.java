@@ -468,6 +468,7 @@ public abstract class RateLimiter {
     return TimeUnit.NANOSECONDS.toMicros(ticker.read() - offsetNanos);
   }
 
+  
   @Override
   public String toString() {
     return String.format("RateLimiter[stableRate=%3.1fqps]", 1000000.0 / stableIntervalMicros);
@@ -563,6 +564,7 @@ public abstract class RateLimiter {
       this.warmupPeriodMicros = timeUnit.toMicros(warmupPeriod);
     }
 
+    
     @Override
     void doSetRate(double permitsPerSecond, double stableIntervalMicros) {
       double oldMaxPermits = maxPermits;
@@ -581,6 +583,7 @@ public abstract class RateLimiter {
       }
     }
 
+    
     @Override
     long storedPermitsToWaitTime(double storedPermits, double permitsToTake) {
       double availablePermitsAboveHalf = storedPermits - halfPermits;
@@ -616,6 +619,7 @@ public abstract class RateLimiter {
       super(ticker);
     }
 
+    
     @Override
     void doSetRate(double permitsPerSecond, double stableIntervalMicros) {
       double oldMaxPermits = this.maxPermits;
@@ -631,6 +635,7 @@ public abstract class RateLimiter {
           : storedPermits * maxPermits / oldMaxPermits;
     }
 
+    
     @Override
     long storedPermitsToWaitTime(double storedPermits, double permitsToTake) {
       return 0L;
@@ -642,11 +647,13 @@ public abstract class RateLimiter {
     abstract void sleepMicrosUninterruptibly(long micros);
 
     static final SleepingTicker SYSTEM_TICKER = new SleepingTicker() {
+      
       @Override
       public long read() {
         return systemTicker().read();
       }
 
+      
       @Override
       public void sleepMicrosUninterruptibly(long micros) {
         if (micros > 0) {

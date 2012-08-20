@@ -242,16 +242,16 @@ public abstract class ImmutableTable<R, C, V> implements Table<R, C, V> {
 
   ImmutableTable() {}
 
-  @Override public abstract ImmutableSet<Cell<R, C, V>> cellSet();
+  public abstract ImmutableSet<Cell<R, C, V>> cellSet();
 
   /**
    * {@inheritDoc}
    *
    * @throws NullPointerException if {@code columnKey} is {@code null}
    */
-  @Override public abstract ImmutableMap<R, V> column(C columnKey);
+  public abstract ImmutableMap<R, V> column(C columnKey);
 
-  @Override public abstract ImmutableSet<C> columnKeySet();
+  public abstract ImmutableSet<C> columnKeySet();
 
   /**
    * {@inheritDoc}
@@ -259,16 +259,16 @@ public abstract class ImmutableTable<R, C, V> implements Table<R, C, V> {
    * <p>The value {@code Map<R, V>}s in the returned map are
    * {@link ImmutableMap}s as well.
    */
-  @Override public abstract ImmutableMap<C, Map<R, V>> columnMap();
+  public abstract ImmutableMap<C, Map<R, V>> columnMap();
 
   /**
    * {@inheritDoc}
    *
    * @throws NullPointerException if {@code rowKey} is {@code null}
    */
-  @Override public abstract ImmutableMap<C, V> row(R rowKey);
+  public abstract ImmutableMap<C, V> row(R rowKey);
 
-  @Override public abstract ImmutableSet<R> rowKeySet();
+  public abstract ImmutableSet<R> rowKeySet();
 
   /**
    * {@inheritDoc}
@@ -276,14 +276,14 @@ public abstract class ImmutableTable<R, C, V> implements Table<R, C, V> {
    * <p>The value {@code Map<C, V>}s in the returned map are
    * {@link ImmutableMap}s as well.
    */
-  @Override public abstract ImmutableMap<R, Map<C, V>> rowMap();
+  public abstract ImmutableMap<R, Map<C, V>> rowMap();
 
   /**
    * Guaranteed to throw an exception and leave the table unmodified.
    *
    * @throws UnsupportedOperationException always
    */
-  @Override public final void clear() {
+  public final void clear() {
     throw new UnsupportedOperationException();
   }
 
@@ -292,7 +292,7 @@ public abstract class ImmutableTable<R, C, V> implements Table<R, C, V> {
    *
    * @throws UnsupportedOperationException always
    */
-  @Override public final V put(R rowKey, C columnKey, V value) {
+  public final V put(R rowKey, C columnKey, V value) {
     throw new UnsupportedOperationException();
   }
 
@@ -301,7 +301,7 @@ public abstract class ImmutableTable<R, C, V> implements Table<R, C, V> {
    *
    * @throws UnsupportedOperationException always
    */
-  @Override public final void putAll(
+  public final void putAll(
       Table<? extends R, ? extends C, ? extends V> table) {
     throw new UnsupportedOperationException();
   }
@@ -311,11 +311,13 @@ public abstract class ImmutableTable<R, C, V> implements Table<R, C, V> {
    *
    * @throws UnsupportedOperationException always
    */
-  @Override public final V remove(Object rowKey, Object columnKey) {
+  public final V remove(Object rowKey, Object columnKey) {
     throw new UnsupportedOperationException();
   }
 
-  @Override public boolean equals(@Nullable Object obj) {
+  
+  @Override
+  public boolean equals(@Nullable Object obj) {
     if (obj == this) {
       return true;
     } else if (obj instanceof Table) {
@@ -326,11 +328,15 @@ public abstract class ImmutableTable<R, C, V> implements Table<R, C, V> {
     }
   }
 
-  @Override public int hashCode() {
+  
+  @Override
+  public int hashCode() {
     return cellSet().hashCode();
   }
 
-  @Override public String toString() {
+  
+  @Override
+  public String toString() {
     return rowMap().toString();
   }
 }

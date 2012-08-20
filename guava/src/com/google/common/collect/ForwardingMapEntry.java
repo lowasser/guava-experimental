@@ -59,28 +59,31 @@ public abstract class ForwardingMapEntry<K, V>
   /** Constructor for use by subclasses. */
   protected ForwardingMapEntry() {}
 
-  @Override protected abstract Map.Entry<K, V> delegate();
-
+  
   @Override
+  protected abstract Map.Entry<K, V> delegate();
+
   public K getKey() {
     return delegate().getKey();
   }
 
-  @Override
   public V getValue() {
     return delegate().getValue();
   }
 
-  @Override
   public V setValue(V value) {
     return delegate().setValue(value);
   }
 
-  @Override public boolean equals(@Nullable Object object) {
+  
+  @Override
+  public boolean equals(@Nullable Object object) {
     return delegate().equals(object);
   }
 
-  @Override public int hashCode() {
+  
+  @Override
+  public int hashCode() {
     return delegate().hashCode();
   }
 

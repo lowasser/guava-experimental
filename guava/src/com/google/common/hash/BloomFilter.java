@@ -160,7 +160,9 @@ public final class BloomFilter<T> implements Serializable {
    *
    * <p>This implementation uses reference equality to compare funnels.
    */
-  @Override public boolean equals(Object o) {
+  
+  @Override
+  public boolean equals(Object o) {
     if (o instanceof BloomFilter) {
       BloomFilter<?> that = (BloomFilter<?>) o;
       return this.numHashFunctions == that.numHashFunctions
@@ -171,7 +173,9 @@ public final class BloomFilter<T> implements Serializable {
     return false;
   }
 
-  @Override public int hashCode() {
+  
+  @Override
+  public int hashCode() {
     return bits.hashCode();
   }
 

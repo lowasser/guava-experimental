@@ -143,7 +143,9 @@ public abstract class ImmutableBiMap<K, V> extends ImmutableMap<K, V>
      * Associates {@code key} with {@code value} in the built bimap. Duplicate
      * keys or values are not allowed, and will cause {@link #build} to fail.
      */
-    @Override public Builder<K, V> put(K key, V value) {
+    
+    @Override
+    public Builder<K, V> put(K key, V value) {
       super.put(key, value);
       return this;
     }
@@ -155,7 +157,9 @@ public abstract class ImmutableBiMap<K, V> extends ImmutableMap<K, V>
      *
      * @throws NullPointerException if any key or value in {@code map} is null
      */
-    @Override public Builder<K, V> putAll(Map<? extends K, ? extends V> map) {
+    
+    @Override
+    public Builder<K, V> putAll(Map<? extends K, ? extends V> map) {
       super.putAll(map);
       return this;
     }
@@ -165,7 +169,9 @@ public abstract class ImmutableBiMap<K, V> extends ImmutableMap<K, V>
      *
      * @throws IllegalArgumentException if duplicate keys or values were added
      */
-    @Override public ImmutableBiMap<K, V> build() {
+    
+    @Override
+    public ImmutableBiMap<K, V> build() {
       ImmutableMap<K, V> map = super.build();
       if (map.isEmpty()) {
         return of();
@@ -217,26 +223,35 @@ public abstract class ImmutableBiMap<K, V> extends ImmutableMap<K, V>
    * <p>The inverse of an {@code ImmutableBiMap} is another
    * {@code ImmutableBiMap}.
    */
-  @Override
   public abstract ImmutableBiMap<V, K> inverse();
 
-  @Override public boolean containsKey(@Nullable Object key) {
+  
+  @Override
+  public boolean containsKey(@Nullable Object key) {
     return delegate().containsKey(key);
   }
 
-  @Override public boolean containsValue(@Nullable Object value) {
+  
+  @Override
+  public boolean containsValue(@Nullable Object value) {
     return inverse().containsKey(value);
   }
 
-  @Override ImmutableSet<Entry<K, V>> createEntrySet() {
+  
+  @Override
+  ImmutableSet<Entry<K, V>> createEntrySet() {
     return delegate().entrySet();
   }
 
-  @Override public V get(@Nullable Object key) {
+  
+  @Override
+  public V get(@Nullable Object key) {
     return delegate().get(key);
   }
 
-  @Override public ImmutableSet<K> keySet() {
+  
+  @Override
+  public ImmutableSet<K> keySet() {
     return delegate().keySet();
   }
 
@@ -244,7 +259,9 @@ public abstract class ImmutableBiMap<K, V> extends ImmutableMap<K, V>
    * Returns an immutable set of the values in this map. The values are in the
    * same order as the parameters used to build this map.
    */
-  @Override public ImmutableSet<V> values() {
+  
+  @Override
+  public ImmutableSet<V> values() {
     return inverse().keySet();
   }
 
@@ -253,29 +270,35 @@ public abstract class ImmutableBiMap<K, V> extends ImmutableMap<K, V>
    *
    * @throws UnsupportedOperationException always
    */
-  @Override
   public V forcePut(K key, V value) {
     throw new UnsupportedOperationException();
   }
 
-  @Override public boolean isEmpty() {
+  
+  @Override
+  public boolean isEmpty() {
     return delegate().isEmpty();
   }
 
-  @Override
   public int size() {
     return delegate().size();
   }
 
-  @Override public boolean equals(@Nullable Object object) {
+  
+  @Override
+  public boolean equals(@Nullable Object object) {
     return object == this || delegate().equals(object);
   }
 
-  @Override public int hashCode() {
+  
+  @Override
+  public int hashCode() {
     return delegate().hashCode();
   }
 
-  @Override public String toString() {
+  
+  @Override
+  public String toString() {
     return delegate().toString();
   }
 
@@ -292,14 +315,18 @@ public abstract class ImmutableBiMap<K, V> extends ImmutableMap<K, V>
     SerializedForm(ImmutableBiMap<?, ?> bimap) {
       super(bimap);
     }
-    @Override Object readResolve() {
+    
+    @Override
+    Object readResolve() {
       Builder<Object, Object> builder = new Builder<Object, Object>();
       return createMap(builder);
     }
     private static final long serialVersionUID = 0;
   }
 
-  @Override Object writeReplace() {
+  
+  @Override
+  Object writeReplace() {
     return new SerializedForm(this);
   }
 }

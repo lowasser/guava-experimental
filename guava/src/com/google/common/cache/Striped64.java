@@ -132,6 +132,7 @@ abstract class Striped64 extends Number {
      * The corresponding ThreadLocal class
      */
     static final class ThreadHashCode extends ThreadLocal<HashCode> {
+        @Override
         public HashCode initialValue() { return new HashCode(); }
     }
 

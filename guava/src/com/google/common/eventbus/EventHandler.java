@@ -79,16 +79,22 @@ class EventHandler {
     }
   }
 
-  @Override public String toString() {
+  
+  @Override
+  public String toString() {
     return "[wrapper " + method + "]";
   }
 
-  @Override public int hashCode() {
+  
+  @Override
+  public int hashCode() {
     final int PRIME = 31;
     return (PRIME + method.hashCode()) * PRIME + target.hashCode();
   }
 
-  @Override public boolean equals(Object obj) {
+  
+  @Override
+  public boolean equals(Object obj) {
     if(this == obj) {
       return true;
     }

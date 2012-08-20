@@ -34,51 +34,54 @@ final class EmptyImmutableSortedMultiset<E> extends ImmutableSortedMultiset<E> {
     this.elementSet = ImmutableSortedSet.emptySet(comparator);
   }
 
-  @Override
   public Entry<E> firstEntry() {
     return null;
   }
 
-  @Override
   public Entry<E> lastEntry() {
     return null;
   }
 
-  @Override
   public int count(@Nullable Object element) {
     return 0;
   }
 
+  
   @Override
   public boolean contains(@Nullable Object object) {
     return false;
   }
 
+  
   @Override
   public boolean containsAll(Collection<?> targets) {
     return targets.isEmpty();
   }
 
-  @Override
+  
   public int size() {
     return 0;
   }
 
+  
   @Override
   public ImmutableSortedSet<E> elementSet() {
     return elementSet;
   }
 
+  
   @Override
   public ImmutableSet<Entry<E>> entrySet() {
     return ImmutableSet.of();
   }
 
+  
   @Override
   ImmutableSet<Entry<E>> createEntrySet() {
     throw new AssertionError("should never be called");
   }
 
+  
   @Override
   public ImmutableSortedMultiset<E> headMultiset(E upperBound, BoundType boundType) {
     checkNotNull(upperBound);
@@ -86,6 +89,7 @@ final class EmptyImmutableSortedMultiset<E> extends ImmutableSortedMultiset<E> {
     return this;
   }
 
+  
   @Override
   public ImmutableSortedMultiset<E> tailMultiset(E lowerBound, BoundType boundType) {
     checkNotNull(lowerBound);
@@ -93,11 +97,13 @@ final class EmptyImmutableSortedMultiset<E> extends ImmutableSortedMultiset<E> {
     return this;
   }
 
+  
   @Override
   public UnmodifiableIterator<E> iterator() {
     return Iterators.emptyIterator();
   }
 
+  
   @Override
   public boolean equals(@Nullable Object object) {
     if (object instanceof Multiset) {
@@ -107,31 +113,37 @@ final class EmptyImmutableSortedMultiset<E> extends ImmutableSortedMultiset<E> {
     return false;
   }
 
+  
   @Override
   public int hashCode() {
     return 0;
   }
 
+  
   @Override
   public String toString() {
     return "[]";
   }
 
+  
   @Override
   boolean isPartialView() {
     return false;
   }
 
+  
   @Override
   public Object[] toArray() {
     return ObjectArrays.EMPTY_ARRAY;
   }
 
+  
   @Override
   public <T> T[] toArray(T[] other) {
     return asList().toArray(other);
   }
 
+  
   @Override
   public ImmutableList<E> asList() {
     return ImmutableList.of();

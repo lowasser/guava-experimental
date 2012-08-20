@@ -55,20 +55,25 @@ final class RegularImmutableSortedSet<E> extends ImmutableSortedSet<E> {
     checkArgument(!elements.isEmpty());
   }
 
-  @Override public UnmodifiableIterator<E> iterator() {
+  
+  @Override
+  public UnmodifiableIterator<E> iterator() {
     return elements.iterator();
   }
 
-  @Override public boolean isEmpty() {
+  
+  @Override
+  public boolean isEmpty() {
     return false;
   }
 
-  @Override
   public int size() {
     return elements.size();
   }
 
-  @Override public boolean contains(Object o) {
+  
+  @Override
+  public boolean contains(Object o) {
     if (o == null) {
       return false;
     }
@@ -79,7 +84,9 @@ final class RegularImmutableSortedSet<E> extends ImmutableSortedSet<E> {
     }
   }
 
-  @Override public boolean containsAll(Collection<?> targets) {
+  
+  @Override
+  public boolean containsAll(Collection<?> targets) {
     // TODO(jlevy): For optimal performance, use a binary search when
     // targets.size() < size() / log(size())
     // TODO(kevinb): see if we can share code with OrderedIterator after it
@@ -129,19 +136,27 @@ final class RegularImmutableSortedSet<E> extends ImmutableSortedSet<E> {
     return Collections.binarySearch(elements, key, unsafeComparator());
   }
 
-  @Override boolean isPartialView() {
+  
+  @Override
+  boolean isPartialView() {
     return elements.isPartialView();
   }
 
-  @Override public Object[] toArray() {
+  
+  @Override
+  public Object[] toArray() {
     return elements.toArray();
   }
 
-  @Override public <T> T[] toArray(T[] array) {
+  
+  @Override
+  public <T> T[] toArray(T[] array) {
     return elements.toArray(array);
   }
 
-  @Override public boolean equals(@Nullable Object object) {
+  
+  @Override
+  public boolean equals(@Nullable Object object) {
     if (object == this) {
       return true;
     }
@@ -176,16 +191,15 @@ final class RegularImmutableSortedSet<E> extends ImmutableSortedSet<E> {
     return this.containsAll(that);
   }
 
-  @Override
   public E first() {
     return elements.get(0);
   }
 
-  @Override
   public E last() {
     return elements.get(size() - 1);
   }
 
+  
   @Override
   ImmutableSortedSet<E> headSetImpl(E toElement, boolean inclusive) {
     return getSubSet(0, headIndex(toElement, inclusive));
@@ -197,6 +211,7 @@ final class RegularImmutableSortedSet<E> extends ImmutableSortedSet<E> {
         inclusive ? FIRST_AFTER : FIRST_PRESENT, NEXT_HIGHER);
   }
 
+  
   @Override
   ImmutableSortedSet<E> subSetImpl(
       E fromElement, boolean fromInclusive, E toElement, boolean toInclusive) {
@@ -204,6 +219,7 @@ final class RegularImmutableSortedSet<E> extends ImmutableSortedSet<E> {
         .headSetImpl(toElement, toInclusive);
   }
 
+  
   @Override
   ImmutableSortedSet<E> tailSetImpl(E fromElement, boolean inclusive) {
     return getSubSet(tailIndex(fromElement, inclusive), size());
@@ -236,7 +252,8 @@ final class RegularImmutableSortedSet<E> extends ImmutableSortedSet<E> {
     }
   }
 
-  @Override int indexOf(@Nullable Object target) {
+  @Override
+  int indexOf(@Nullable Object target) {
     if (target == null) {
       return -1;
     }
@@ -250,10 +267,13 @@ final class RegularImmutableSortedSet<E> extends ImmutableSortedSet<E> {
     return (position >= 0) ? position : -1;
   }
 
-  @Override ImmutableList<E> createAsList() {
+  
+  @Override
+  ImmutableList<E> createAsList() {
     return new ImmutableSortedAsList<E>(this, elements);
   }
 
+  
   @Override
   ImmutableSortedSet<E> createDescendingSet() {
     return new RegularImmutableSortedSet<E>(elements.reverse(),

@@ -62,6 +62,7 @@ public class AsyncEventBus extends EventBus {
     this.executor = executor;
   }
 
+  
   @Override
   void enqueueEvent(Object event, EventHandler handler) {
     eventsToDispatch.offer(new EventWithHandler(event, handler));
@@ -71,8 +72,9 @@ public class AsyncEventBus extends EventBus {
    * Dispatch {@code events} in the order they were posted, regardless of
    * the posting thread.
    */
-  @SuppressWarnings("deprecation") // only deprecated for external subclasses
   @Override
+  @SuppressWarnings("deprecation") // only deprecated for external subclasses
+  
   protected void dispatchQueuedEvents() {
     while (true) {
       EventWithHandler eventWithHandler = eventsToDispatch.poll();
@@ -87,10 +89,10 @@ public class AsyncEventBus extends EventBus {
   /**
    * Calls the {@link #executor} to dispatch {@code event} to {@code handler}.
    */
+  
   @Override
   void dispatch(final Object event, final EventHandler handler) {
     executor.execute(new Runnable() {
-          @Override
           @SuppressWarnings("synthetic-access")
           public void run() {
             AsyncEventBus.super.dispatch(event, handler);

@@ -42,7 +42,7 @@ public abstract class AbstractInvocationHandler implements InvocationHandler {
    * equality (the default behavior of {@link Object}). {@link Object#toString} delegates to
    * {@link #toString} that can be overridden by subclasses.
    */
-  @Override public final Object invoke(Object proxy, Method method, @Nullable Object[] args)
+  public final Object invoke(Object proxy, Method method, @Nullable Object[] args)
       throws Throwable {
     if (args == null) {
       args = NO_ARGS;
@@ -76,7 +76,9 @@ public abstract class AbstractInvocationHandler implements InvocationHandler {
    * The dynamic proxies' {@link Object#toString} will delegate to this method. Subclasses can
    * override this to provide custom string representation of the proxies.
    */
-  @Override public String toString() {
+  
+  @Override
+  public String toString() {
     return super.toString();
   }
 }

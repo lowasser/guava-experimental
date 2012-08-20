@@ -41,22 +41,24 @@ final class Murmur3_32HashFunction extends AbstractStreamingHashFunction impleme
     this.seed = seed;
   }
 
-  @Override public int bits() {
+  public int bits() {
     return 32;
   }
 
-  @Override public Hasher newHasher() {
+  public Hasher newHasher() {
     return new Murmur3_32Hasher(seed);
   }
 
-  @Override public HashCode hashInt(int input) {
+  @Override
+  public HashCode hashInt(int input) {
     int k1 = mixK1(input);
     int h1 = mixH1(seed, k1);
 
     return fmix(h1, Ints.BYTES);
   }
 
-  @Override public HashCode hashLong(long input) {
+  @Override
+  public HashCode hashLong(long input) {
     int low = (int) input;
     int high = (int) (input >>> 32);
 
@@ -70,7 +72,8 @@ final class Murmur3_32HashFunction extends AbstractStreamingHashFunction impleme
   }
 
   // TODO(user): Maybe implement #hashBytes instead?
-  @Override public HashCode hashString(CharSequence input) {
+  @Override
+  public HashCode hashString(CharSequence input) {
     int h1 = seed;
 
     // step through the CharSequence 2 chars at a time
@@ -126,13 +129,15 @@ final class Murmur3_32HashFunction extends AbstractStreamingHashFunction impleme
       this.length = 0;
     }
 
-    @Override protected void process(ByteBuffer bb) {
+    @Override
+    protected void process(ByteBuffer bb) {
       int k1 = Murmur3_32HashFunction.mixK1(bb.getInt());
       h1 = Murmur3_32HashFunction.mixH1(h1, k1);
       length += CHUNK_SIZE;
     }
 
-    @Override protected void processRemaining(ByteBuffer bb) {
+    @Override
+    protected void processRemaining(ByteBuffer bb) {
       length += bb.remaining();
       int k1 = 0;
       switch (bb.remaining()) {
@@ -149,7 +154,8 @@ final class Murmur3_32HashFunction extends AbstractStreamingHashFunction impleme
       h1 ^= Murmur3_32HashFunction.mixK1(k1);
     }
 
-    @Override public HashCode makeHash() {
+    @Override
+    public HashCode makeHash() {
       return Murmur3_32HashFunction.fmix(h1, length);
     }
   }

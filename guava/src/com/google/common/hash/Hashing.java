@@ -304,6 +304,7 @@ public final class Hashing {
       this.bits = bitSum;
     }
 
+    
     @Override
     HashCode makeHash(Hasher[] hashers) {
       // TODO(user): Get rid of the ByteBuffer here?
@@ -315,7 +316,6 @@ public final class Hashing {
       return HashCodes.fromBytesNoCopy(bytes);
     }
 
-    @Override
     public int bits() {
       return bits;
     }

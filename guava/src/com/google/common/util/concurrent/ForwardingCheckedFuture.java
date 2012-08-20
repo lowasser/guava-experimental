@@ -41,16 +41,15 @@ import java.util.concurrent.TimeoutException;
 public abstract class ForwardingCheckedFuture<V, X extends Exception> 
     extends ForwardingListenableFuture<V> implements CheckedFuture<V, X> {
 
-  @Override
   public V checkedGet() throws X {
     return delegate().checkedGet();
   }
 
-  @Override
   public V checkedGet(long timeout, TimeUnit unit) throws TimeoutException, X {
     return delegate().checkedGet(timeout, unit);
   }
 
+  
   @Override
   protected abstract CheckedFuture<V, X> delegate();
 
@@ -70,6 +69,7 @@ public abstract class ForwardingCheckedFuture<V, X extends Exception>
       this.delegate = Preconditions.checkNotNull(delegate);
     }
 
+    
     @Override
     protected final CheckedFuture<V, X> delegate() {
       return delegate;

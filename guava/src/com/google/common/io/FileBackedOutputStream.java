@@ -95,12 +95,13 @@ public final class FileBackedOutputStream extends OutputStream {
 
     if (resetOnFinalize) {
       supplier = new InputSupplier<InputStream>() {
-        @Override
         public InputStream getInput() throws IOException {
           return openStream();
         }
 
-        @Override protected void finalize() {
+        
+        @Override
+        protected void finalize() {
           try {
             reset();
           } catch (Throwable t) {
@@ -110,7 +111,6 @@ public final class FileBackedOutputStream extends OutputStream {
       };
     } else {
       supplier = new InputSupplier<InputStream>() {
-        @Override
         public InputStream getInput() throws IOException {
           return openStream();
         }
@@ -162,26 +162,36 @@ public final class FileBackedOutputStream extends OutputStream {
     }
   }
 
-  @Override public synchronized void write(int b) throws IOException {
+  
+  @Override
+  public synchronized void write(int b) throws IOException {
     update(1);
     out.write(b);
   }
 
-  @Override public synchronized void write(byte[] b) throws IOException {
+  
+  @Override
+  public synchronized void write(byte[] b) throws IOException {
     write(b, 0, b.length);
   }
 
-  @Override public synchronized void write(byte[] b, int off, int len)
+  
+  @Override
+  public synchronized void write(byte[] b, int off, int len)
       throws IOException {
     update(len);
     out.write(b, off, len);
   }
 
-  @Override public synchronized void close() throws IOException {
+  
+  @Override
+  public synchronized void close() throws IOException {
     out.close();
   }
 
-  @Override public synchronized void flush() throws IOException {
+  
+  @Override
+  public synchronized void flush() throws IOException {
     out.flush();
   }
 

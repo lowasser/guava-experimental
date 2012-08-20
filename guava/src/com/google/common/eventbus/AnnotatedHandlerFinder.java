@@ -36,7 +36,6 @@ class AnnotatedHandlerFinder implements HandlerFindingStrategy {
    *
    * This implementation finds all methods marked with a {@link Subscribe} annotation.
    */
-  @Override
   public Multimap<Class<?>, EventHandler> findAllHandlers(Object listener) {
     Multimap<Class<?>, EventHandler> methodsInListener = HashMultimap.create();
     Class<?> clazz = listener.getClass();

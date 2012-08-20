@@ -40,28 +40,27 @@ class RegularImmutableMultiset<E> extends ImmutableMultiset<E> {
     this.size = size;
   }
 
+  
   @Override
   boolean isPartialView() {
     return map.isPartialView();
   }
 
-  @Override
   public int count(@Nullable Object element) {
     Integer value = map.get(element);
     return (value == null) ? 0 : value;
   }
 
-  @Override
   public int size() {
     return size;
   }
 
+  
   @Override
   public boolean contains(@Nullable Object element) {
     return map.containsKey(element);
   }
 
-  @Override
   public ImmutableSet<E> elementSet() {
     return map.keySet();
   }
@@ -70,31 +69,35 @@ class RegularImmutableMultiset<E> extends ImmutableMultiset<E> {
     return Multisets.immutableEntry(entry.getKey(), entry.getValue());
   }
 
+  
   @Override
   ImmutableSet<Entry<E>> createEntrySet() {
     return new EntrySet();
   }
 
   private class EntrySet extends ImmutableMultiset<E>.EntrySet {
-    @Override
+    
     public int size() {
       return map.size();
     }
 
+    
     @Override
     public UnmodifiableIterator<Entry<E>> iterator() {
       return asList().iterator();
     }
 
+    
     @Override
     ImmutableList<Entry<E>> createAsList() {
       final ImmutableList<Map.Entry<E, Integer>> entryList = map.entrySet().asList();
       return new ImmutableAsList<Entry<E>>() {
-        @Override
+        
         public Entry<E> get(int index) {
           return entryFromMapEntry(entryList.get(index));
         }
 
+        
         @Override
         ImmutableCollection<Entry<E>> delegateCollection() {
           return EntrySet.this;
@@ -103,6 +106,7 @@ class RegularImmutableMultiset<E> extends ImmutableMultiset<E> {
     }
   }
 
+  
   @Override
   public int hashCode() {
     return map.hashCode();

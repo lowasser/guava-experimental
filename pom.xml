@@ -54,23 +54,13 @@
   </developers>
   <modules>
     <module>guava</module>
+    <module>guava-bootstrap</module>
     <module>guava-gwt</module>
     <module>guava-testlib</module>
     <module>guava-tests</module>
   </modules>
   <build>
     <plugins>
-      <plugin>
-        <artifactId>maven-gpg-plugin</artifactId>
-        <version>1.4</version>
-        <executions>
-          <execution>
-            <id>sign-artifacts</id>
-            <phase>verify</phase>
-            <goals><goal>sign</goal></goals>
-          </execution>
-        </executions>
-      </plugin>
     </plugins>
   </build>
   <distributionManagement>

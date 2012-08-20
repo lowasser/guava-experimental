@@ -157,7 +157,9 @@ public class ImmutableSetMultimap<K, V>
     BuilderMultimap() {
       super(new LinkedHashMap<K, Collection<V>>());
     }
-    @Override Collection<V> createCollection() {
+    
+    @Override
+    Collection<V> createCollection() {
       return Sets.newLinkedHashSet();
     }
     private static final long serialVersionUID = 0;
@@ -174,7 +176,9 @@ public class ImmutableSetMultimap<K, V>
       super(new TreeMap<K, Collection<V>>(keyComparator));
       putAll(multimap);
     }
-    @Override Collection<V> createCollection() {
+    
+    @Override
+    Collection<V> createCollection() {
       return Sets.newLinkedHashSet();
     }
     private static final long serialVersionUID = 0;
@@ -212,7 +216,9 @@ public class ImmutableSetMultimap<K, V>
      * Adds a key-value mapping to the built multimap if it is not already
      * present.
      */
-    @Override public Builder<K, V> put(K key, V value) {
+    
+    @Override
+    public Builder<K, V> put(K key, V value) {
       builderMultimap.put(checkNotNull(key), checkNotNull(value));
       return this;
     }
@@ -222,13 +228,17 @@ public class ImmutableSetMultimap<K, V>
      *
      * @since 11.0
      */
-    @Override public Builder<K, V> put(Entry<? extends K, ? extends V> entry) {
+    
+    @Override
+    public Builder<K, V> put(Entry<? extends K, ? extends V> entry) {
       builderMultimap.put(
           checkNotNull(entry.getKey()), checkNotNull(entry.getValue()));
       return this;
     }
 
-    @Override public Builder<K, V> putAll(K key, Iterable<? extends V> values) {
+    
+    @Override
+    public Builder<K, V> putAll(K key, Iterable<? extends V> values) {
       Collection<V> collection = builderMultimap.get(checkNotNull(key));
       for (V value : values) {
         collection.add(checkNotNull(value));
@@ -236,11 +246,15 @@ public class ImmutableSetMultimap<K, V>
       return this;
     }
 
-    @Override public Builder<K, V> putAll(K key, V... values) {
+    
+    @Override
+    public Builder<K, V> putAll(K key, V... values) {
       return putAll(key, Arrays.asList(values));
     }
 
-    @Override public Builder<K, V> putAll(
+    
+    @Override
+    public Builder<K, V> putAll(
         Multimap<? extends K, ? extends V> multimap) {
       for (Entry<? extends K, ? extends Collection<? extends V>> entry
           : multimap.asMap().entrySet()) {
@@ -281,7 +295,9 @@ public class ImmutableSetMultimap<K, V>
     /**
      * Returns a newly-created immutable set multimap.
      */
-    @Override public ImmutableSetMultimap<K, V> build() {
+    
+    @Override
+    public ImmutableSetMultimap<K, V> build() {
       if (keyComparator != null) {
         Multimap<K, V> sortedCopy = new BuilderMultimap<K, V>();
         List<Map.Entry<K, Collection<V>>> entries = Lists.newArrayList(
@@ -289,7 +305,6 @@ public class ImmutableSetMultimap<K, V>
         Collections.sort(
             entries,
             Ordering.from(keyComparator).onResultOf(new Function<Entry<K, Collection<V>>, K>() {
-              @Override
               public K apply(Entry<K, Collection<V>> entry) {
                 return entry.getKey();
               }
@@ -377,7 +392,9 @@ public class ImmutableSetMultimap<K, V>
    * The values are in the same order as the parameters used to build this
    * multimap.
    */
-  @Override public ImmutableSet<V> get(@Nullable K key) {
+  
+  @Override
+  public ImmutableSet<V> get(@Nullable K key) {
     // This cast is safe as its type is known in constructor.
     ImmutableSet<V> set = (ImmutableSet<V>) map.get(key);
     if (set != null) {
@@ -401,6 +418,8 @@ public class ImmutableSetMultimap<K, V>
    *
    * @since 11.0
    */
+  
+  @Override
   @Beta
   public ImmutableSetMultimap<V, K> inverse() {
     ImmutableSetMultimap<V, K> result = inverse;
@@ -422,7 +441,9 @@ public class ImmutableSetMultimap<K, V>
    *
    * @throws UnsupportedOperationException always
    */
-  @Override public ImmutableSet<V> removeAll(Object key) {
+  
+  @Override
+  public ImmutableSet<V> removeAll(Object key) {
     throw new UnsupportedOperationException();
   }
 
@@ -431,7 +452,9 @@ public class ImmutableSetMultimap<K, V>
    *
    * @throws UnsupportedOperationException always
    */
-  @Override public ImmutableSet<V> replaceValues(
+  
+  @Override
+  public ImmutableSet<V> replaceValues(
       K key, Iterable<? extends V> values) {
     throw new UnsupportedOperationException();
   }
@@ -444,7 +467,9 @@ public class ImmutableSetMultimap<K, V>
    * second key, and so on.
    */
   // TODO(kevinb): Fix this so that two copies of the entries are not created.
-  @Override public ImmutableSet<Entry<K, V>> entries() {
+  
+  @Override
+  public ImmutableSet<Entry<K, V>> entries() {
     ImmutableSet<Entry<K, V>> result = entries;
     return (result == null)
         ? (entries = ImmutableSet.copyOf(super.entries()))

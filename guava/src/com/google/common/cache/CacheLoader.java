@@ -141,6 +141,7 @@ public abstract class CacheLoader<K, V> {
       this.computingFunction = checkNotNull(computingFunction);
     }
 
+    
     @Override
     public V load(K key) {
       return computingFunction.apply(key);
@@ -171,6 +172,7 @@ public abstract class CacheLoader<K, V> {
       this.computingSupplier = checkNotNull(computingSupplier);
     }
 
+    
     @Override
     public V load(Object key) {
       return computingSupplier.get();

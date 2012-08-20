@@ -60,7 +60,6 @@ public class HashBasedTable<R, C, V> extends StandardTable<R, C, V> {
     Factory(int expectedSize) {
       this.expectedSize = expectedSize;
     }
-    @Override
     public Map<C, V> get() {
       return Maps.newHashMapWithExpectedSize(expectedSize);
     }
@@ -114,32 +113,46 @@ public class HashBasedTable<R, C, V> extends StandardTable<R, C, V> {
 
   // Overriding so NullPointerTester test passes.
 
-  @Override public boolean contains(
+  
+  @Override
+  public boolean contains(
       @Nullable Object rowKey, @Nullable Object columnKey) {
     return super.contains(rowKey, columnKey);
   }
 
-  @Override public boolean containsColumn(@Nullable Object columnKey) {
+  
+  @Override
+  public boolean containsColumn(@Nullable Object columnKey) {
     return super.containsColumn(columnKey);
   }
 
-  @Override public boolean containsRow(@Nullable Object rowKey) {
+  
+  @Override
+  public boolean containsRow(@Nullable Object rowKey) {
     return super.containsRow(rowKey);
   }
 
-  @Override public boolean containsValue(@Nullable Object value) {
+  
+  @Override
+  public boolean containsValue(@Nullable Object value) {
     return super.containsValue(value);
   }
 
-  @Override public V get(@Nullable Object rowKey, @Nullable Object columnKey) {
+  
+  @Override
+  public V get(@Nullable Object rowKey, @Nullable Object columnKey) {
     return super.get(rowKey, columnKey);
   }
 
-  @Override public boolean equals(@Nullable Object obj) {
+  
+  @Override
+  public boolean equals(@Nullable Object obj) {
     return super.equals(obj);
   }
 
-  @Override public V remove(
+  
+  @Override
+  public V remove(
       @Nullable Object rowKey, @Nullable Object columnKey) {
     return super.remove(rowKey, columnKey);
   }

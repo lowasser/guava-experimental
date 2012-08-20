@@ -56,7 +56,7 @@ public final class UncaughtExceptionHandlers {
       this.runtime = runtime;
     }
 
-    @Override public void uncaughtException(Thread t, Throwable e) {
+    public void uncaughtException(Thread t, Throwable e) {
       // cannot use FormattingLogger due to a dependency loop
       logger.log(SEVERE, String.format("Caught an exception in %s.  Shutting down.", t), e);
       runtime.exit(1);

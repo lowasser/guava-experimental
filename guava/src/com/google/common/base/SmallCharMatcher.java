@@ -47,6 +47,7 @@ final class SmallCharMatcher extends CharMatcher {
     return 1 == (1 & (filter >> c));
   }
 
+  
   @Override
   public CharMatcher precomputed() {
     return this;
@@ -99,6 +100,7 @@ final class SmallCharMatcher extends CharMatcher {
     return new SmallCharMatcher(table, filter, containsZero, reprobe, description);
   }
 
+  
   @Override
   public boolean matches(char c) {
     if (c == 0) {

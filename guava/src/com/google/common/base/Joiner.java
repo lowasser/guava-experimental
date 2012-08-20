@@ -264,16 +264,22 @@ public class Joiner {
   public Joiner useForNull(final String nullText) {
     checkNotNull(nullText);
     return new Joiner(this) {
-      @Override CharSequence toString(Object part) {
+      
+      @Override
+      CharSequence toString(Object part) {
         return (part == null) ? nullText : Joiner.this.toString(part);
       }
 
-      @Override public Joiner useForNull(String nullText) {
+      
+      @Override
+      public Joiner useForNull(String nullText) {
         checkNotNull(nullText); // weird: just to satisfy NullPointerTester.
         throw new UnsupportedOperationException("already specified useForNull");
       }
 
-      @Override public Joiner skipNulls() {
+      
+      @Override
+      public Joiner skipNulls() {
         throw new UnsupportedOperationException("already specified useForNull");
       }
     };
@@ -286,7 +292,9 @@ public class Joiner {
   @CheckReturnValue
   public Joiner skipNulls() {
     return new Joiner(this) {
-      @Override public <A extends Appendable> A appendTo(A appendable, Iterator<?> parts)
+      
+      @Override
+      public <A extends Appendable> A appendTo(A appendable, Iterator<?> parts)
           throws IOException {
         checkNotNull(appendable, "appendable");
         checkNotNull(parts, "parts");
@@ -307,12 +315,16 @@ public class Joiner {
         return appendable;
       }
 
-      @Override public Joiner useForNull(String nullText) {
+      
+      @Override
+      public Joiner useForNull(String nullText) {
         checkNotNull(nullText); // weird: just to satisfy NullPointerTester.
         throw new UnsupportedOperationException("already specified skipNulls");
       }
 
-      @Override public MapJoiner withKeyValueSeparator(String kvs) {
+      
+      @Override
+      public MapJoiner withKeyValueSeparator(String kvs) {
         checkNotNull(kvs); // weird: just to satisfy NullPointerTester.
         throw new UnsupportedOperationException("can't use .skipNulls() with maps");
       }
@@ -543,11 +555,15 @@ public class Joiner {
       final Object first, final Object second, final Object[] rest) {
     checkNotNull(rest);
     return new AbstractList<Object>() {
-      @Override public int size() {
+      
+      @Override
+      public int size() {
         return rest.length + 2;
       }
 
-      @Override public Object get(int index) {
+      
+      @Override
+      public Object get(int index) {
         switch (index) {
           case 0:
             return first;

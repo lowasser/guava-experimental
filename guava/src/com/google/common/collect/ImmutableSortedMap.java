@@ -28,7 +28,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.NavigableMap;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -59,7 +58,7 @@ import javax.annotation.Nullable;
  */
 @GwtCompatible(serializable = true, emulated = true)
 public abstract class ImmutableSortedMap<K, V>
-    extends ImmutableSortedMapFauxverideShim<K, V> implements NavigableMap<K, V> {
+    extends ImmutableSortedMapFauxverideShim<K, V> implements SortedMap<K, V> {
   /*
    * TODO(kevinb): Confirm that ImmutableSortedMap is faster to construct and
    * uses less memory than TreeMap; then say so in the class Javadoc.
@@ -288,7 +287,7 @@ public abstract class ImmutableSortedMap<K, V>
       List<Entry<K, V>> entries, final Comparator<? super K> comparator) {
     Comparator<Entry<K, V>> entryComparator = new Comparator<Entry<K, V>>() {
 
-      @Override public int compare(Entry<K, V> entry1, Entry<K, V> entry2) {
+      public int compare(Entry<K, V> entry1, Entry<K, V> entry2) {
         return comparator.compare(entry1.getKey(), entry2.getKey());
       }
     };
@@ -383,7 +382,9 @@ public abstract class ImmutableSortedMap<K, V>
      * keys, according to the comparator (which might be the keys' natural
      * order), are not allowed, and will cause {@link #build} to fail.
      */
-    @Override public Builder<K, V> put(K key, V value) {
+    
+    @Override
+    public Builder<K, V> put(K key, V value) {
       entries.add(entryOf(key, value));
       return this;
     }
@@ -396,7 +397,9 @@ public abstract class ImmutableSortedMap<K, V>
      *
      * @since 11.0
      */
-    @Override public Builder<K, V> put(Entry<? extends K, ? extends V> entry) {
+    
+    @Override
+    public Builder<K, V> put(Entry<? extends K, ? extends V> entry) {
       super.put(entry);
       return this;
     }
@@ -408,7 +411,9 @@ public abstract class ImmutableSortedMap<K, V>
      *
      * @throws NullPointerException if any key or value in {@code map} is null
      */
-    @Override public Builder<K, V> putAll(Map<? extends K, ? extends V> map) {
+    
+    @Override
+    public Builder<K, V> putAll(Map<? extends K, ? extends V> map) {
       for (Entry<? extends K, ? extends V> entry : map.entrySet()) {
         put(entry.getKey(), entry.getValue());
       }
@@ -421,7 +426,9 @@ public abstract class ImmutableSortedMap<K, V>
      * @throws IllegalArgumentException if any two keys are equal according to
      *     the comparator (which might be the keys' natural order)
      */
-    @Override public ImmutableSortedMap<K, V> build() {
+    
+    @Override
+    public ImmutableSortedMap<K, V> build() {
       sortEntries(entries, comparator);
       validateEntries(entries, comparator);
       return fromSortedEntries(comparator, entries);
@@ -435,16 +442,17 @@ public abstract class ImmutableSortedMap<K, V>
     this.descendingMap = descendingMap;
   }
 
-  @Override
   public int size() {
     return values().size();
   }
 
-  @Override public boolean containsValue(@Nullable Object value) {
+  @Override
+  public boolean containsValue(@Nullable Object value) {
     return values().contains(value);
   }
 
-  @Override boolean isPartialView() {
+  @Override
+  boolean isPartialView() {
     return keySet().isPartialView() || values().isPartialView();
   }
 
@@ -452,20 +460,24 @@ public abstract class ImmutableSortedMap<K, V>
    * Returns an immutable set of the mappings in this map, sorted by the key
    * ordering.
    */
-  @Override public ImmutableSet<Entry<K, V>> entrySet() {
+  
+  @Override
+  public ImmutableSet<Entry<K, V>> entrySet() {
     return super.entrySet();
   }
 
   /**
    * Returns an immutable sorted set of the keys in this map.
    */
-  @Override public abstract ImmutableSortedSet<K> keySet();
+  @Override
+  public abstract ImmutableSortedSet<K> keySet();
 
   /**
    * Returns an immutable collection of the values in this map, sorted by the
    * ordering of the corresponding keys.
    */
-  @Override public abstract ImmutableCollection<V> values();
+  @Override
+  public abstract ImmutableCollection<V> values();
 
   /**
    * Returns the comparator that orders the keys, which is
@@ -473,17 +485,14 @@ public abstract class ImmutableSortedMap<K, V>
    * Note that its behavior is not consistent with {@link TreeMap#comparator()},
    * which returns {@code null} to indicate natural ordering.
    */
-  @Override
   public Comparator<? super K> comparator() {
     return keySet().comparator();
   }
 
-  @Override
   public K firstKey() {
     return keySet().first();
   }
 
-  @Override
   public K lastKey() {
     return keySet().last();
   }
@@ -498,7 +507,6 @@ public abstract class ImmutableSortedMap<K, V>
    * an exception in that situation, but instead keeps the original {@code
    * toKey}.
    */
-  @Override
   public ImmutableSortedMap<K, V> headMap(K toKey) {
     return headMap(toKey, false);
   }
@@ -515,7 +523,7 @@ public abstract class ImmutableSortedMap<K, V>
    *
    * @since 12.0
    */
-  @Override
+  
   public abstract ImmutableSortedMap<K, V> headMap(K toKey, boolean inclusive);
 
   /**
@@ -531,7 +539,6 @@ public abstract class ImmutableSortedMap<K, V>
    * of throwing an exception, if passed a {@code toKey} greater than an earlier
    * {@code toKey}.
    */
-  @Override
   public ImmutableSortedMap<K, V> subMap(K fromKey, K toKey) {
     return subMap(fromKey, true, toKey, false);
   }
@@ -551,7 +558,6 @@ public abstract class ImmutableSortedMap<K, V>
    *
    * @since 12.0
    */
-  @Override
   public ImmutableSortedMap<K, V> subMap(K fromKey, boolean fromInclusive, K toKey,
       boolean toInclusive) {
     checkNotNull(fromKey);
@@ -571,7 +577,6 @@ public abstract class ImmutableSortedMap<K, V>
    * throw an exception in that situation, but instead keeps the original {@code
    * fromKey}.
    */
-  @Override
   public ImmutableSortedMap<K, V> tailMap(K fromKey) {
     return tailMap(fromKey, true);
   }
@@ -589,72 +594,59 @@ public abstract class ImmutableSortedMap<K, V>
    *
    * @since 12.0
    */
-  @Override
+  
   public abstract ImmutableSortedMap<K, V> tailMap(K fromKey, boolean inclusive);
 
-  @Override
   public Entry<K, V> lowerEntry(K key) {
     return headMap(key, false).lastEntry();
   }
 
-  @Override
   public K lowerKey(K key) {
     return keyOrNull(lowerEntry(key));
   }
 
-  @Override
   public Entry<K, V> floorEntry(K key) {
     return headMap(key, true).lastEntry();
   }
 
-  @Override
   public K floorKey(K key) {
     return keyOrNull(floorEntry(key));
   }
 
-  @Override
   public Entry<K, V> ceilingEntry(K key) {
     return tailMap(key, true).firstEntry();
   }
 
-  @Override
   public K ceilingKey(K key) {
     return keyOrNull(ceilingEntry(key));
   }
 
-  @Override
   public Entry<K, V> higherEntry(K key) {
     return tailMap(key, false).firstEntry();
   }
 
-  @Override
   public K higherKey(K key) {
     return keyOrNull(higherEntry(key));
   }
 
-  @Override
   public Entry<K, V> firstEntry() {
     return isEmpty() ? null : entrySet().asList().get(0);
   }
 
-  @Override
   public Entry<K, V> lastEntry() {
     return isEmpty() ? null : entrySet().asList().get(size() - 1);
   }
 
-  @Override
   public final Entry<K, V> pollFirstEntry() {
     throw new UnsupportedOperationException();
   }
 
-  @Override
   public final Entry<K, V> pollLastEntry() {
     throw new UnsupportedOperationException();
   }
 
   private transient ImmutableSortedMap<K, V> descendingMap;
 
-  @Override
   public ImmutableSortedMap<K, V> descendingMap() {
     ImmutableSortedMap<K, V> result = descendingMap;
     if (result == null) {
@@ -665,12 +657,11 @@ public abstract class ImmutableSortedMap<K, V>
 
   abstract ImmutableSortedMap<K, V> createDescendingMap();
 
-  @Override
+  
   public ImmutableSortedSet<K> navigableKeySet() {
     return keySet();
   }
 
-  @Override
   public ImmutableSortedSet<K> descendingKeySet() {
     return keySet().descendingSet();
   }
@@ -688,14 +679,18 @@ public abstract class ImmutableSortedMap<K, V>
       super(sortedMap);
       comparator = (Comparator<Object>) sortedMap.comparator();
     }
-    @Override Object readResolve() {
+    
+    @Override
+    Object readResolve() {
       Builder<Object, Object> builder = new Builder<Object, Object>(comparator);
       return createMap(builder);
     }
     private static final long serialVersionUID = 0;
   }
 
-  @Override Object writeReplace() {
+  
+  @Override
+  Object writeReplace() {
     return new SerializedForm(this);
   }
 

@@ -145,6 +145,7 @@ public final class HostSpecifier {
     }
   }
 
+  
   @Override
   public boolean equals(@Nullable Object other) {
     if (this == other) {
@@ -159,6 +160,7 @@ public final class HostSpecifier {
     return false;
   }
 
+  
   @Override
   public int hashCode() {
     return canonicalForm.hashCode();
@@ -171,6 +173,7 @@ public final class HostSpecifier {
    * an IPv6 address without brackets, brackets are added so that the
    * result will be usable in the host part of a URI.
    */
+  
   @Override
   public String toString() {
     return canonicalForm;

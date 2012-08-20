@@ -137,12 +137,12 @@ public final class JdkFutureAdapters {
       this.adapterExecutor = checkNotNull(adapterExecutor);
     }
 
+    
     @Override
     protected Future<V> delegate() {
       return delegate;
     }
 
-    @Override
     public void addListener(Runnable listener, Executor exec) {
       executionList.add(listener, exec);
 
@@ -157,7 +157,6 @@ public final class JdkFutureAdapters {
         }
 
         adapterExecutor.execute(new Runnable() {
-          @Override
           public void run() {
             try {
               delegate.get();

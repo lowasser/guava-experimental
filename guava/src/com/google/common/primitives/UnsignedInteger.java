@@ -158,6 +158,7 @@ public final class UnsignedInteger extends Number implements Comparable<Unsigned
    * <p>Note that if this {@code UnsignedInteger} holds a value {@code >= 2^31}, the returned value
    * will be equal to {@code this - 2^32}.
    */
+  
   @Override
   public int intValue() {
     return value;
@@ -166,6 +167,7 @@ public final class UnsignedInteger extends Number implements Comparable<Unsigned
   /**
    * Returns the value of this {@code UnsignedInteger} as a {@code long}.
    */
+  
   @Override
   public long longValue() {
     return toLong(value);
@@ -175,6 +177,7 @@ public final class UnsignedInteger extends Number implements Comparable<Unsigned
    * Returns the value of this {@code UnsignedInteger} as a {@code float}, analogous to a widening
    * primitive conversion from {@code int} to {@code float}, and correctly rounded.
    */
+  
   @Override
   public float floatValue() {
     return longValue();
@@ -184,6 +187,7 @@ public final class UnsignedInteger extends Number implements Comparable<Unsigned
    * Returns the value of this {@code UnsignedInteger} as a {@code float}, analogous to a widening
    * primitive conversion from {@code int} to {@code double}, and correctly rounded.
    */
+  
   @Override
   public double doubleValue() {
     return longValue();
@@ -201,17 +205,18 @@ public final class UnsignedInteger extends Number implements Comparable<Unsigned
    * Returns {@code 0} if they are equal, a negative number if {@code this < other},
    * and a positive number if {@code this > other}.
    */
-  @Override
   public int compareTo(UnsignedInteger other) {
     checkNotNull(other);
     return compare(value, other.value);
   }
 
+  
   @Override
   public int hashCode() {
     return value;
   }
 
+  
   @Override
   public boolean equals(@Nullable Object obj) {
     if (obj instanceof UnsignedInteger) {
@@ -224,6 +229,7 @@ public final class UnsignedInteger extends Number implements Comparable<Unsigned
   /**
    * Returns a string representation of the {@code UnsignedInteger} value, in base 10.
    */
+  
   @Override
   public String toString() {
     return toString(10);

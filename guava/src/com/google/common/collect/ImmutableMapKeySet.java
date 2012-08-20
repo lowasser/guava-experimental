@@ -42,30 +42,35 @@ abstract class ImmutableMapKeySet<K, V> extends TransformedImmutableSet<Entry<K,
 
   abstract ImmutableMap<K, V> map();
 
+  
   @Override
   K transform(Entry<K, V> entry) {
     return entry.getKey();
   }
 
+  
   @Override
   public boolean contains(@Nullable Object object) {
     return map().containsKey(object);
   }
 
+  
   @Override
   boolean isPartialView() {
     return true;
   }
 
+  
   @Override
   ImmutableList<K> createAsList() {
     final ImmutableList<Entry<K, V>> entryList = map().entrySet().asList();
     return new ImmutableAsList<K>() {
-      @Override
+      
       public K get(int index) {
         return entryList.get(index).getKey();
       }
 
+      
       @Override
       ImmutableCollection<K> delegateCollection() {
         return ImmutableMapKeySet.this;
@@ -73,8 +78,9 @@ abstract class ImmutableMapKeySet<K, V> extends TransformedImmutableSet<Entry<K,
     };
   }
 
+  @Override
   @GwtIncompatible("serialization")
-  @Override Object writeReplace() {
+  Object writeReplace() {
     return new KeySetSerializedForm<K>(map());
   }
 

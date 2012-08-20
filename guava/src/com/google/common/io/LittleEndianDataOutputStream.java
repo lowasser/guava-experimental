@@ -52,16 +52,18 @@ public class LittleEndianDataOutputStream extends FilterOutputStream
     super(new DataOutputStream(Preconditions.checkNotNull(out)));
   }
 
-  @Override public void write(byte[] b, int off, int len) throws IOException {
+  
+  @Override
+  public void write(byte[] b, int off, int len) throws IOException {
     // Override slow FilterOutputStream impl
     out.write(b, off, len);
   }
 
-  @Override public void writeBoolean(boolean v) throws IOException {
+  public void writeBoolean(boolean v) throws IOException {
     ((DataOutputStream) out).writeBoolean(v);
   }
 
-  @Override public void writeByte(int v) throws IOException {
+  public void writeByte(int v) throws IOException {
     ((DataOutputStream) out).writeByte(v);
   }
 
@@ -71,7 +73,7 @@ public class LittleEndianDataOutputStream extends FilterOutputStream
    *             {@link #writeChars(String s)} or another write method instead.
    */
   @Deprecated
-  @Override public void writeBytes(String s) throws IOException {
+  public void writeBytes(String s) throws IOException {
     ((DataOutputStream) out).writeBytes(s);
   }
 
@@ -81,7 +83,7 @@ public class LittleEndianDataOutputStream extends FilterOutputStream
    *
    * @throws IOException if an I/O error occurs
    */
-  @Override public void writeChar(int v) throws IOException {
+  public void writeChar(int v) throws IOException {
     writeShort(v);
   }
 
@@ -92,7 +94,7 @@ public class LittleEndianDataOutputStream extends FilterOutputStream
    *
    * @throws IOException if an I/O error occurs
    */
-  @Override public void writeChars(String s) throws IOException {
+  public void writeChars(String s) throws IOException {
     for (int i = 0; i < s.length(); i++) {
       writeChar(s.charAt(i));
     }
@@ -105,7 +107,7 @@ public class LittleEndianDataOutputStream extends FilterOutputStream
    *
    * @throws IOException if an I/O error occurs
    */
-  @Override public void writeDouble(double v) throws IOException {
+  public void writeDouble(double v) throws IOException {
     writeLong(Double.doubleToLongBits(v));
   }
 
@@ -116,7 +118,7 @@ public class LittleEndianDataOutputStream extends FilterOutputStream
    *
    * @throws IOException if an I/O error occurs
    */
-  @Override public void writeFloat(float v) throws IOException {
+  public void writeFloat(float v) throws IOException {
     writeInt(Float.floatToIntBits(v));
   }
 
@@ -127,7 +129,7 @@ public class LittleEndianDataOutputStream extends FilterOutputStream
    *
    * @throws IOException if an I/O error occurs
    */
-  @Override public void writeInt(int v) throws IOException {
+  public void writeInt(int v) throws IOException {
     out.write(0xFF & v);
     out.write(0xFF & (v >> 8));
     out.write(0xFF & (v >> 16));
@@ -141,7 +143,7 @@ public class LittleEndianDataOutputStream extends FilterOutputStream
    *
    * @throws IOException if an I/O error occurs
    */
-  @Override public void writeLong(long v) throws IOException {
+  public void writeLong(long v) throws IOException {
     byte[] bytes = Longs.toByteArray(Long.reverseBytes(v));
     write(bytes, 0, bytes.length);
   }
@@ -153,12 +155,12 @@ public class LittleEndianDataOutputStream extends FilterOutputStream
    *
    * @throws IOException if an I/O error occurs
    */
-  @Override public void writeShort(int v) throws IOException {
+  public void writeShort(int v) throws IOException {
     out.write(0xFF & v);
     out.write(0xFF & (v >> 8));
   }
 
-  @Override public void writeUTF(String str) throws IOException {
+  public void writeUTF(String str) throws IOException {
     ((DataOutputStream) out).writeUTF(str);
   }
 }

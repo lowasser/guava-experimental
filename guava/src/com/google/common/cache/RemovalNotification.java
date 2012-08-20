@@ -63,19 +63,21 @@ public final class RemovalNotification<K, V> implements Entry<K, V> {
     return cause.wasEvicted();
   }
 
-  @Nullable @Override public K getKey() {
+  @Nullable public K getKey() {
     return key;
   }
 
-  @Nullable @Override public V getValue() {
+  @Nullable public V getValue() {
     return value;
   }
 
-  @Override public final V setValue(V value){
+  public final V setValue(V value){
     throw new UnsupportedOperationException();
   }
 
-  @Override public boolean equals(@Nullable Object object) {
+  
+  @Override
+  public boolean equals(@Nullable Object object) {
     if (object instanceof Entry) {
       Entry<?, ?> that = (Entry<?, ?>) object;
       return Objects.equal(this.getKey(), that.getKey())
@@ -84,7 +86,9 @@ public final class RemovalNotification<K, V> implements Entry<K, V> {
     return false;
   }
 
-  @Override public int hashCode() {
+  
+  @Override
+  public int hashCode() {
     K k = getKey();
     V v = getValue();
     return ((k == null) ? 0 : k.hashCode()) ^ ((v == null) ? 0 : v.hashCode());
@@ -93,7 +97,9 @@ public final class RemovalNotification<K, V> implements Entry<K, V> {
   /**
    * Returns a string representation of the form <code>{key}={value}</code>.
    */
-  @Override public String toString() {
+  
+  @Override
+  public String toString() {
     return getKey() + "=" + getValue();
   }
   private static final long serialVersionUID = 0;

@@ -36,7 +36,8 @@ final class CompoundOrdering<T> extends Ordering<T> implements Serializable {
     this.comparators = ImmutableList.copyOf(comparators);
   }
 
-  @Override public int compare(T left, T right) {
+  @Override
+  public int compare(T left, T right) {
     // Avoid using the Iterator to avoid generating garbage (issue 979).
     int size = comparators.size();
     for (int i = 0; i < size; i++) {
@@ -48,7 +49,9 @@ final class CompoundOrdering<T> extends Ordering<T> implements Serializable {
     return 0;
   }
 
-  @Override public boolean equals(Object object) {
+  
+  @Override
+  public boolean equals(Object object) {
     if (object == this) {
       return true;
     }
@@ -59,11 +62,15 @@ final class CompoundOrdering<T> extends Ordering<T> implements Serializable {
     return false;
   }
 
-  @Override public int hashCode() {
+  
+  @Override
+  public int hashCode() {
     return comparators.hashCode();
   }
 
-  @Override public String toString() {
+  
+  @Override
+  public String toString() {
     return "Ordering.compound(" + comparators + ")";
   }
 

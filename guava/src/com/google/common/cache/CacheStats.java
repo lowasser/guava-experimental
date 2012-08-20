@@ -235,12 +235,14 @@ public final class CacheStats {
         evictionCount + other.evictionCount);
   }
 
+  
   @Override
   public int hashCode() {
     return Objects.hashCode(hitCount, missCount, loadSuccessCount, loadExceptionCount,
         totalLoadTime, evictionCount);
   }
 
+  
   @Override
   public boolean equals(@Nullable Object object) {
     if (object instanceof CacheStats) {
@@ -255,6 +257,7 @@ public final class CacheStats {
     return false;
   }
 
+  
   @Override
   public String toString() {
     return Objects.toStringHelper(this)

@@ -117,6 +117,7 @@ public abstract class AbstractScheduledService implements Service {
     public static Scheduler newFixedDelaySchedule(final long initialDelay, final long delay,
         final TimeUnit unit) {
       return new Scheduler() {
+        
         @Override
         public Future<?> schedule(AbstractService service, ScheduledExecutorService executor,
             Runnable task) {
@@ -136,6 +137,7 @@ public abstract class AbstractScheduledService implements Service {
     public static Scheduler newFixedRateSchedule(final long initialDelay, final long period,
         final TimeUnit unit) {
       return new Scheduler() {
+        
         @Override
         public Future<?> schedule(AbstractService service, ScheduledExecutorService executor,
             Runnable task) {
@@ -164,7 +166,7 @@ public abstract class AbstractScheduledService implements Service {
     private final ReentrantLock lock = new ReentrantLock();
 
     private final Runnable task = new Runnable() {
-      @Override public void run() {
+      public void run() {
         lock.lock();
         try {
           AbstractScheduledService.this.runOneIteration();
@@ -183,10 +185,11 @@ public abstract class AbstractScheduledService implements Service {
       }
     };
 
-    @Override protected final void doStart() {
+    @Override
+    protected final void doStart() {
       executorService = executor();
       executorService.execute(new Runnable() {
-        @Override public void run() {
+        public void run() {
           lock.lock();
           try {
             startUp();
@@ -202,10 +205,11 @@ public abstract class AbstractScheduledService implements Service {
       });
     }
 
-    @Override protected final void doStop() {
+    @Override
+    protected final void doStop() {
       runningTask.cancel(false);
       executorService.execute(new Runnable() {
-        @Override public void run() {
+        public void run() {
           try {
             lock.lock();
             try {
@@ -270,37 +274,39 @@ public abstract class AbstractScheduledService implements Service {
     return Executors.newSingleThreadScheduledExecutor();
   }
 
-  @Override public String toString() {
+  
+  @Override
+  public String toString() {
     return getClass().getSimpleName() + " [" + state() + "]";
   }
 
   // We override instead of using ForwardingService so that these can be final.
 
-  @Override public final ListenableFuture<State> start() {
+  public final ListenableFuture<State> start() {
     return delegate.start();
   }
 
-  @Override public final State startAndWait() {
+  public final State startAndWait() {
     return delegate.startAndWait();
   }
 
-  @Override public final boolean isRunning() {
+  public final boolean isRunning() {
     return delegate.isRunning();
   }
 
-  @Override public final State state() {
+  public final State state() {
     return delegate.state();
   }
 
-  @Override public final ListenableFuture<State> stop() {
+  public final ListenableFuture<State> stop() {
     return delegate.stop();
   }
 
-  @Override public final State stopAndWait() {
+  public final State stopAndWait() {
     return delegate.stopAndWait();
   }
 
-  @Override public final void addListener(Listener listener, Executor executor) {
+  public final void addListener(Listener listener, Executor executor) {
     delegate.addListener(listener, executor);
   }
 
@@ -350,7 +356,7 @@ public abstract class AbstractScheduledService implements Service {
         this.service = service;
       }
 
-      @Override
+      
       public Void call() throws Exception {
         wrappedRunnable.run();
         reschedule();
@@ -385,6 +391,7 @@ public abstract class AbstractScheduledService implements Service {
 
       // N.B. Only protect cancel and isCancelled because those are the only methods that are
       // invoked by the AbstractScheduledService.
+      
       @Override
       public boolean cancel(boolean mayInterruptIfRunning) {
         // Ensure that a task cannot be rescheduled while a cancel is ongoing.
@@ -396,12 +403,14 @@ public abstract class AbstractScheduledService implements Service {
         }
       }
 
+      
       @Override
       protected Future<Void> delegate() {
         throw new UnsupportedOperationException("Only cancel is supported by this future");
       }
     }
 
+    
     @Override
     final Future<?> schedule(AbstractService service, ScheduledExecutorService executor,
         Runnable runnable) {

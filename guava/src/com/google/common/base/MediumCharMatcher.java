@@ -72,6 +72,7 @@ final class MediumCharMatcher extends CharMatcher {
   // This method is thread-safe, since if any two threads execute it simultaneously, all
   // that will happen is that they compute the same data structure twice, but nothing will ever
   // be incorrect.
+  
   @Override
   public CharMatcher precomputed() {
     return this;
@@ -104,6 +105,7 @@ final class MediumCharMatcher extends CharMatcher {
     return new MediumCharMatcher(table, filter, containsZero, description);
   }
 
+  
   @Override
   public boolean matches(char c) {
     if (c == 0) {

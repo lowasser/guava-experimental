@@ -43,17 +43,20 @@ final class RegularImmutableSortedMap<K, V> extends ImmutableSortedMap<K, V> {
     this.valueList = valueList;
   }
 
+  
   @Override
   ImmutableSet<Entry<K, V>> createEntrySet() {
     return new EntrySet();
   }
 
   private class EntrySet extends ImmutableMapEntrySet<K, V> {
+    
     @Override
     public UnmodifiableIterator<Entry<K, V>> iterator() {
       return asList().iterator();
     }
 
+    
     @Override
     ImmutableList<Entry<K, V>> createAsList() {
       return new ImmutableAsList<Entry<K, V>>() {
@@ -61,11 +64,12 @@ final class RegularImmutableSortedMap<K, V> extends ImmutableSortedMap<K, V> {
         private final ImmutableList<K> keyList = keySet().asList();
         private final ImmutableList<V> valueList = values().asList();
 
-        @Override
+        
         public Entry<K, V> get(int index) {
           return Maps.immutableEntry(keyList.get(index), valueList.get(index));
         }
 
+        
         @Override
         ImmutableCollection<Entry<K, V>> delegateCollection() {
           return EntrySet.this;
@@ -73,22 +77,26 @@ final class RegularImmutableSortedMap<K, V> extends ImmutableSortedMap<K, V> {
       };
     }
 
+    
     @Override
     ImmutableMap<K, V> map() {
       return RegularImmutableSortedMap.this;
     }
   }
 
+  
   @Override
   public ImmutableSortedSet<K> keySet() {
     return keySet;
   }
 
+  
   @Override
   public ImmutableCollection<V> values() {
     return valueList;
   }
 
+  
   @Override
   public V get(@Nullable Object key) {
     int index = keySet.indexOf(key);
@@ -107,16 +115,19 @@ final class RegularImmutableSortedMap<K, V> extends ImmutableSortedMap<K, V> {
     }
   }
 
+  
   @Override
   public ImmutableSortedMap<K, V> headMap(K toKey, boolean inclusive) {
     return getSubMap(0, keySet.headIndex(checkNotNull(toKey), inclusive));
   }
 
+  
   @Override
   public ImmutableSortedMap<K, V> tailMap(K fromKey, boolean inclusive) {
     return getSubMap(keySet.tailIndex(checkNotNull(fromKey), inclusive), size());
   }
 
+  
   @Override
   ImmutableSortedMap<K, V> createDescendingMap() {
     return new RegularImmutableSortedMap<K, V>(

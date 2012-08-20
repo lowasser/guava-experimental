@@ -36,6 +36,7 @@ public enum RemovalCause {
    * {@link Map#remove}, {@link ConcurrentMap#remove}, or {@link Iterator#remove}.
    */
   EXPLICIT {
+    
     @Override
     boolean wasEvicted() {
       return false;
@@ -49,6 +50,7 @@ public enum RemovalCause {
    * {@link ConcurrentMap#replace(Object, Object, Object)}.
    */
   REPLACED {
+    
     @Override
     boolean wasEvicted() {
       return false;
@@ -61,6 +63,7 @@ public enum RemovalCause {
    * {@link CacheBuilder#softValues}.
    */
   COLLECTED {
+    
     @Override
     boolean wasEvicted() {
       return true;
@@ -72,6 +75,7 @@ public enum RemovalCause {
    * {@link CacheBuilder#expireAfterWrite} or {@link CacheBuilder#expireAfterAccess}.
    */
   EXPIRED {
+    
     @Override
     boolean wasEvicted() {
       return true;
@@ -83,6 +87,7 @@ public enum RemovalCause {
    * {@link CacheBuilder#maximumSize} or {@link CacheBuilder#maximumWeight}.
    */
   SIZE {
+    
     @Override
     boolean wasEvicted() {
       return true;

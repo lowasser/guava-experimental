@@ -47,15 +47,21 @@ final class FunctionalEquivalence<F, T> extends Equivalence<F>
     this.resultEquivalence = checkNotNull(resultEquivalence);
   }
 
-  @Override protected boolean doEquivalent(F a, F b) {
+  
+  @Override
+  protected boolean doEquivalent(F a, F b) {
     return resultEquivalence.equivalent(function.apply(a), function.apply(b));
   }
 
-  @Override protected int doHash(F a) {
+  
+  @Override
+  protected int doHash(F a) {
     return resultEquivalence.hash(function.apply(a));
   }
 
-  @Override public boolean equals(@Nullable Object obj) {
+  
+  @Override
+  public boolean equals(@Nullable Object obj) {
     if (obj == this) {
       return true;
     }
@@ -67,11 +73,15 @@ final class FunctionalEquivalence<F, T> extends Equivalence<F>
     return false;
   }
 
-  @Override public int hashCode() {
+  
+  @Override
+  public int hashCode() {
     return Objects.hashCode(function, resultEquivalence);
   }
 
-  @Override public String toString() {
+  
+  @Override
+  public String toString() {
     return resultEquivalence + ".onResultOf(" + function + ")";
   }
 }

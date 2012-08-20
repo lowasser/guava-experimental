@@ -80,15 +80,12 @@ public final class Tables {
       this.value = value;
     }
 
-    @Override
     public R getRowKey() {
       return rowKey;
     }
-    @Override
     public C getColumnKey() {
       return columnKey;
     }
-    @Override
     public V getValue() {
       return value;
     }
@@ -100,7 +97,9 @@ public final class Tables {
     // needed for serialization
     AbstractCell() {}
 
-    @Override public boolean equals(Object obj) {
+    
+    @Override
+    public boolean equals(Object obj) {
       if (obj == this) {
         return true;
       }
@@ -113,11 +112,15 @@ public final class Tables {
       return false;
     }
 
-    @Override public int hashCode() {
+    
+    @Override
+    public int hashCode() {
       return Objects.hashCode(getRowKey(), getColumnKey(), getValue());
     }
 
-    @Override public String toString() {
+    
+    @Override
+    public String toString() {
       return "(" + getRowKey() + "," + getColumnKey() + ")=" + getValue();
     }
   }
@@ -149,98 +152,82 @@ public final class Tables {
       this.original = checkNotNull(original);
     }
 
-    @Override
     public void clear() {
       original.clear();
     }
 
-    @Override
     public Map<C, V> column(R columnKey) {
       return original.row(columnKey);
     }
 
-    @Override
     public Set<R> columnKeySet() {
       return original.rowKeySet();
     }
 
-    @Override
     public Map<R, Map<C, V>> columnMap() {
       return original.rowMap();
     }
 
-    @Override
     public boolean contains(
         @Nullable Object rowKey, @Nullable Object columnKey) {
       return original.contains(columnKey, rowKey);
     }
 
-    @Override
     public boolean containsColumn(@Nullable Object columnKey) {
       return original.containsRow(columnKey);
     }
 
-    @Override
     public boolean containsRow(@Nullable Object rowKey) {
       return original.containsColumn(rowKey);
     }
 
-    @Override
     public boolean containsValue(@Nullable Object value) {
       return original.containsValue(value);
     }
 
-    @Override
     public V get(@Nullable Object rowKey, @Nullable Object columnKey) {
       return original.get(columnKey, rowKey);
     }
 
-    @Override
     public boolean isEmpty() {
       return original.isEmpty();
     }
 
-    @Override
     public V put(C rowKey, R columnKey, V value) {
       return original.put(columnKey, rowKey, value);
     }
 
-    @Override
     public void putAll(Table<? extends C, ? extends R, ? extends V> table) {
       original.putAll(transpose(table));
     }
 
-    @Override
     public V remove(@Nullable Object rowKey, @Nullable Object columnKey) {
       return original.remove(columnKey, rowKey);
     }
 
-    @Override
     public Map<R, V> row(C rowKey) {
       return original.column(rowKey);
     }
 
-    @Override
     public Set<C> rowKeySet() {
       return original.columnKeySet();
     }
 
-    @Override
     public Map<C, Map<R, V>> rowMap() {
       return original.columnMap();
     }
 
-    @Override
     public int size() {
       return original.size();
     }
 
-    @Override
     public Collection<V> values() {
       return original.values();
     }
 
-    @Override public boolean equals(@Nullable Object obj) {
+    
+    @Override
+    public boolean equals(@Nullable Object obj) {
       if (obj == this) {
         return true;
       }
@@ -251,18 +238,21 @@ public final class Tables {
       return false;
     }
 
-    @Override public int hashCode() {
+    
+    @Override
+    public int hashCode() {
       return cellSet().hashCode();
     }
 
-    @Override public String toString() {
+    
+    @Override
+    public String toString() {
       return rowMap().toString();
     }
 
     // Will cast TRANSPOSE_CELL to a type that always succeeds
     private static final Function<Cell<?, ?, ?>, Cell<?, ?, ?>> TRANSPOSE_CELL =
         new Function<Cell<?, ?, ?>, Cell<?, ?, ?>>() {
-          @Override
           public Cell<?, ?, ?> apply(Cell<?, ?, ?> cell) {
             return immutableCell(
                 cell.getColumnKey(), cell.getRowKey(), cell.getValue());
@@ -271,7 +261,6 @@ public final class Tables {
 
     CellSet cellSet;
 
-    @Override
     public Set<Cell<C, R, V>> cellSet() {
       CellSet result = cellSet;
       return (result == null) ? cellSet = new CellSet() : result;
@@ -285,7 +274,9 @@ public final class Tables {
         super(original.cellSet(), (Function) TRANSPOSE_CELL);
       }
 
-      @Override public boolean equals(Object obj) {
+      
+      @Override
+      public boolean equals(Object obj) {
         if (obj == this) {
           return true;
         }
@@ -299,11 +290,15 @@ public final class Tables {
         return containsAll(os);
       }
 
-      @Override public int hashCode() {
+      
+      @Override
+      public int hashCode() {
         return Sets.hashCodeImpl(this);
       }
 
-      @Override public boolean contains(Object obj) {
+      
+      @Override
+      public boolean contains(Object obj) {
         if (obj instanceof Cell) {
           Cell<?, ?, ?> cell = (Cell<?, ?, ?>) obj;
           return original.cellSet().contains(immutableCell(
@@ -312,7 +307,9 @@ public final class Tables {
         return false;
       }
 
-      @Override public boolean remove(Object obj) {
+      
+      @Override
+      public boolean remove(Object obj) {
         if (obj instanceof Cell) {
           Cell<?, ?, ?> cell = (Cell<?, ?, ?>) obj;
           return original.cellSet().remove(immutableCell(
@@ -416,66 +413,66 @@ public final class Tables {
       this.function = checkNotNull(function);
     }
 
-    @Override public boolean contains(Object rowKey, Object columnKey) {
+    public boolean contains(Object rowKey, Object columnKey) {
       return fromTable.contains(rowKey, columnKey);
     }
 
-    @Override public boolean containsRow(Object rowKey) {
+    public boolean containsRow(Object rowKey) {
       return fromTable.containsRow(rowKey);
     }
 
-    @Override public boolean containsColumn(Object columnKey) {
+    public boolean containsColumn(Object columnKey) {
       return fromTable.containsColumn(columnKey);
     }
 
-    @Override public boolean containsValue(Object value) {
+    public boolean containsValue(Object value) {
       return values().contains(value);
     }
 
-    @Override public V2 get(Object rowKey, Object columnKey) {
+    public V2 get(Object rowKey, Object columnKey) {
       // The function is passed a null input only when the table contains a null
       // value.
       return contains(rowKey, columnKey)
           ? function.apply(fromTable.get(rowKey, columnKey)) : null;
     }
 
-    @Override public boolean isEmpty() {
+    public boolean isEmpty() {
       return fromTable.isEmpty();
     }
 
-    @Override public int size() {
+    public int size() {
       return fromTable.size();
     }
 
-    @Override public void clear() {
+    public void clear() {
       fromTable.clear();
     }
 
-    @Override public V2 put(R rowKey, C columnKey, V2 value) {
+    public V2 put(R rowKey, C columnKey, V2 value) {
       throw new UnsupportedOperationException();
     }
 
-    @Override public void putAll(
+    public void putAll(
         Table<? extends R, ? extends C, ? extends V2> table) {
       throw new UnsupportedOperationException();
     }
 
-    @Override public V2 remove(Object rowKey, Object columnKey) {
+    public V2 remove(Object rowKey, Object columnKey) {
       return contains(rowKey, columnKey)
           ? function.apply(fromTable.remove(rowKey, columnKey)) : null;
     }
 
-    @Override public Map<C, V2> row(R rowKey) {
+    public Map<C, V2> row(R rowKey) {
       return Maps.transformValues(fromTable.row(rowKey), function);
     }
 
-    @Override public Map<R, V2> column(C columnKey) {
+    public Map<R, V2> column(C columnKey) {
       return Maps.transformValues(fromTable.column(columnKey), function);
     }
 
     Function<Cell<R, C, V1>, Cell<R, C, V2>> cellFunction() {
       return new Function<Cell<R, C, V1>, Cell<R, C, V2>>() {
-        @Override public Cell<R, C, V2> apply(Cell<R, C, V1> cell) {
+        public Cell<R, C, V2> apply(Cell<R, C, V1> cell) {
           return immutableCell(
               cell.getRowKey(), cell.getColumnKey(),
               function.apply(cell.getValue()));
@@ -488,13 +485,19 @@ public final class Tables {
       CellSet() {
         super(fromTable.cellSet(), cellFunction());
       }
-      @Override public boolean equals(Object obj) {
+      
+      @Override
+      public boolean equals(Object obj) {
         return Sets.equalsImpl(this, obj);
       }
-      @Override public int hashCode() {
+      
+      @Override
+      public int hashCode() {
         return Sets.hashCodeImpl(this);
       }
-      @Override public boolean contains(Object obj) {
+      
+      @Override
+      public boolean contains(Object obj) {
         if (obj instanceof Cell) {
           Cell<?, ?, ?> cell = (Cell<?, ?, ?>) obj;
           if (!Objects.equal(
@@ -506,7 +509,9 @@ public final class Tables {
         }
         return false;
       }
-      @Override public boolean remove(Object obj) {
+      
+      @Override
+      public boolean remove(Object obj) {
         if (contains(obj)) {
           Cell<?, ?, ?> cell = (Cell<?, ?, ?>) obj;
           fromTable.remove(cell.getRowKey(), cell.getColumnKey());
@@ -518,21 +523,21 @@ public final class Tables {
 
     CellSet cellSet;
 
-    @Override public Set<Cell<R, C, V2>> cellSet() {
+    public Set<Cell<R, C, V2>> cellSet() {
       return (cellSet == null) ? cellSet = new CellSet() : cellSet;
     }
 
-    @Override public Set<R> rowKeySet() {
+    public Set<R> rowKeySet() {
       return fromTable.rowKeySet();
     }
 
-    @Override public Set<C> columnKeySet() {
+    public Set<C> columnKeySet() {
       return fromTable.columnKeySet();
     }
 
     Collection<V2> values;
 
-    @Override public Collection<V2> values() {
+    public Collection<V2> values() {
       return (values == null)
           ? values = Collections2.transform(fromTable.values(), function)
           : values;
@@ -541,7 +546,7 @@ public final class Tables {
     Map<R, Map<C, V2>> createRowMap() {
       Function<Map<C, V1>, Map<C, V2>> rowFunction =
           new Function<Map<C, V1>, Map<C, V2>>() {
-            @Override public Map<C, V2> apply(Map<C, V1> row) {
+            public Map<C, V2> apply(Map<C, V1> row) {
               return Maps.transformValues(row, function);
             }
           };
@@ -550,14 +555,14 @@ public final class Tables {
 
     Map<R, Map<C, V2>> rowMap;
 
-    @Override public Map<R, Map<C, V2>> rowMap() {
+    public Map<R, Map<C, V2>> rowMap() {
       return (rowMap == null) ? rowMap = createRowMap() : rowMap;
     }
 
     Map<C, Map<R, V2>> createColumnMap() {
       Function<Map<R, V1>, Map<R, V2>> columnFunction =
           new Function<Map<R, V1>, Map<R, V2>>() {
-            @Override public Map<R, V2> apply(Map<R, V1> column) {
+            public Map<R, V2> apply(Map<R, V1> column) {
               return Maps.transformValues(column, function);
             }
           };
@@ -566,11 +571,13 @@ public final class Tables {
 
     Map<C, Map<R, V2>> columnMap;
 
-    @Override public Map<C, Map<R, V2>> columnMap() {
+    public Map<C, Map<R, V2>> columnMap() {
       return (columnMap == null) ? columnMap = createColumnMap() : columnMap;
     }
 
-    @Override public boolean equals(@Nullable Object obj) {
+    
+    @Override
+    public boolean equals(@Nullable Object obj) {
       if (obj == this) {
         return true;
       }
@@ -581,11 +588,15 @@ public final class Tables {
       return false;
     }
 
-    @Override public int hashCode() {
+    
+    @Override
+    public int hashCode() {
       return cellSet().hashCode();
     }
 
-    @Override public String toString() {
+    
+    @Override
+    public String toString() {
       return rowMap().toString();
     }
   }
@@ -618,69 +629,82 @@ public final class Tables {
       this.delegate = checkNotNull(delegate);
     }
 
-    @SuppressWarnings("unchecked") // safe, covariant cast
+    
     @Override
+    @SuppressWarnings("unchecked") // safe, covariant cast
     protected Table<R, C, V> delegate() {
       return (Table<R, C, V>) delegate;
     }
 
+    
     @Override
     public Set<Cell<R, C, V>> cellSet() {
       return Collections.unmodifiableSet(super.cellSet());
     }
 
+    
     @Override
     public void clear() {
       throw new UnsupportedOperationException();
     }
 
+    
     @Override
     public Map<R, V> column(@Nullable C columnKey) {
       return Collections.unmodifiableMap(super.column(columnKey));
     }
 
+    
     @Override
     public Set<C> columnKeySet() {
       return Collections.unmodifiableSet(super.columnKeySet());
     }
 
+    
     @Override
     public Map<C, Map<R, V>> columnMap() {
       Function<Map<R, V>, Map<R, V>> wrapper = unmodifiableWrapper();
       return Collections.unmodifiableMap(Maps.transformValues(super.columnMap(), wrapper));
     }
 
+    
     @Override
     public V put(@Nullable R rowKey, @Nullable C columnKey, @Nullable V value) {
       throw new UnsupportedOperationException();
     }
 
+    
     @Override
     public void putAll(Table<? extends R, ? extends C, ? extends V> table) {
       throw new UnsupportedOperationException();
     }
 
+    
     @Override
     public V remove(@Nullable Object rowKey, @Nullable Object columnKey) {
       throw new UnsupportedOperationException();
     }
 
+    
     @Override
     public Map<C, V> row(@Nullable R rowKey) {
       return Collections.unmodifiableMap(super.row(rowKey));
     }
 
+    
     @Override
     public Set<R> rowKeySet() {
       return Collections.unmodifiableSet(super.rowKeySet());
     }
 
+    
     @Override
     public Map<R, Map<C, V>> rowMap() {
       Function<Map<C, V>, Map<C, V>> wrapper = unmodifiableWrapper();
       return Collections.unmodifiableMap(Maps.transformValues(super.rowMap(), wrapper));
     }
 
+    
     @Override
     public Collection<V> values() {
       return Collections.unmodifiableCollection(super.values());
@@ -719,17 +743,20 @@ public final class Tables {
       super(delegate);
     }
 
+    
     @Override
     protected RowSortedTable<R, C, V> delegate() {
       return (RowSortedTable<R, C, V>) super.delegate();
     }
 
+    
     @Override
     public SortedMap<R, Map<C, V>> rowMap() {
       Function<Map<C, V>, Map<C, V>> wrapper = unmodifiableWrapper();
       return Collections.unmodifiableSortedMap(Maps.transformValues(delegate().rowMap(), wrapper));
     }
 
+    
     @Override
     public SortedSet<R> rowKeySet() {
       return Collections.unmodifiableSortedSet(delegate().rowKeySet());
@@ -745,7 +772,6 @@ public final class Tables {
 
   private static final Function<? extends Map<?, ?>, ? extends Map<?, ?>> UNMODIFIABLE_WRAPPER =
       new Function<Map<Object, Object>, Map<Object, Object>>() {
-        @Override
         public Map<Object, Object> apply(Map<Object, Object> input) {
           return Collections.unmodifiableMap(input);
         }

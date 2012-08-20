@@ -130,22 +130,26 @@ public final class TreeMultiset<E> extends AbstractSortedMultiset<E> implements 
    */
   private enum Aggregate {
     SIZE {
+      
       @Override
       int nodeAggregate(AvlNode<?> node) {
         return node.elemCount;
       }
 
+      
       @Override
       long treeAggregate(@Nullable AvlNode<?> root) {
         return (root == null) ? 0 : root.totalCount;
       }
     },
     DISTINCT {
+      
       @Override
       int nodeAggregate(AvlNode<?> node) {
         return 1;
       }
 
+      
       @Override
       long treeAggregate(@Nullable AvlNode<?> root) {
         return (root == null) ? 0 : root.distinctElements;
@@ -212,16 +216,19 @@ public final class TreeMultiset<E> extends AbstractSortedMultiset<E> implements 
     }
   }
 
+  
   @Override
   public int size() {
     return Ints.saturatedCast(aggregateForEntries(Aggregate.SIZE));
   }
 
+  
   @Override
   int distinctElements() {
     return Ints.saturatedCast(aggregateForEntries(Aggregate.DISTINCT));
   }
 
+  
   @Override
   public int count(@Nullable Object element) {
     try {
@@ -239,6 +246,7 @@ public final class TreeMultiset<E> extends AbstractSortedMultiset<E> implements 
     }
   }
 
+  
   @Override
   public int add(@Nullable E element, int occurrences) {
     checkArgument(occurrences >= 0, "occurrences must be >= 0 but was %s", occurrences);
@@ -260,6 +268,7 @@ public final class TreeMultiset<E> extends AbstractSortedMultiset<E> implements 
     return result[0];
   }
 
+  
   @Override
   public int remove(@Nullable Object element, int occurrences) {
     checkArgument(occurrences >= 0, "occurrences must be >= 0 but was %s", occurrences);
@@ -285,6 +294,7 @@ public final class TreeMultiset<E> extends AbstractSortedMultiset<E> implements 
     return result[0];
   }
 
+  
   @Override
   public int setCount(@Nullable E element, int count) {
     checkArgument(count >= 0);
@@ -306,6 +316,7 @@ public final class TreeMultiset<E> extends AbstractSortedMultiset<E> implements 
     return result[0];
   }
 
+  
   @Override
   public boolean setCount(@Nullable E element, int oldCount, int newCount) {
     checkArgument(newCount >= 0);
@@ -331,12 +342,10 @@ public final class TreeMultiset<E> extends AbstractSortedMultiset<E> implements 
 
   private Entry<E> wrapEntry(final AvlNode<E> baseEntry) {
     return new Multisets.AbstractEntry<E>() {
-      @Override
       public E getElement() {
         return baseEntry.getElement();
       }
 
-      @Override
       public int getCount() {
         int result = baseEntry.getCount();
         if (result == 0) {
@@ -395,13 +404,13 @@ public final class TreeMultiset<E> extends AbstractSortedMultiset<E> implements 
     return (node == header || !range.contains(node.getElement())) ? null : node;
   }
 
+  
   @Override
   Iterator<Entry<E>> entryIterator() {
     return new Iterator<Entry<E>>() {
       AvlNode<E> current = firstNode();
       Entry<E> prevEntry;
 
-      @Override
       public boolean hasNext() {
         if (current == null) {
           return false;
@@ -413,7 +422,6 @@ public final class TreeMultiset<E> extends AbstractSortedMultiset<E> implements 
         }
       }
 
-      @Override
       public Entry<E> next() {
         if (!hasNext()) {
           throw new NoSuchElementException();
@@ -428,7 +436,6 @@ public final class TreeMultiset<E> extends AbstractSortedMultiset<E> implements 
         return result;
       }
 
-      @Override
       public void remove() {
         checkState(prevEntry != null);
         setCount(prevEntry.getElement(), 0);
@@ -437,13 +444,13 @@ public final class TreeMultiset<E> extends AbstractSortedMultiset<E> implements 
     };
   }
 
+  
   @Override
   Iterator<Entry<E>> descendingEntryIterator() {
     return new Iterator<Entry<E>>() {
       AvlNode<E> current = lastNode();
       Entry<E> prevEntry = null;
 
-      @Override
       public boolean hasNext() {
         if (current == null) {
           return false;
@@ -455,7 +462,6 @@ public final class TreeMultiset<E> extends AbstractSortedMultiset<E> implements 
         }
       }
 
-      @Override
       public Entry<E> next() {
         if (!hasNext()) {
           throw new NoSuchElementException();
@@ -470,7 +476,6 @@ public final class TreeMultiset<E> extends AbstractSortedMultiset<E> implements 
         return result;
       }
 
-      @Override
       public void remove() {
         checkState(prevEntry != null);
         setCount(prevEntry.getElement(), 0);
@@ -479,7 +484,6 @@ public final class TreeMultiset<E> extends AbstractSortedMultiset<E> implements 
     };
   }
 
-  @Override
   public SortedMultiset<E> headMultiset(@Nullable E upperBound, BoundType boundType) {
     return new TreeMultiset<E>(rootReference, range.intersect(GeneralRange.upTo(
         comparator(),
@@ -487,7 +491,6 @@ public final class TreeMultiset<E> extends AbstractSortedMultiset<E> implements 
         boundType)), header);
   }
 
-  @Override
   public SortedMultiset<E> tailMultiset(@Nullable E lowerBound, BoundType boundType) {
     return new TreeMultiset<E>(rootReference, range.intersect(GeneralRange.downTo(
         comparator(),
@@ -916,16 +919,15 @@ public final class TreeMultiset<E> extends AbstractSortedMultiset<E> implements 
       }
     }
 
-    @Override
     public E getElement() {
       return elem;
     }
 
-    @Override
     public int getCount() {
       return elemCount;
     }
 
+    
     @Override
     public String toString() {
       return Multisets.immutableEntry(getElement(), getCount()).toString();

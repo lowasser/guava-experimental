@@ -44,7 +44,6 @@ public abstract class GenericMapMaker<K0, V0> {
   enum NullListener implements RemovalListener<Object, Object> {
     INSTANCE;
 
-    @Override
     public void onRemoval(RemovalNotification<Object, Object> notification) {}
   }
 

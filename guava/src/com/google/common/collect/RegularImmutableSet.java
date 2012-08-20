@@ -42,7 +42,9 @@ final class RegularImmutableSet<E> extends ArrayImmutableSet<E> {
     this.hashCode = hashCode;
   }
 
-  @Override public boolean contains(Object target) {
+  
+  @Override
+  public boolean contains(Object target) {
     if (target == null) {
       return false;
     }
@@ -57,11 +59,15 @@ final class RegularImmutableSet<E> extends ArrayImmutableSet<E> {
     }
   }
 
-  @Override public int hashCode() {
+  
+  @Override
+  public int hashCode() {
     return hashCode;
   }
 
-  @Override boolean isHashCodeFast() {
+  
+  @Override
+  boolean isHashCodeFast() {
     return true;
   }
 }

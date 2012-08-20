@@ -48,44 +48,47 @@ abstract class TransformedImmutableSet<D, E> extends ImmutableSet<E> {
 
   abstract E transform(D element);
 
-  @Override
   public int size() {
     return source.size();
   }
 
-  @Override public boolean isEmpty() {
+  @Override
+  public boolean isEmpty() {
     return false;
   }
 
-  @Override public UnmodifiableIterator<E> iterator() {
+  @Override
+  public UnmodifiableIterator<E> iterator() {
     final Iterator<D> backingIterator = source.iterator();
     return new UnmodifiableIterator<E>() {
-      @Override
       public boolean hasNext() {
         return backingIterator.hasNext();
       }
 
-      @Override
       public E next() {
         return transform(backingIterator.next());
       }
     };
   }
 
-  @Override public Object[] toArray() {
+  @Override
+  public Object[] toArray() {
     return toArray(new Object[size()]);
   }
 
-  @Override public <T> T[] toArray(T[] array) {
+  @Override
+  public <T> T[] toArray(T[] array) {
     return ObjectArrays.toArrayImpl(this, array);
   }
 
-  @Override public final int hashCode() {
+  @Override
+  public final int hashCode() {
     return hashCode;
   }
 
+  @Override
   @GwtIncompatible("unused")
-  @Override boolean isHashCodeFast() {
+  boolean isHashCodeFast() {
     return true;
   }
 }

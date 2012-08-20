@@ -61,12 +61,10 @@ public abstract class AbstractSequentialIterator<T>
    */
   protected abstract T computeNext(T previous);
 
-  @Override
   public final boolean hasNext() {
     return nextOrNull != null;
   }
 
-  @Override
   public final T next() {
     if (!hasNext()) {
       throw new NoSuchElementException();

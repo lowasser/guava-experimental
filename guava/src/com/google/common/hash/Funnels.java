@@ -43,7 +43,9 @@ public final class Funnels {
       into.putBytes(from);
     }
 
-    @Override public String toString() {
+    
+    @Override
+    public String toString() {
       return "Funnels.byteArrayFunnel()";
     }
   }
@@ -62,7 +64,9 @@ public final class Funnels {
       into.putString(from);
     }
 
-    @Override public String toString() {
+    
+    @Override
+    public String toString() {
       return "Funnels.stringFunnel()";
     }
   }
@@ -83,7 +87,8 @@ public final class Funnels {
       into.putInt(from);
     }
     
-    @Override public String toString() {
+    @Override
+    public String toString() {
       return "Funnels.integerFunnel()";
     }
   }
@@ -104,7 +109,8 @@ public final class Funnels {
       into.putLong(from);
     }
     
-    @Override public String toString() {
+    @Override
+    public String toString() {
       return "Funnels.longFunnel()";
     }
   }
@@ -129,19 +135,23 @@ public final class Funnels {
       this.sink = Preconditions.checkNotNull(sink);
     }
     
-    @Override public void write(int b) {
+    @Override
+    public void write(int b) {
       sink.putByte((byte) b);
     }
 
-    @Override public void write(byte[] bytes) {
+    @Override
+    public void write(byte[] bytes) {
       sink.putBytes(bytes);
     }
 
-    @Override public void write(byte[] bytes, int off, int len) {
+    @Override
+    public void write(byte[] bytes, int off, int len) {
       sink.putBytes(bytes, off, len);
     }
     
-    @Override public String toString() {
+    @Override
+    public String toString() {
       return "Funnels.asOutputStream(" + sink + ")";
     }
   }

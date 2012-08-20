@@ -30,13 +30,16 @@ final class EmptyImmutableBiMap extends ImmutableBiMap<Object, Object> {
 
   private EmptyImmutableBiMap() {}
 
-  @Override ImmutableMap<Object, Object> delegate() {
+  @Override
+  ImmutableMap<Object, Object> delegate() {
     return ImmutableMap.of();
   }
-  @Override public ImmutableBiMap<Object, Object> inverse() {
+  @Override
+  public ImmutableBiMap<Object, Object> inverse() {
     return this;
   }
-  @Override boolean isPartialView() {
+  @Override
+  boolean isPartialView() {
     return false;
   }
   Object readResolve() {

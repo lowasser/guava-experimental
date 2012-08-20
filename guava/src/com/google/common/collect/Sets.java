@@ -19,7 +19,6 @@ package com.google.common.collect;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import com.google.common.annotations.Beta;
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.annotations.GwtIncompatible;
 import com.google.common.base.Predicate;
@@ -41,7 +40,6 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.NavigableSet;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.SortedSet;
@@ -516,49 +514,64 @@ public final class Sets {
       s = map.keySet();
     }
 
-    @Override public void clear() {
+    @Override
+    public void clear() {
       m.clear();
     }
-    @Override public int size() {
+    @Override
+    public int size() {
       return m.size();
     }
-    @Override public boolean isEmpty() {
+    @Override
+    public boolean isEmpty() {
       return m.isEmpty();
     }
-    @Override public boolean contains(Object o) {
+    @Override
+    public boolean contains(Object o) {
       return m.containsKey(o);
     }
-    @Override public boolean remove(Object o) {
+    @Override
+    public boolean remove(Object o) {
       return m.remove(o) != null;
     }
-    @Override public boolean add(E e) {
+    @Override
+    public boolean add(E e) {
       return m.put(e, Boolean.TRUE) == null;
     }
-    @Override public Iterator<E> iterator() {
+    @Override
+    public Iterator<E> iterator() {
       return s.iterator();
     }
-    @Override public Object[] toArray() {
+    @Override
+    public Object[] toArray() {
       return s.toArray();
     }
-    @Override public <T> T[] toArray(T[] a) {
+    @Override
+    public <T> T[] toArray(T[] a) {
       return s.toArray(a);
     }
-    @Override public String toString() {
+    @Override
+    public String toString() {
       return s.toString();
     }
-    @Override public int hashCode() {
+    @Override
+    public int hashCode() {
       return s.hashCode();
     }
-    @Override public boolean equals(@Nullable Object object) {
+    @Override
+    public boolean equals(@Nullable Object object) {
       return this == object || this.s.equals(object);
     }
-    @Override public boolean containsAll(Collection<?> c) {
+    @Override
+    public boolean containsAll(Collection<?> c) {
       return s.containsAll(c);
     }
-    @Override public boolean removeAll(Collection<?> c) {
+    @Override
+    public boolean removeAll(Collection<?> c) {
       return s.removeAll(c);
     }
-    @Override public boolean retainAll(Collection<?> c) {
+    @Override
+    public boolean retainAll(Collection<?> c) {
       return s.retainAll(c);
     }
 
@@ -643,25 +656,31 @@ public final class Sets {
     final Set<? extends E> set2minus1 = difference(set2, set1);
 
     return new SetView<E>() {
-      @Override public int size() {
+      @Override
+      public int size() {
         return set1.size() + set2minus1.size();
       }
-      @Override public boolean isEmpty() {
+      @Override
+      public boolean isEmpty() {
         return set1.isEmpty() && set2.isEmpty();
       }
-      @Override public Iterator<E> iterator() {
+      @Override
+      public Iterator<E> iterator() {
         return Iterators.unmodifiableIterator(
             Iterators.concat(set1.iterator(), set2minus1.iterator()));
       }
-      @Override public boolean contains(Object object) {
+      @Override
+      public boolean contains(Object object) {
         return set1.contains(object) || set2.contains(object);
       }
-      @Override public <S extends Set<E>> S copyInto(S set) {
+      @Override
+      public <S extends Set<E>> S copyInto(S set) {
         set.addAll(set1);
         set.addAll(set2);
         return set;
       }
-      @Override public ImmutableSet<E> immutableCopy() {
+      @Override
+      public ImmutableSet<E> immutableCopy() {
         return new ImmutableSet.Builder<E>()
             .addAll(set1).addAll(set2).build();
       }
@@ -701,19 +720,24 @@ public final class Sets {
 
     final Predicate<Object> inSet2 = Predicates.in(set2);
     return new SetView<E>() {
-      @Override public Iterator<E> iterator() {
+      @Override
+      public Iterator<E> iterator() {
         return Iterators.filter(set1.iterator(), inSet2);
       }
-      @Override public int size() {
+      @Override
+      public int size() {
         return Iterators.size(iterator());
       }
-      @Override public boolean isEmpty() {
+      @Override
+      public boolean isEmpty() {
         return !iterator().hasNext();
       }
-      @Override public boolean contains(Object object) {
+      @Override
+      public boolean contains(Object object) {
         return set1.contains(object) && set2.contains(object);
       }
-      @Override public boolean containsAll(Collection<?> collection) {
+      @Override
+      public boolean containsAll(Collection<?> collection) {
         return set1.containsAll(collection)
             && set2.containsAll(collection);
       }
@@ -738,16 +762,20 @@ public final class Sets {
 
     final Predicate<Object> notInSet2 = Predicates.not(Predicates.in(set2));
     return new SetView<E>() {
-      @Override public Iterator<E> iterator() {
+      @Override
+      public Iterator<E> iterator() {
         return Iterators.filter(set1.iterator(), notInSet2);
       }
-      @Override public int size() {
+      @Override
+      public int size() {
         return Iterators.size(iterator());
       }
-      @Override public boolean isEmpty() {
+      @Override
+      public boolean isEmpty() {
         return set2.containsAll(set1);
       }
-      @Override public boolean contains(Object element) {
+      @Override
+      public boolean contains(Object element) {
         return set1.contains(element) && !set2.contains(element);
       }
     };
@@ -826,11 +854,13 @@ public final class Sets {
       super(unfiltered, predicate);
     }
 
-    @Override public boolean equals(@Nullable Object object) {
+    @Override
+    public boolean equals(@Nullable Object object) {
       return equalsImpl(this, object);
     }
 
-    @Override public int hashCode() {
+    @Override
+    public int hashCode() {
       return hashCodeImpl(this);
     }
   }
@@ -888,41 +918,37 @@ public final class Sets {
       super(unfiltered, predicate);
     }
 
-    @Override public boolean equals(@Nullable Object object) {
+    @Override
+    public boolean equals(@Nullable Object object) {
       return equalsImpl(this, object);
     }
 
-    @Override public int hashCode() {
+    @Override
+    public int hashCode() {
       return hashCodeImpl(this);
     }
 
-    @Override
     public Comparator<? super E> comparator() {
       return ((SortedSet<E>) unfiltered).comparator();
     }
 
-    @Override
     public SortedSet<E> subSet(E fromElement, E toElement) {
       return new FilteredSortedSet<E>(((SortedSet<E>) unfiltered).subSet(fromElement, toElement),
           predicate);
     }
 
-    @Override
     public SortedSet<E> headSet(E toElement) {
       return new FilteredSortedSet<E>(((SortedSet<E>) unfiltered).headSet(toElement), predicate);
     }
 
-    @Override
     public SortedSet<E> tailSet(E fromElement) {
       return new FilteredSortedSet<E>(((SortedSet<E>) unfiltered).tailSet(fromElement), predicate);
     }
 
-    @Override
     public E first() {
       return iterator().next();
     }
 
-    @Override
     public E last() {
       SortedSet<E> sortedUnfiltered = (SortedSet<E>) unfiltered;
       while (true) {
@@ -1061,11 +1087,13 @@ public final class Sets {
       size = dividend;
     }
 
-    @Override public int size() {
+    @Override
+    public int size() {
       return size;
     }
 
-    @Override public UnmodifiableIterator<List<B>> iterator() {
+    @Override
+    public UnmodifiableIterator<List<B>> iterator() {
       return new AbstractIndexedListIterator<List<B>>(size) {
         @Override
         protected List<B> get(int index) {
@@ -1098,7 +1126,8 @@ public final class Sets {
       return true;
     }
 
-    @Override public boolean equals(@Nullable Object object) {
+    @Override
+    public boolean equals(@Nullable Object object) {
       // Warning: this is broken if size() == 0, so it is critical that we
       // substitute an empty ImmutableSet to the user in place of this
       if (object instanceof CartesianSet) {
@@ -1108,7 +1137,8 @@ public final class Sets {
       return super.equals(object);
     }
 
-    @Override public int hashCode() {
+    @Override
+    public int hashCode() {
       // Warning: this is broken if size() == 0, so it is critical that we
       // substitute an empty ImmutableSet to the user in place of this
 
@@ -1143,7 +1173,8 @@ public final class Sets {
         return choices.contains(target);
       }
 
-      @Override public boolean equals(Object obj) {
+      @Override
+      public boolean equals(Object obj) {
         if (obj instanceof CartesianSet.Axis) {
           CartesianSet.Axis that = (CartesianSet.Axis) obj;
           return this.choices.equals(that.choices);
@@ -1152,7 +1183,8 @@ public final class Sets {
         return false;
       }
 
-      @Override public int hashCode() {
+      @Override
+      public int hashCode() {
         // Because Axis instances are not exposed, we can
         // opportunistically choose whatever bizarre formula happens
         // to make CartesianSet.hashCode() as simple as possible.
@@ -1209,22 +1241,28 @@ public final class Sets {
       this.powerSetSize = 1 << input.size();
     }
 
-    @Override public int size() {
+    @Override
+    public int size() {
       return powerSetSize;
     }
 
-    @Override public boolean isEmpty() {
+    @Override
+    public boolean isEmpty() {
       return false;
     }
 
-    @Override public Iterator<Set<E>> iterator() {
+    @Override
+    public Iterator<Set<E>> iterator() {
       return new AbstractIndexedListIterator<Set<E>>(powerSetSize) {
-        @Override protected Set<E> get(final int setBits) {
+        @Override
+        protected Set<E> get(final int setBits) {
           return new AbstractSet<E>() {
-            @Override public int size() {
+            @Override
+            public int size() {
               return Integer.bitCount(setBits);
             }
-            @Override public Iterator<E> iterator() {
+            @Override
+            public Iterator<E> iterator() {
               return new BitFilteredSetIterator<E>(inputList, setBits);
             }
           };
@@ -1242,11 +1280,11 @@ public final class Sets {
         this.remainingSetBits = allSetBits;
       }
 
-      @Override public boolean hasNext() {
+      public boolean hasNext() {
         return remainingSetBits != 0;
       }
 
-      @Override public E next() {
+      public E next() {
         int index = Integer.numberOfTrailingZeros(remainingSetBits);
         if (index == 32) {
           throw new NoSuchElementException();
@@ -1258,7 +1296,8 @@ public final class Sets {
       }
     }
 
-    @Override public boolean contains(@Nullable Object obj) {
+    @Override
+    public boolean contains(@Nullable Object obj) {
       if (obj instanceof Set) {
         Set<?> set = (Set<?>) obj;
         return inputSet.containsAll(set);
@@ -1266,7 +1305,8 @@ public final class Sets {
       return false;
     }
 
-    @Override public boolean equals(@Nullable Object obj) {
+    @Override
+    public boolean equals(@Nullable Object obj) {
       if (obj instanceof PowerSet) {
         PowerSet<?> that = (PowerSet<?>) obj;
         return inputSet.equals(that.inputSet);
@@ -1274,7 +1314,8 @@ public final class Sets {
       return super.equals(obj);
     }
 
-    @Override public int hashCode() {
+    @Override
+    public int hashCode() {
       /*
        * The sum of the sums of the hash codes in each subset is just the sum of
        * each input element's hash code times the number of sets that element
@@ -1283,7 +1324,8 @@ public final class Sets {
       return inputSet.hashCode() << (inputSet.size() - 1);
     }
 
-    @Override public String toString() {
+    @Override
+    public String toString() {
       return "powerSet(" + inputSet + ")";
     }
   }
@@ -1321,171 +1363,6 @@ public final class Sets {
   }
 
   /**
-   * Returns an unmodifiable view of the specified navigable set. This method
-   * allows modules to provide users with "read-only" access to internal
-   * navigable sets. Query operations on the returned set "read through" to the
-   * specified set, and attempts to modify the returned set, whether direct or
-   * via its collection views, result in an
-   * {@code UnsupportedOperationException}.
-   *
-   * <p>The returned navigable set will be serializable if the specified
-   * navigable set is serializable.
-   *
-   * @param set the navigable set for which an unmodifiable view is to be
-   *        returned
-   * @return an unmodifiable view of the specified navigable set
-   * @since 12.0
-   */
-  @GwtIncompatible("NavigableSet")
-  public static <E> NavigableSet<E> unmodifiableNavigableSet(
-      NavigableSet<E> set) {
-    if (set instanceof ImmutableSortedSet
-        || set instanceof UnmodifiableNavigableSet) {
-      return set;
-    }
-    return new UnmodifiableNavigableSet<E>(set);
-  }
-
-  @GwtIncompatible("NavigableSet")
-  static final class UnmodifiableNavigableSet<E>
-      extends ForwardingSortedSet<E> implements NavigableSet<E>, Serializable {
-    private final NavigableSet<E> delegate;
-
-    UnmodifiableNavigableSet(NavigableSet<E> delegate) {
-      this.delegate = checkNotNull(delegate);
-    }
-
-    @Override
-    protected SortedSet<E> delegate() {
-      return Collections.unmodifiableSortedSet(delegate);
-    }
-
-    @Override
-    public E lower(E e) {
-      return delegate.lower(e);
-    }
-
-    @Override
-    public E floor(E e) {
-      return delegate.floor(e);
-    }
-
-    @Override
-    public E ceiling(E e) {
-      return delegate.ceiling(e);
-    }
-
-    @Override
-    public E higher(E e) {
-      return delegate.higher(e);
-    }
-
-    @Override
-    public E pollFirst() {
-      throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public E pollLast() {
-      throw new UnsupportedOperationException();
-    }
-
-    private transient UnmodifiableNavigableSet<E> descendingSet;
-
-    @Override
-    public NavigableSet<E> descendingSet() {
-      UnmodifiableNavigableSet<E> result = descendingSet;
-      if (result == null) {
-        result = descendingSet = new UnmodifiableNavigableSet<E>(
-            delegate.descendingSet());
-        result.descendingSet = this;
-      }
-      return result;
-    }
-
-    @Override
-    public Iterator<E> descendingIterator() {
-      return Iterators.unmodifiableIterator(delegate.descendingIterator());
-    }
-
-    @Override
-    public NavigableSet<E> subSet(
-        E fromElement,
-        boolean fromInclusive,
-        E toElement,
-        boolean toInclusive) {
-      return unmodifiableNavigableSet(delegate.subSet(
-          fromElement,
-          fromInclusive,
-          toElement,
-          toInclusive));
-    }
-
-    @Override
-    public NavigableSet<E> headSet(E toElement, boolean inclusive) {
-      return unmodifiableNavigableSet(delegate.headSet(toElement, inclusive));
-    }
-
-    @Override
-    public NavigableSet<E> tailSet(E fromElement, boolean inclusive) {
-      return unmodifiableNavigableSet(
-          delegate.tailSet(fromElement, inclusive));
-    }
-
-    private static final long serialVersionUID = 0;
-  }
-
-  /**
-   * Returns a synchronized (thread-safe) navigable set backed by the specified
-   * navigable set.  In order to guarantee serial access, it is critical that
-   * <b>all</b> access to the backing navigable set is accomplished
-   * through the returned navigable set (or its views).
-   *
-   * <p>It is imperative that the user manually synchronize on the returned
-   * sorted set when iterating over it or any of its {@code descendingSet},
-   * {@code subSet}, {@code headSet}, or {@code tailSet} views. <pre>   {@code
-   *
-   *   NavigableSet<E> set = synchronizedNavigableSet(new TreeSet<E>());
-   *    ...
-   *   synchronized (set) {
-   *     // Must be in the synchronized block
-   *     Iterator<E> it = set.iterator();
-   *     while (it.hasNext()){
-   *       foo(it.next());
-   *     }
-   *   }}</pre>
-   *
-   * or: <pre>   {@code
-   *
-   *   NavigableSet<E> set = synchronizedNavigableSet(new TreeSet<E>());
-   *   NavigableSet<E> set2 = set.descendingSet().headSet(foo);
-   *    ...
-   *   synchronized (set) { // Note: set, not set2!!!
-   *     // Must be in the synchronized block
-   *     Iterator<E> it = set2.descendingIterator();
-   *     while (it.hasNext())
-   *       foo(it.next());
-   *     }
-   *   }}</pre>
-   *
-   * Failure to follow this advice may result in non-deterministic behavior.
-   *
-   * <p>The returned navigable set will be serializable if the specified
-   * navigable set is serializable.
-   *
-   * @param navigableSet the navigable set to be "wrapped" in a synchronized
-   *    navigable set.
-   * @return a synchronized view of the specified navigable set.
-   * @since 13.0
-   */
-  @Beta
-  @GwtIncompatible("NavigableSet")
-  public static <E> NavigableSet<E> synchronizedNavigableSet(
-      NavigableSet<E> navigableSet) {
-    return Synchronized.navigableSet(navigableSet);
-  }
-
-  /**
    * Remove each element in an iterable from a set.
    */
   static boolean removeAllImpl(Set<?> set, Iterator<?> iterator) {
@@ -1520,140 +1397,6 @@ public final class Sets {
       return changed;
     } else {
       return removeAllImpl(set, collection.iterator());
-    }
-  }
-
-  @GwtIncompatible("NavigableSet")
-  static class DescendingSet<E> extends ForwardingNavigableSet<E> {
-    private final NavigableSet<E> forward;
-
-    DescendingSet(NavigableSet<E> forward) {
-      this.forward = forward;
-    }
-
-    @Override
-    protected NavigableSet<E> delegate() {
-      return forward;
-    }
-
-    @Override
-    public E lower(E e) {
-      return forward.higher(e);
-    }
-
-    @Override
-    public E floor(E e) {
-      return forward.ceiling(e);
-    }
-
-    @Override
-    public E ceiling(E e) {
-      return forward.floor(e);
-    }
-
-    @Override
-    public E higher(E e) {
-      return forward.lower(e);
-    }
-
-    @Override
-    public E pollFirst() {
-      return forward.pollLast();
-    }
-
-    @Override
-    public E pollLast() {
-      return forward.pollFirst();
-    }
-
-    @Override
-    public NavigableSet<E> descendingSet() {
-      return forward;
-    }
-
-    @Override
-    public Iterator<E> descendingIterator() {
-      return forward.iterator();
-    }
-
-    @Override
-    public NavigableSet<E> subSet(
-        E fromElement,
-        boolean fromInclusive,
-        E toElement,
-        boolean toInclusive) {
-      return forward.subSet(toElement, toInclusive, fromElement, fromInclusive).descendingSet();
-    }
-
-    @Override
-    public NavigableSet<E> headSet(E toElement, boolean inclusive) {
-      return forward.tailSet(toElement, inclusive).descendingSet();
-    }
-
-    @Override
-    public NavigableSet<E> tailSet(E fromElement, boolean inclusive) {
-      return forward.headSet(fromElement, inclusive).descendingSet();
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public Comparator<? super E> comparator() {
-      Comparator<? super E> forwardComparator = forward.comparator();
-      if (forwardComparator == null) {
-        return (Comparator) Ordering.natural().reverse();
-      } else {
-        return reverse(forwardComparator);
-      }
-    }
-
-    // If we inline this, we get a javac error.
-    private static <T> Ordering<T> reverse(Comparator<T> forward) {
-      return Ordering.from(forward).reverse();
-    }
-
-    @Override
-    public E first() {
-      return forward.last();
-    }
-
-    @Override
-    public SortedSet<E> headSet(E toElement) {
-      return standardHeadSet(toElement);
-    }
-
-    @Override
-    public E last() {
-      return forward.first();
-    }
-
-    @Override
-    public SortedSet<E> subSet(E fromElement, E toElement) {
-      return standardSubSet(fromElement, toElement);
-    }
-
-    @Override
-    public SortedSet<E> tailSet(E fromElement) {
-      return standardTailSet(fromElement);
-    }
-
-    @Override
-    public Iterator<E> iterator() {
-      return forward.descendingIterator();
-    }
-
-    @Override
-    public Object[] toArray() {
-      return standardToArray();
-    }
-
-    @Override
-    public <T> T[] toArray(T[] array) {
-      return standardToArray(array);
-    }
-
-    @Override
-    public String toString() {
-      return standardToString();
     }
   }
 

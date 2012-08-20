@@ -19,7 +19,6 @@ package com.google.common.util.concurrent;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
-import static com.google.common.util.concurrent.MoreExecutors.sameThreadExecutor;
 import static com.google.common.util.concurrent.Uninterruptibles.getUninterruptibly;
 import static com.google.common.util.concurrent.Uninterruptibles.putUninterruptibly;
 import static com.google.common.util.concurrent.Uninterruptibles.takeUninterruptibly;
@@ -110,7 +109,6 @@ public final class Futures {
     SettableFuture<V> future = SettableFuture.create();
     future.set(value);
     return Futures.makeChecked(future, new Function<Exception, X>() {
-      @Override
       public X apply(Exception e) {
         throw new AssertionError("impossible");
       }
@@ -153,7 +151,6 @@ public final class Futures {
     checkNotNull(exception);
     return makeChecked(Futures.<V>immediateFailedFuture(exception),
         new Function<Exception, X>() {
-          @Override
           public X apply(Exception e) {
             return exception;
           }
@@ -372,7 +369,7 @@ public final class Futures {
     checkNotNull(function);
     AsyncFunction<I, O> wrapperFunction
         = new AsyncFunction<I, O>() {
-            @Override public ListenableFuture<O> apply(I input) {
+            public ListenableFuture<O> apply(I input) {
               O output = function.apply(input);
               return immediateFuture(output);
             }
@@ -410,27 +407,22 @@ public final class Futures {
     checkNotNull(function);
     return new Future<O>() {
 
-      @Override
       public boolean cancel(boolean mayInterruptIfRunning) {
         return input.cancel(mayInterruptIfRunning);
       }
 
-      @Override
       public boolean isCancelled() {
         return input.isCancelled();
       }
 
-      @Override
       public boolean isDone() {
         return input.isDone();
       }
 
-      @Override
       public O get() throws InterruptedException, ExecutionException {
         return applyTransformation(input.get());
       }
 
-      @Override
       public O get(long timeout, TimeUnit unit)
           throws InterruptedException, ExecutionException, TimeoutException {
         return applyTransformation(input.get(timeout, unit));
@@ -473,6 +465,7 @@ public final class Futures {
       this.inputFuture = checkNotNull(inputFuture);
     }
 
+    
     @Override
     public boolean cancel(boolean mayInterruptIfRunning) {
       /*
@@ -497,7 +490,6 @@ public final class Futures {
       }
     }
 
-    @Override
     public void run() {
       try {
         I sourceResult;
@@ -529,7 +521,6 @@ public final class Futures {
           return;
         }
         outputFuture.addListener(new Runnable() {
-            @Override
             public void run() {
               try {
                 // Here it would have been nice to have had an
@@ -604,7 +595,7 @@ public final class Futures {
    */
   private static final AsyncFunction<ListenableFuture<Object>, Object> DEREFERENCER =
       new AsyncFunction<ListenableFuture<Object>, Object>() {
-        @Override public ListenableFuture<Object> apply(ListenableFuture<Object> input) {
+        public ListenableFuture<Object> apply(ListenableFuture<Object> input) {
           return input;
         }
       };
@@ -790,7 +781,6 @@ public final class Futures {
       final FutureCallback<? super V> callback, Executor executor) {
     Preconditions.checkNotNull(callback);
     Runnable callbackListener = new Runnable() {
-      @Override
       public void run() {
         try {
           // TODO(user): (Before Guava release), validate that this
@@ -1059,7 +1049,7 @@ public final class Futures {
 
   private static final Ordering<Constructor<?>> WITH_STRING_PARAM_FIRST =
       Ordering.natural().onResultOf(new Function<Constructor<?>, Boolean>() {
-        @Override public Boolean apply(Constructor<?> input) {
+        public Boolean apply(Constructor<?> input) {
           return asList(input.getParameterTypes()).contains(String.class);
         }
       }).reverse();
@@ -1126,7 +1116,6 @@ public final class Futures {
     private void init(final Executor listenerExecutor) {
       // First, schedule cleanup to execute when the Future is done.
       addListener(new Runnable() {
-        @Override
         public void run() {
           // By now the values array has either been set as the Future's value,
           // or (in case of failure) is no longer useful.
@@ -1162,7 +1151,6 @@ public final class Futures {
         final ListenableFuture<? extends V> listenable = localFutures.get(i);
         final int index = i;
         listenable.addListener(new Runnable() {
-          @Override
           public void run() {
             setOneValue(index, listenable);
           }
@@ -1241,6 +1229,7 @@ public final class Futures {
       this.mapper = checkNotNull(mapper);
     }
 
+    
     @Override
     protected X mapException(Exception e) {
       return mapper.apply(e);

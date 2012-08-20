@@ -317,17 +317,16 @@ public abstract class ImmutableSortedMultiset<E> extends ImmutableSortedMultiset
 
   ImmutableSortedMultiset() {}
 
-  @Override
+  
   public final Comparator<? super E> comparator() {
     return elementSet().comparator();
   }
 
-  @Override
+  
   public abstract ImmutableSortedSet<E> elementSet();
 
   transient ImmutableSortedMultiset<E> descendingMultiset;
 
-  @Override
   public ImmutableSortedMultiset<E> descendingMultiset() {
     ImmutableSortedMultiset<E> result = descendingMultiset;
     if (result == null) {
@@ -343,7 +342,6 @@ public abstract class ImmutableSortedMultiset<E> extends ImmutableSortedMultiset
    *
    * @throws UnsupportedOperationException always
    */
-  @Override
   public final Entry<E> pollFirstEntry() {
     throw new UnsupportedOperationException();
   }
@@ -355,15 +353,13 @@ public abstract class ImmutableSortedMultiset<E> extends ImmutableSortedMultiset
    *
    * @throws UnsupportedOperationException always
    */
-  @Override
+  
   public final Entry<E> pollLastEntry() {
     throw new UnsupportedOperationException();
   }
 
-  @Override
   public abstract ImmutableSortedMultiset<E> headMultiset(E upperBound, BoundType boundType);
 
-  @Override
   public ImmutableSortedMultiset<E> subMultiset(
       E lowerBound, BoundType lowerBoundType, E upperBound, BoundType upperBoundType) {
     checkArgument(comparator().compare(lowerBound, upperBound) <= 0,
@@ -371,7 +367,6 @@ public abstract class ImmutableSortedMultiset<E> extends ImmutableSortedMultiset
     return tailMultiset(lowerBound, lowerBoundType).headMultiset(upperBound, upperBoundType);
   }
 
-  @Override
   public abstract ImmutableSortedMultiset<E> tailMultiset(E lowerBound, BoundType boundType);
 
   /**
@@ -450,6 +445,7 @@ public abstract class ImmutableSortedMultiset<E> extends ImmutableSortedMultiset
      * @return this {@code Builder} object
      * @throws NullPointerException if {@code element} is null
      */
+    
     @Override
     public Builder<E> add(E element) {
       super.add(element);
@@ -467,6 +463,7 @@ public abstract class ImmutableSortedMultiset<E> extends ImmutableSortedMultiset
      * @throws IllegalArgumentException if {@code occurrences} is negative, or if this operation
      *         would result in more than {@link Integer#MAX_VALUE} occurrences of the element
      */
+    
     @Override
     public Builder<E> addCopies(E element, int occurrences) {
       super.addCopies(element, occurrences);
@@ -483,6 +480,7 @@ public abstract class ImmutableSortedMultiset<E> extends ImmutableSortedMultiset
      * @throws NullPointerException if {@code element} is null
      * @throws IllegalArgumentException if {@code count} is negative
      */
+    
     @Override
     public Builder<E> setCount(E element, int count) {
       super.setCount(element, count);
@@ -496,6 +494,7 @@ public abstract class ImmutableSortedMultiset<E> extends ImmutableSortedMultiset
      * @return this {@code Builder} object
      * @throws NullPointerException if {@code elements} is null or contains a null element
      */
+    
     @Override
     public Builder<E> add(E... elements) {
       super.add(elements);
@@ -509,6 +508,7 @@ public abstract class ImmutableSortedMultiset<E> extends ImmutableSortedMultiset
      * @return this {@code Builder} object
      * @throws NullPointerException if {@code elements} is null or contains a null element
      */
+    
     @Override
     public Builder<E> addAll(Iterable<? extends E> elements) {
       super.addAll(elements);
@@ -522,6 +522,7 @@ public abstract class ImmutableSortedMultiset<E> extends ImmutableSortedMultiset
      * @return this {@code Builder} object
      * @throws NullPointerException if {@code elements} is null or contains a null element
      */
+    
     @Override
     public Builder<E> addAll(Iterator<? extends E> elements) {
       super.addAll(elements);
@@ -532,6 +533,7 @@ public abstract class ImmutableSortedMultiset<E> extends ImmutableSortedMultiset
      * Returns a newly-created {@code ImmutableSortedMultiset} based on the contents of the {@code
      * Builder}.
      */
+    
     @Override
     public ImmutableSortedMultiset<E> build() {
       return copyOfSorted((SortedMultiset<E>) contents);
@@ -567,6 +569,7 @@ public abstract class ImmutableSortedMultiset<E> extends ImmutableSortedMultiset
     }
   }
 
+  
   @Override
   Object writeReplace() {
     return new SerializedForm(this);

@@ -342,7 +342,6 @@ public final class Doubles {
   private enum LexicographicalComparator implements Comparator<double[]> {
     INSTANCE;
 
-    @Override
     public int compare(double[] left, double[] right) {
       int minLength = Math.min(left.length, right.length);
       for (int i = 0; i < minLength; i++) {
@@ -426,26 +425,36 @@ public final class Doubles {
       this.end = end;
     }
 
-    @Override public int size() {
+    
+    @Override
+    public int size() {
       return end - start;
     }
 
-    @Override public boolean isEmpty() {
+    
+    @Override
+    public boolean isEmpty() {
       return false;
     }
 
-    @Override public Double get(int index) {
+    
+    @Override
+    public Double get(int index) {
       checkElementIndex(index, size());
       return array[start + index];
     }
 
-    @Override public boolean contains(Object target) {
+    
+    @Override
+    public boolean contains(Object target) {
       // Overridden to prevent a ton of boxing
       return (target instanceof Double)
           && Doubles.indexOf(array, (Double) target, start, end) != -1;
     }
 
-    @Override public int indexOf(Object target) {
+    
+    @Override
+    public int indexOf(Object target) {
       // Overridden to prevent a ton of boxing
       if (target instanceof Double) {
         int i = Doubles.indexOf(array, (Double) target, start, end);
@@ -456,7 +465,9 @@ public final class Doubles {
       return -1;
     }
 
-    @Override public int lastIndexOf(Object target) {
+    
+    @Override
+    public int lastIndexOf(Object target) {
       // Overridden to prevent a ton of boxing
       if (target instanceof Double) {
         int i = Doubles.lastIndexOf(array, (Double) target, start, end);
@@ -467,7 +478,9 @@ public final class Doubles {
       return -1;
     }
 
-    @Override public Double set(int index, Double element) {
+    
+    @Override
+    public Double set(int index, Double element) {
       checkElementIndex(index, size());
       double oldValue = array[start + index];
       // checkNotNull for GWT (do not optimize)
@@ -475,7 +488,9 @@ public final class Doubles {
       return oldValue;
     }
 
-    @Override public List<Double> subList(int fromIndex, int toIndex) {
+    
+    @Override
+    public List<Double> subList(int fromIndex, int toIndex) {
       int size = size();
       checkPositionIndexes(fromIndex, toIndex, size);
       if (fromIndex == toIndex) {
@@ -484,7 +499,9 @@ public final class Doubles {
       return new DoubleArrayAsList(array, start + fromIndex, start + toIndex);
     }
 
-    @Override public boolean equals(Object object) {
+    
+    @Override
+    public boolean equals(Object object) {
       if (object == this) {
         return true;
       }
@@ -504,7 +521,9 @@ public final class Doubles {
       return super.equals(object);
     }
 
-    @Override public int hashCode() {
+    
+    @Override
+    public int hashCode() {
       int result = 1;
       for (int i = start; i < end; i++) {
         result = 31 * result + Doubles.hashCode(array[i]);
@@ -512,7 +531,9 @@ public final class Doubles {
       return result;
     }
 
-    @Override public String toString() {
+    
+    @Override
+    public String toString() {
       StringBuilder builder = new StringBuilder(size() * 12);
       builder.append('[').append(array[start]);
       for (int i = start + 1; i < end; i++) {

@@ -51,6 +51,7 @@ import javax.annotation.Nullable;
      * made as to which index is returned, if more than one element compares as equal to the key.
      */
     ANY_PRESENT {
+      
       @Override
       <E> int resultIndex(
           Comparator<? super E> comparator, E key, List<? extends E> list, int foundIndex) {
@@ -61,6 +62,7 @@ import javax.annotation.Nullable;
      * Return the index of the last list element that compares as equal to the key.
      */
     LAST_PRESENT {
+      
       @Override
       <E> int resultIndex(
           Comparator<? super E> comparator, E key, List<? extends E> list, int foundIndex) {
@@ -85,6 +87,7 @@ import javax.annotation.Nullable;
      * Return the index of the first list element that compares as equal to the key.
      */
     FIRST_PRESENT {
+      
       @Override
       <E> int resultIndex(
           Comparator<? super E> comparator, E key, List<? extends E> list, int foundIndex) {
@@ -111,6 +114,7 @@ import javax.annotation.Nullable;
      * list.size()} if there is no such element.
      */
     FIRST_AFTER {
+      
       @Override
       public <E> int resultIndex(
           Comparator<? super E> comparator, E key, List<? extends E> list, int foundIndex) {
@@ -122,6 +126,7 @@ import javax.annotation.Nullable;
      * if there is no such element.
      */
     LAST_BEFORE {
+      
       @Override
       public <E> int resultIndex(
           Comparator<? super E> comparator, E key, List<? extends E> list, int foundIndex) {
@@ -142,6 +147,7 @@ import javax.annotation.Nullable;
      * element.
      */
     NEXT_LOWER {
+      
       @Override
       int resultIndex(int higherIndex) {
         return higherIndex - 1;
@@ -152,6 +158,7 @@ import javax.annotation.Nullable;
      * no such element.
      */
     NEXT_HIGHER {
+      
       @Override
       public int resultIndex(int higherIndex) {
         return higherIndex;
@@ -170,6 +177,7 @@ import javax.annotation.Nullable;
      * {@code ~insertionIndex} is equal to {@code -1 - insertionIndex}.
      */
     INVERTED_INSERTION_INDEX {
+      
       @Override
       public int resultIndex(int higherIndex) {
         return ~higherIndex;

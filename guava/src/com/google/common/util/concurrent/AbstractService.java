@@ -94,26 +94,26 @@ public abstract class AbstractService implements Service {
     // before the other listeners. This way the other listeners can access the completed futures.
     addListener(
         new Listener() {
-          @Override public void starting() {}
+          public void starting() {}
 
-          @Override public void running() {
+          public void running() {
             startup.set(State.RUNNING);
           }
 
-          @Override public void stopping(State from) {
+          public void stopping(State from) {
             if (from == State.STARTING) {
               startup.set(State.STOPPING);
             }
           }
 
-          @Override public void terminated(State from) {
+          public void terminated(State from) {
             if (from == State.NEW) {
               startup.set(State.TERMINATED);
             }
             shutdown.set(State.TERMINATED);
           }
 
-          @Override public void failed(State from, Throwable failure) {
+          public void failed(State from, Throwable failure) {
             switch (from) {
               case STARTING:
                 startup.setException(failure);
@@ -160,7 +160,6 @@ public abstract class AbstractService implements Service {
    */
   protected abstract void doStop();
 
-  @Override
   public final ListenableFuture<State> start() {
     lock.lock();
     try {
@@ -179,7 +178,6 @@ public abstract class AbstractService implements Service {
     return startup;
   }
 
-  @Override
   public final ListenableFuture<State> stop() {
     lock.lock();
     try {
@@ -215,12 +213,10 @@ public abstract class AbstractService implements Service {
     return shutdown;
   }
 
-  @Override
   public State startAndWait() {
     return Futures.getUnchecked(start());
   }
 
-  @Override
   public State stopAndWait() {
     return Futures.getUnchecked(stop());
   }
@@ -314,17 +310,15 @@ public abstract class AbstractService implements Service {
     }
   }
 
-  @Override
   public final boolean isRunning() {
     return state() == State.RUNNING;
   }
 
-  @Override
   public final State state() {
     return snapshot.externalState();
   }
 
-  @Override
+  
   public final void addListener(Listener listener, Executor executor) {
     checkNotNull(listener, "listener");
     checkNotNull(executor, "executor");
@@ -338,7 +332,9 @@ public abstract class AbstractService implements Service {
     }
   }
 
-  @Override public String toString() {
+  
+  @Override
+  public String toString() {
     return getClass().getSimpleName() + " [" + state() + "]";
   }
 
@@ -346,6 +342,7 @@ public abstract class AbstractService implements Service {
    * A change from one service state to another, plus the result of the change.
    */
   private class Transition extends AbstractFuture<State> {
+    
     @Override
     public State get(long timeout, TimeUnit unit)
         throws InterruptedException, TimeoutException, ExecutionException {
@@ -376,9 +373,9 @@ public abstract class AbstractService implements Service {
   private void starting() {
     for (final ListenerExecutorPair pair : listeners) {
       queuedListeners.add(new Runnable() {
-        @Override public void run() {
+        public void run() {
           pair.execute(new Runnable() {
-            @Override public void run() {
+            public void run() {
               pair.listener.starting();
             }
           });
@@ -391,9 +388,9 @@ public abstract class AbstractService implements Service {
   private void running() {
     for (final ListenerExecutorPair pair : listeners) {
       queuedListeners.add(new Runnable() {
-        @Override public void run() {
+        public void run() {
           pair.execute(new Runnable() {
-            @Override public void run() {
+            public void run() {
               pair.listener.running();
             }
           });
@@ -406,9 +403,9 @@ public abstract class AbstractService implements Service {
   private void stopping(final State from) {
     for (final ListenerExecutorPair pair : listeners) {
       queuedListeners.add(new Runnable() {
-        @Override public void run() {
+        public void run() {
           pair.execute(new Runnable() {
-            @Override public void run() {
+            public void run() {
               pair.listener.stopping(from);
             }
           });
@@ -421,9 +418,9 @@ public abstract class AbstractService implements Service {
   private void terminated(final State from) {
     for (final ListenerExecutorPair pair : listeners) {
       queuedListeners.add(new Runnable() {
-        @Override public void run() {
+        public void run() {
           pair.execute(new Runnable() {
-            @Override public void run() {
+            public void run() {
               pair.listener.terminated(from);
             }
           });
@@ -438,9 +435,9 @@ public abstract class AbstractService implements Service {
   private void failed(final State from, final Throwable cause) {
     for (final ListenerExecutorPair pair : listeners) {
       queuedListeners.add(new Runnable() {
-        @Override public void run() {
+        public void run() {
           pair.execute(new Runnable() {
-            @Override public void run() {
+            public void run() {
               pair.listener.failed(from, cause);
             }
           });

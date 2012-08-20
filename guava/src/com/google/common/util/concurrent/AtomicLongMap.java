@@ -291,7 +291,6 @@ public final class AtomicLongMap<K> {
   private Map<K, Long> createAsMap() {
     return Collections.unmodifiableMap(
         Maps.transformValues(map, new Function<AtomicLong, Long>() {
-          @Override
           public Long apply(AtomicLong atomic) {
             return atomic.get();
           }
@@ -330,6 +329,7 @@ public final class AtomicLongMap<K> {
     map.clear();
   }
 
+  
   @Override
   public String toString() {
     return map.toString();

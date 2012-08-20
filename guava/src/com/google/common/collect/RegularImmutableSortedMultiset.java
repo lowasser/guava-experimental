@@ -54,38 +54,41 @@ final class RegularImmutableSortedMultiset<E> extends ImmutableSortedMultiset<E>
         counts[offset + index]);
   }
 
-  @Override
+  
   public Entry<E> firstEntry() {
     return getEntry(0);
   }
 
-  @Override
+  
   public Entry<E> lastEntry() {
     return getEntry(length - 1);
   }
 
-  @Override
+  
   public int count(@Nullable Object element) {
     int index = elementSet.indexOf(element);
     return (index == -1) ? 0 : counts[index + offset];
   }
 
-  @Override
+  
   public int size() {
     long size = cumulativeCounts[offset + length] - cumulativeCounts[offset];
     return Ints.saturatedCast(size);
   }
 
+  
   @Override
   public ImmutableSortedSet<E> elementSet() {
     return elementSet;
   }
 
+  
   @Override
   public ImmutableSortedMultiset<E> headMultiset(E upperBound, BoundType boundType) {
     return getSubMultiset(0, elementSet.headIndex(upperBound, checkNotNull(boundType) == CLOSED));
   }
 
+  
   @Override
   public ImmutableSortedMultiset<E> tailMultiset(E lowerBound, BoundType boundType) {
     return getSubMultiset(elementSet.tailIndex(lowerBound, checkNotNull(boundType) == CLOSED),
@@ -106,30 +109,34 @@ final class RegularImmutableSortedMultiset<E> extends ImmutableSortedMultiset<E>
     }
   }
 
+  
   @Override
   ImmutableSet<Entry<E>> createEntrySet() {
     return new EntrySet();
   }
 
   private final class EntrySet extends ImmutableMultiset<E>.EntrySet {
-    @Override
+    
     public int size() {
       return length;
     }
 
+    
     @Override
     public UnmodifiableIterator<Entry<E>> iterator() {
       return asList().iterator();
     }
 
+    
     @Override
     ImmutableList<Entry<E>> createAsList() {
       return new ImmutableAsList<Entry<E>>() {
-        @Override
+        
         public Entry<E> get(int index) {
           return getEntry(index);
         }
 
+        
         @Override
         ImmutableCollection<Entry<E>> delegateCollection() {
           return EntrySet.this;
@@ -138,6 +145,7 @@ final class RegularImmutableSortedMultiset<E> extends ImmutableSortedMultiset<E>
     }
   }
 
+  
   @Override
   boolean isPartialView() {
     return offset > 0 || length < counts.length;

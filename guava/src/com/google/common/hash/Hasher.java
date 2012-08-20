@@ -28,39 +28,39 @@ import java.nio.charset.Charset;
  */
 @Beta
 public interface Hasher extends PrimitiveSink {
-  @Override Hasher putByte(byte b);
-  @Override Hasher putBytes(byte[] bytes);
-  @Override Hasher putBytes(byte[] bytes, int off, int len);
-  @Override Hasher putShort(short s);
-  @Override Hasher putInt(int i);
-  @Override Hasher putLong(long l);
+  Hasher putByte(byte b);
+  Hasher putBytes(byte[] bytes);
+  Hasher putBytes(byte[] bytes, int off, int len);
+  Hasher putShort(short s);
+  Hasher putInt(int i);
+  Hasher putLong(long l);
 
   /**
    * Equivalent to {@code putInt(Float.floatToRawIntBits(f))}.
    */
-  @Override Hasher putFloat(float f);
+  Hasher putFloat(float f);
 
   /**
    * Equivalent to {@code putLong(Double.doubleToRawLongBits(d))}.
    */
-  @Override Hasher putDouble(double d);
+  Hasher putDouble(double d);
 
   /**
    * Equivalent to {@code putByte(b ? (byte) 1 : (byte) 0)}.
    */
-  @Override Hasher putBoolean(boolean b);
-  @Override Hasher putChar(char c);
+  Hasher putBoolean(boolean b);
+  Hasher putChar(char c);
 
   /**
    * Equivalent to processing each {@code char} value in the {@code CharSequence}, in order.
    * The input must not be updated while this method is in progress.
    */
-  @Override Hasher putString(CharSequence charSequence);
+  Hasher putString(CharSequence charSequence);
 
   /**
    * Equivalent to {@code putBytes(charSequence.toString().getBytes(charset))}.
    */
-  @Override Hasher putString(CharSequence charSequence, Charset charset);
+  Hasher putString(CharSequence charSequence, Charset charset);
 
   /**
    * A simple convenience for {@code funnel.funnel(object, this)}.

@@ -111,11 +111,13 @@ public final class EnumBiMap<K extends Enum<K>, V extends Enum<V>>
     return valueType;
   }
 
+  
   @Override
   K checkKey(K key) {
     return checkNotNull(key);
   }
 
+  
   @Override
   V checkValue(V value) {
     return checkNotNull(value);

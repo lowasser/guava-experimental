@@ -83,7 +83,6 @@ public final class Enums {
       this.enumClass = checkNotNull(enumClass);
     }
 
-    @Override
     public T apply(String value) {
       try {
         return Enum.valueOf(enumClass, value);
@@ -92,16 +91,22 @@ public final class Enums {
       }
     }
 
-    @Override public boolean equals(@Nullable Object obj) {
+    
+    @Override
+    public boolean equals(@Nullable Object obj) {
       return obj instanceof ValueOfFunction &&
           enumClass.equals(((ValueOfFunction) obj).enumClass);
     }
 
-    @Override public int hashCode() {
+    
+    @Override
+    public int hashCode() {
       return enumClass.hashCode();
     }
 
-    @Override public String toString() {
+    
+    @Override
+    public String toString() {
       return "Enums.valueOf(" + enumClass + ")";
     }
 

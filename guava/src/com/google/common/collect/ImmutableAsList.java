@@ -35,22 +35,25 @@ import java.io.Serializable;
 abstract class ImmutableAsList<E> extends ImmutableList<E> {
   abstract ImmutableCollection<E> delegateCollection();
 
-  @Override public boolean contains(Object target) {
+  @Override
+  public boolean contains(Object target) {
     // The collection's contains() is at least as fast as ImmutableList's
     // and is often faster.
     return delegateCollection().contains(target);
   }
 
-  @Override
+  
   public int size() {
     return delegateCollection().size();
   }
 
+  
   @Override
   public boolean isEmpty() {
     return delegateCollection().isEmpty();
   }
 
+  
   @Override
   boolean isPartialView() {
     return delegateCollection().isPartialView();
@@ -77,8 +80,9 @@ abstract class ImmutableAsList<E> extends ImmutableList<E> {
     throw new InvalidObjectException("Use SerializedForm");
   }
 
+  @Override
   @GwtIncompatible("serialization")
-  @Override Object writeReplace() {
+  Object writeReplace() {
     return new SerializedForm(delegateCollection());
   }
 }

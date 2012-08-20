@@ -33,6 +33,7 @@ final class PairwiseEquivalence<T> extends Equivalence<Iterable<T>>
     this.elementEquivalence = Preconditions.checkNotNull(elementEquivalence);
   }
 
+  
   @Override
   protected boolean doEquivalent(Iterable<T> iterableA, Iterable<T> iterableB) {
     Iterator<T> iteratorA = iterableA.iterator();
@@ -47,6 +48,7 @@ final class PairwiseEquivalence<T> extends Equivalence<Iterable<T>>
     return !iteratorA.hasNext() && !iteratorB.hasNext();
   }
 
+  
   @Override
   protected int doHash(Iterable<T> iterable) {
     int hash = 78721;
@@ -56,6 +58,7 @@ final class PairwiseEquivalence<T> extends Equivalence<Iterable<T>>
     return hash;
   }
 
+  
   @Override
   public boolean equals(@Nullable Object object) {
     if (object instanceof PairwiseEquivalence) {
@@ -66,11 +69,13 @@ final class PairwiseEquivalence<T> extends Equivalence<Iterable<T>>
     return false;
   }
 
+  
   @Override
   public int hashCode() {
     return elementEquivalence.hashCode() ^ 0x46a3eb07;
   }
 
+  
   @Override
   public String toString() {
     return elementEquivalence + ".pairwise()";

@@ -144,8 +144,9 @@ public final class MapMaker extends GenericMapMaker<Object, Object> {
    * {@link #weakKeys} or {@link #softKeys} is specified, and {@link Equivalence#equals()}
    * otherwise. The only place this is used is in {@link Interners.WeakInterner}.
    */
-  @GwtIncompatible("To be supported")
+  
   @Override
+  @GwtIncompatible("To be supported")
   MapMaker keyEquivalence(Equivalence<Object> equivalence) {
     checkState(keyEquivalence == null, "key equivalence was already set to %s", keyEquivalence);
     keyEquivalence = checkNotNull(equivalence);
@@ -167,6 +168,7 @@ public final class MapMaker extends GenericMapMaker<Object, Object> {
    * @throws IllegalArgumentException if {@code initialCapacity} is negative
    * @throws IllegalStateException if an initial capacity was already set
    */
+  
   @Override
   public MapMaker initialCapacity(int initialCapacity) {
     checkState(this.initialCapacity == UNSET_INT, "initial capacity was already set to %s",
@@ -203,8 +205,9 @@ public final class MapMaker extends GenericMapMaker<Object, Object> {
    *     CacheBuilder} is simply an enhanced API for an implementation which was branched from
    *     {@code MapMaker}.
    */
-  @Deprecated
+  
   @Override
+  @Deprecated
   MapMaker maximumSize(int size) {
     checkState(this.maximumSize == UNSET_INT, "maximum size was already set to %s",
         this.maximumSize);
@@ -237,6 +240,7 @@ public final class MapMaker extends GenericMapMaker<Object, Object> {
    * @throws IllegalArgumentException if {@code concurrencyLevel} is nonpositive
    * @throws IllegalStateException if a concurrency level was already set
    */
+  
   @Override
   public MapMaker concurrencyLevel(int concurrencyLevel) {
     checkState(this.concurrencyLevel == UNSET_INT, "concurrency level was already set to %s",
@@ -261,8 +265,9 @@ public final class MapMaker extends GenericMapMaker<Object, Object> {
    * @throws IllegalStateException if the key strength was already set
    * @see WeakReference
    */
-  @GwtIncompatible("java.lang.ref.WeakReference")
+  
   @Override
+  @GwtIncompatible("java.lang.ref.WeakReference")
   public MapMaker weakKeys() {
     return setKeyStrength(Strength.WEAK);
   }
@@ -287,9 +292,10 @@ public final class MapMaker extends GenericMapMaker<Object, Object> {
    *     create a map that doesn't hold strong references to the keys.
    *     <b>This method is scheduled for deletion in January 2013.</b>
    */
+  
+  @Override
   @Deprecated
   @GwtIncompatible("java.lang.ref.SoftReference")
-  @Override
   public MapMaker softKeys() {
     return setKeyStrength(Strength.SOFT);
   }
@@ -325,8 +331,9 @@ public final class MapMaker extends GenericMapMaker<Object, Object> {
    * @throws IllegalStateException if the value strength was already set
    * @see WeakReference
    */
-  @GwtIncompatible("java.lang.ref.WeakReference")
+  
   @Override
+  @GwtIncompatible("java.lang.ref.WeakReference")
   public MapMaker weakValues() {
     return setValueStrength(Strength.WEAK);
   }
@@ -351,8 +358,9 @@ public final class MapMaker extends GenericMapMaker<Object, Object> {
    * @throws IllegalStateException if the value strength was already set
    * @see SoftReference
    */
-  @GwtIncompatible("java.lang.ref.SoftReference")
+  
   @Override
+  @GwtIncompatible("java.lang.ref.SoftReference")
   public MapMaker softValues() {
     return setValueStrength(Strength.SOFT);
   }
@@ -396,8 +404,9 @@ public final class MapMaker extends GenericMapMaker<Object, Object> {
    *     CacheBuilder} is simply an enhanced API for an implementation which was branched from
    *     {@code MapMaker}.
    */
-  @Deprecated
+  
   @Override
+  @Deprecated
   MapMaker expireAfterWrite(long duration, TimeUnit unit) {
     checkExpiration(duration, unit);
     this.expireAfterWriteNanos = unit.toNanos(duration);
@@ -446,9 +455,10 @@ public final class MapMaker extends GenericMapMaker<Object, Object> {
    *     {@code CacheBuilder} is simply an enhanced API for an implementation which was branched
    *     from {@code MapMaker}.
    */
+  
+  @Override
   @Deprecated
   @GwtIncompatible("To be supported")
-  @Override
   MapMaker expireAfterAccess(long duration, TimeUnit unit) {
     checkExpiration(duration, unit);
     this.expireAfterAccessNanos = unit.toNanos(duration);
@@ -523,6 +533,7 @@ public final class MapMaker extends GenericMapMaker<Object, Object> {
    *
    * @return a serializable concurrent map having the requested features
    */
+  
   @Override
   public <K, V> ConcurrentMap<K, V> makeMap() {
     if (!useCustomMap) {
@@ -537,6 +548,7 @@ public final class MapMaker extends GenericMapMaker<Object, Object> {
    * Returns a MapMakerInternalMap for the benefit of internal callers that use features of
    * that class not exposed through ConcurrentMap.
    */
+  
   @Override
   @GwtIncompatible("MapMakerInternalMap")
   <K, V> MapMakerInternalMap<K, V> makeCustomMap() {
@@ -601,8 +613,9 @@ public final class MapMaker extends GenericMapMaker<Object, Object> {
    *     Migration Guide</a> for more details.
    *     <b>This method is scheduled for deletion in February 2013.</b>
    */
-  @Deprecated
+  
   @Override
+  @Deprecated
   public <K, V> ConcurrentMap<K, V> makeComputingMap(
       Function<? super K, ? extends V> computingFunction) {
     return (nullRemovalCause == null)
@@ -614,6 +627,7 @@ public final class MapMaker extends GenericMapMaker<Object, Object> {
    * Returns a string representation for this MapMaker instance. The exact form of the returned
    * string is not specificed.
    */
+  
   @Override
   public String toString() {
     Objects.ToStringHelper s = Objects.toStringHelper(this);
@@ -711,6 +725,7 @@ public final class MapMaker extends GenericMapMaker<Object, Object> {
      * {@link Map#remove}, {@link ConcurrentMap#remove}, or {@link java.util.Iterator#remove}.
      */
     EXPLICIT {
+      
       @Override
       boolean wasEvicted() {
         return false;
@@ -724,6 +739,7 @@ public final class MapMaker extends GenericMapMaker<Object, Object> {
      * {@link ConcurrentMap#replace(Object, Object, Object)}.
      */
     REPLACED {
+      
       @Override
       boolean wasEvicted() {
         return false;
@@ -736,6 +752,7 @@ public final class MapMaker extends GenericMapMaker<Object, Object> {
      * #weakValues}.
      */
     COLLECTED {
+      
       @Override
       boolean wasEvicted() {
         return true;
@@ -747,6 +764,7 @@ public final class MapMaker extends GenericMapMaker<Object, Object> {
      * #expireAfterWrite} or {@link #expireAfterAccess}.
      */
     EXPIRED {
+      
       @Override
       boolean wasEvicted() {
         return true;
@@ -758,6 +776,7 @@ public final class MapMaker extends GenericMapMaker<Object, Object> {
      * #maximumSize}.
      */
     SIZE {
+      
       @Override
       boolean wasEvicted() {
         return true;
@@ -786,16 +805,19 @@ public final class MapMaker extends GenericMapMaker<Object, Object> {
 
     // implements ConcurrentMap
 
+    
     @Override
     public boolean containsKey(@Nullable Object key) {
       return false;
     }
 
+    
     @Override
     public boolean containsValue(@Nullable Object value) {
       return false;
     }
 
+    
     @Override
     public V get(@Nullable Object key) {
       return null;
@@ -807,6 +829,7 @@ public final class MapMaker extends GenericMapMaker<Object, Object> {
       removalListener.onRemoval(notification);
     }
 
+    
     @Override
     public V put(K key, V value) {
       checkNotNull(key);
@@ -815,35 +838,33 @@ public final class MapMaker extends GenericMapMaker<Object, Object> {
       return null;
     }
 
-    @Override
     public V putIfAbsent(K key, V value) {
       return put(key, value);
     }
 
+    
     @Override
     public V remove(@Nullable Object key) {
       return null;
     }
 
-    @Override
     public boolean remove(@Nullable Object key, @Nullable Object value) {
       return false;
     }
 
-    @Override
     public V replace(K key, V value) {
       checkNotNull(key);
       checkNotNull(value);
       return null;
     }
 
-    @Override
     public boolean replace(K key, @Nullable V oldValue, V newValue) {
       checkNotNull(key);
       checkNotNull(newValue);
       return false;
     }
 
+    
     @Override
     public Set<Entry<K, V>> entrySet() {
       return Collections.emptySet();
@@ -862,8 +883,9 @@ public final class MapMaker extends GenericMapMaker<Object, Object> {
       this.computingFunction = checkNotNull(computingFunction);
     }
 
-    @SuppressWarnings("unchecked") // unsafe, which is why Cache is preferred
+    
     @Override
+    @SuppressWarnings("unchecked") // unsafe, which is why Cache is preferred
     public V get(Object k) {
       K key = (K) k;
       V value = compute(key);

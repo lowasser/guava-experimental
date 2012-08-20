@@ -62,6 +62,5 @@ public interface Constraint<E> {
    * Returns a brief human readable description of this constraint, such as
    * "Not null" or "Positive number".
    */
-  @Override
   String toString();
 }

@@ -236,11 +236,13 @@ public final class Monitor {
      */
     public abstract boolean isSatisfied();
 
+    
     @Override
     public final boolean equals(Object other) {
       // Overridden as final to ensure identity semantics in Monitor.activeGuards.
       return this == other;
     }
+    
     
     @Override
     public final int hashCode() {

@@ -225,6 +225,7 @@ public final class HostAndPort implements Serializable {
     return this;
   }
 
+  
   @Override
   public boolean equals(Object other) {
     if (this == other) {
@@ -239,12 +240,14 @@ public final class HostAndPort implements Serializable {
     return false;
   }
 
+  
   @Override
   public int hashCode() {
     return Objects.hashCode(host, port, hasBracketlessColons);
   }
 
   /** Rebuild the host:port string, including brackets if necessary. */
+  
   @Override
   public String toString() {
     StringBuilder builder = new StringBuilder(host.length() + 7);

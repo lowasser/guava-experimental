@@ -101,7 +101,7 @@ public final class ImmutableTypeToInstanceMap<B> extends ForwardingMap<TypeToken
     this.delegate = delegate;
   }
 
-  @Override public <T extends B> T getInstance(TypeToken<T> type) {
+  public <T extends B> T getInstance(TypeToken<T> type) {
     return trustedGet(type.rejectTypeVariables());
   }
 
@@ -110,11 +110,11 @@ public final class ImmutableTypeToInstanceMap<B> extends ForwardingMap<TypeToken
    *
    * @throws UnsupportedOperationException always
    */
-  @Override public <T extends B> T putInstance(TypeToken<T> type, T value) {
+  public <T extends B> T putInstance(TypeToken<T> type, T value) {
     throw new UnsupportedOperationException();
   }
 
-  @Override public <T extends B> T getInstance(Class<T> type) {
+  public <T extends B> T getInstance(Class<T> type) {
     return trustedGet(TypeToken.of(type));
   }
 
@@ -123,11 +123,12 @@ public final class ImmutableTypeToInstanceMap<B> extends ForwardingMap<TypeToken
    *
    * @throws UnsupportedOperationException always
    */
-  @Override public <T extends B> T putInstance(Class<T> type, T value) {
+  public <T extends B> T putInstance(Class<T> type, T value) {
     throw new UnsupportedOperationException();
   }
 
-  @Override protected Map<TypeToken<? extends B>, B> delegate() {
+  @Override
+  protected Map<TypeToken<? extends B>, B> delegate() {
     return delegate;
   }
 

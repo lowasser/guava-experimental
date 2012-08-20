@@ -14,7 +14,6 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.io.IOException;
 import java.io.Serializable;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 
 /**
  * One or more variables that together maintain an initially zero
@@ -49,6 +48,7 @@ final class LongAdder extends Striped64 implements Serializable {
     /**
      * Version of plus for use in retryUpdate
      */
+    @Override
     final long fn(long v, long x) { return v + x; }
 
     /**
@@ -153,6 +153,7 @@ final class LongAdder extends Striped64 implements Serializable {
      * Returns the String representation of the {@link #sum}.
      * @return the String representation of the {@link #sum}
      */
+    @Override
     public String toString() {
         return Long.toString(sum());
     }
@@ -162,6 +163,7 @@ final class LongAdder extends Striped64 implements Serializable {
      *
      * @return the sum
      */
+    @Override
     public long longValue() {
         return sum();
     }
@@ -170,6 +172,7 @@ final class LongAdder extends Striped64 implements Serializable {
      * Returns the {@link #sum} as an {@code int} after a narrowing
      * primitive conversion.
      */
+    @Override
     public int intValue() {
         return (int)sum();
     }
@@ -178,6 +181,7 @@ final class LongAdder extends Striped64 implements Serializable {
      * Returns the {@link #sum} as a {@code float}
      * after a widening primitive conversion.
      */
+    @Override
     public float floatValue() {
         return (float)sum();
     }
@@ -186,6 +190,7 @@ final class LongAdder extends Striped64 implements Serializable {
      * Returns the {@link #sum} as a {@code double} after a widening
      * primitive conversion.
      */
+    @Override
     public double doubleValue() {
         return (double)sum();
     }

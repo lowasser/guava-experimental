@@ -38,40 +38,43 @@ public final class MutableTypeToInstanceMap<B> extends ForwardingMap<TypeToken<?
   private final Map<TypeToken<? extends B>, B> backingMap = Maps.newHashMap();
 
   @Nullable
-  @Override
+  
   public <T extends B> T getInstance(Class<T> type) {
     return trustedGet(TypeToken.of(type));
   }
 
   @Nullable
-  @Override
+  
   public <T extends B> T putInstance(Class<T> type, @Nullable T value) {
     return trustedPut(TypeToken.of(type), value);
   }
 
   @Nullable
-  @Override
+  
   public <T extends B> T getInstance(TypeToken<T> type) {
     return trustedGet(type.rejectTypeVariables());
   }
 
   @Nullable
-  @Override
+  
   public <T extends B> T putInstance(TypeToken<T> type, @Nullable T value) {
     return trustedPut(type.rejectTypeVariables(), value);
   }
 
   /** Not supported. Use {@link #putInstance} instead. */
-  @Override public B put(TypeToken<? extends B> key, B value) {
+  @Override
+  public B put(TypeToken<? extends B> key, B value) {
     throw new UnsupportedOperationException("Please use putInstance() instead.");
   }
 
   /** Not supported. Use {@link #putInstance} instead. */
-  @Override public void putAll(Map<? extends TypeToken<? extends B>, ? extends B> map) {
+  @Override
+  public void putAll(Map<? extends TypeToken<? extends B>, ? extends B> map) {
     throw new UnsupportedOperationException("Please use putInstance() instead.");
   }
 
-  @Override protected Map<TypeToken<? extends B>, B> delegate() {
+  @Override
+  protected Map<TypeToken<? extends B>, B> delegate() {
     return backingMap;
   }
 

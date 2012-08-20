@@ -36,7 +36,9 @@ final class ExplicitOrdering<T> extends Ordering<T> implements Serializable {
     this.rankMap = rankMap;
   }
 
-  @Override public int compare(T left, T right) {
+  
+  @Override
+  public int compare(T left, T right) {
     return rank(left) - rank(right); // safe because both are nonnegative
   }
 
@@ -58,7 +60,9 @@ final class ExplicitOrdering<T> extends Ordering<T> implements Serializable {
     return builder.build();
   }
 
-  @Override public boolean equals(@Nullable Object object) {
+  
+  @Override
+  public boolean equals(@Nullable Object object) {
     if (object instanceof ExplicitOrdering) {
       ExplicitOrdering<?> that = (ExplicitOrdering<?>) object;
       return this.rankMap.equals(that.rankMap);
@@ -66,11 +70,15 @@ final class ExplicitOrdering<T> extends Ordering<T> implements Serializable {
     return false;
   }
 
-  @Override public int hashCode() {
+  
+  @Override
+  public int hashCode() {
     return rankMap.hashCode();
   }
 
-  @Override public String toString() {
+  
+  @Override
+  public String toString() {
     return "Ordering.explicit(" + rankMap.keySet() + ")";
   }
 

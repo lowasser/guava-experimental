@@ -396,7 +396,9 @@ public final class Objects {
      * Returns a string in the format specified by {@link
      * Objects#toStringHelper(Object)}.
      */
-    @Override public String toString() {
+    
+    @Override
+    public String toString() {
       // create a copy to keep it consistent in case value changes
       boolean omitNullValuesSnapshot = omitNullValues;
       boolean needsSeparator = false;

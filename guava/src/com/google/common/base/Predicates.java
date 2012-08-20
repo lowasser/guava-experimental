@@ -274,22 +274,22 @@ public final class Predicates {
   // Package private for GWT serialization.
   enum ObjectPredicate implements Predicate<Object> {
     ALWAYS_TRUE {
-      @Override public boolean apply(@Nullable Object o) {
+      public boolean apply(@Nullable Object o) {
         return true;
       }
     },
     ALWAYS_FALSE {
-      @Override public boolean apply(@Nullable Object o) {
+      public boolean apply(@Nullable Object o) {
         return false;
       }
     },
     IS_NULL {
-      @Override public boolean apply(@Nullable Object o) {
+      public boolean apply(@Nullable Object o) {
         return o == null;
       }
     },
     NOT_NULL {
-      @Override public boolean apply(@Nullable Object o) {
+      public boolean apply(@Nullable Object o) {
         return o != null;
       }
     };
@@ -307,21 +307,26 @@ public final class Predicates {
     NotPredicate(Predicate<T> predicate) {
       this.predicate = checkNotNull(predicate);
     }
-    @Override
     public boolean apply(T t) {
       return !predicate.apply(t);
     }
-    @Override public int hashCode() {
+    
+    @Override
+    public int hashCode() {
       return ~predicate.hashCode();
     }
-    @Override public boolean equals(@Nullable Object obj) {
+    
+    @Override
+    public boolean equals(@Nullable Object obj) {
       if (obj instanceof NotPredicate) {
         NotPredicate<?> that = (NotPredicate<?>) obj;
         return predicate.equals(that.predicate);
       }
       return false;
     }
-    @Override public String toString() {
+    
+    @Override
+    public String toString() {
       return "Not(" + predicate.toString() + ")";
     }
     private static final long serialVersionUID = 0;
@@ -336,7 +341,6 @@ public final class Predicates {
     private AndPredicate(List<? extends Predicate<? super T>> components) {
       this.components = components;
     }
-    @Override
     public boolean apply(T t) {
       // Avoid using the Iterator to avoid generating garbage (issue 820).
       for (int i = 0; i < components.size(); i++) {
@@ -346,18 +350,23 @@ public final class Predicates {
       }
       return true;
     }
-    @Override public int hashCode() {
+    @Override
+    public int hashCode() {
       // add a random number to avoid collisions with OrPredicate
       return components.hashCode() + 0x12472c2c;
     }
-    @Override public boolean equals(@Nullable Object obj) {
+    
+    @Override
+    public boolean equals(@Nullable Object obj) {
       if (obj instanceof AndPredicate) {
         AndPredicate<?> that = (AndPredicate<?>) obj;
         return components.equals(that.components);
       }
       return false;
     }
-    @Override public String toString() {
+    
+    @Override
+    public String toString() {
       return "And(" + COMMA_JOINER.join(components) + ")";
     }
     private static final long serialVersionUID = 0;
@@ -370,7 +379,6 @@ public final class Predicates {
     private OrPredicate(List<? extends Predicate<? super T>> components) {
       this.components = components;
     }
-    @Override
     public boolean apply(T t) {
       // Avoid using the Iterator to avoid generating garbage (issue 820).
       for (int i = 0; i < components.size(); i++) {
@@ -380,18 +388,23 @@ public final class Predicates {
       }
       return false;
     }
-    @Override public int hashCode() {
+    @Override
+    public int hashCode() {
       // add a random number to avoid collisions with AndPredicate
       return components.hashCode() + 0x053c91cf;
     }
-    @Override public boolean equals(@Nullable Object obj) {
+    
+    @Override
+    public boolean equals(@Nullable Object obj) {
       if (obj instanceof OrPredicate) {
         OrPredicate<?> that = (OrPredicate<?>) obj;
         return components.equals(that.components);
       }
       return false;
     }
-    @Override public String toString() {
+    
+    @Override
+    public String toString() {
       return "Or(" + COMMA_JOINER.join(components) + ")";
     }
     private static final long serialVersionUID = 0;
@@ -405,21 +418,26 @@ public final class Predicates {
     private IsEqualToPredicate(T target) {
       this.target = target;
     }
-    @Override
     public boolean apply(T t) {
       return target.equals(t);
     }
-    @Override public int hashCode() {
+    
+    @Override
+    public int hashCode() {
       return target.hashCode();
     }
-    @Override public boolean equals(@Nullable Object obj) {
+    
+    @Override
+    public boolean equals(@Nullable Object obj) {
       if (obj instanceof IsEqualToPredicate) {
         IsEqualToPredicate<?> that = (IsEqualToPredicate<?>) obj;
         return target.equals(that.target);
       }
       return false;
     }
-    @Override public String toString() {
+    
+    @Override
+    public String toString() {
       return "IsEqualTo(" + target + ")";
     }
     private static final long serialVersionUID = 0;
@@ -434,21 +452,26 @@ public final class Predicates {
     private InstanceOfPredicate(Class<?> clazz) {
       this.clazz = checkNotNull(clazz);
     }
-    @Override
     public boolean apply(@Nullable Object o) {
       return clazz.isInstance(o);
     }
-    @Override public int hashCode() {
+    
+    @Override
+    public int hashCode() {
       return clazz.hashCode();
     }
-    @Override public boolean equals(@Nullable Object obj) {
+    
+    @Override
+    public boolean equals(@Nullable Object obj) {
       if (obj instanceof InstanceOfPredicate) {
         InstanceOfPredicate that = (InstanceOfPredicate) obj;
         return clazz == that.clazz;
       }
       return false;
     }
-    @Override public String toString() {
+    
+    @Override
+    public String toString() {
       return "IsInstanceOf(" + clazz.getName() + ")";
     }
     private static final long serialVersionUID = 0;
@@ -463,21 +486,26 @@ public final class Predicates {
     private AssignableFromPredicate(Class<?> clazz) {
       this.clazz = checkNotNull(clazz);
     }
-    @Override
     public boolean apply(Class<?> input) {
       return clazz.isAssignableFrom(input);
     }
-    @Override public int hashCode() {
+    
+    @Override
+    public int hashCode() {
       return clazz.hashCode();
     }
-    @Override public boolean equals(@Nullable Object obj) {
+    
+    @Override
+    public boolean equals(@Nullable Object obj) {
       if (obj instanceof AssignableFromPredicate) {
         AssignableFromPredicate that = (AssignableFromPredicate) obj;
         return clazz == that.clazz;
       }
       return false;
     }
-    @Override public String toString() {
+    
+    @Override
+    public String toString() {
       return "IsAssignableFrom(" + clazz.getName() + ")";
     }
     private static final long serialVersionUID = 0;
@@ -491,7 +519,6 @@ public final class Predicates {
       this.target = checkNotNull(target);
     }
 
-    @Override
     public boolean apply(T t) {
       try {
         return target.contains(t);
@@ -502,7 +529,9 @@ public final class Predicates {
       }
     }
 
-    @Override public boolean equals(@Nullable Object obj) {
+    
+    @Override
+    public boolean equals(@Nullable Object obj) {
       if (obj instanceof InPredicate) {
         InPredicate<?> that = (InPredicate<?>) obj;
         return target.equals(that.target);
@@ -510,11 +539,15 @@ public final class Predicates {
       return false;
     }
 
-    @Override public int hashCode() {
+    
+    @Override
+    public int hashCode() {
       return target.hashCode();
     }
 
-    @Override public String toString() {
+    
+    @Override
+    public String toString() {
       return "In(" + target + ")";
     }
     private static final long serialVersionUID = 0;
@@ -531,12 +564,13 @@ public final class Predicates {
       this.f = checkNotNull(f);
     }
 
-    @Override
     public boolean apply(A a) {
       return p.apply(f.apply(a));
     }
 
-    @Override public boolean equals(@Nullable Object obj) {
+    
+    @Override
+    public boolean equals(@Nullable Object obj) {
       if (obj instanceof CompositionPredicate) {
         CompositionPredicate<?, ?> that = (CompositionPredicate<?, ?>) obj;
         return f.equals(that.f) && p.equals(that.p);
@@ -544,11 +578,15 @@ public final class Predicates {
       return false;
     }
 
-    @Override public int hashCode() {
+    
+    @Override
+    public int hashCode() {
       return f.hashCode() ^ p.hashCode();
     }
 
-    @Override public String toString() {
+    
+    @Override
+    public String toString() {
       return p.toString() + "(" + f.toString() + ")";
     }
 
@@ -572,19 +610,22 @@ public final class Predicates {
       this(Pattern.compile(patternStr));
     }
 
-    @Override
     public boolean apply(CharSequence t) {
       return pattern.matcher(t).find();
     }
 
-    @Override public int hashCode() {
+    
+    @Override
+    public int hashCode() {
       // Pattern uses Object.hashCode, so we have to reach
       // inside to build a hashCode consistent with equals.
 
       return Objects.hashCode(pattern.pattern(), pattern.flags());
     }
 
-    @Override public boolean equals(@Nullable Object obj) {
+    
+    @Override
+    public boolean equals(@Nullable Object obj) {
       if (obj instanceof ContainsPatternPredicate) {
         ContainsPatternPredicate that = (ContainsPatternPredicate) obj;
 
@@ -596,7 +637,9 @@ public final class Predicates {
       return false;
     }
 
-    @Override public String toString() {
+    
+    @Override
+    public String toString() {
       return Objects.toStringHelper(this)
           .add("pattern", pattern)
           .add("pattern.flags", Integer.toHexString(pattern.flags()))

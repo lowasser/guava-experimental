@@ -45,7 +45,9 @@ abstract class AbstractSortedSetMultimap<K, V>
     super(map);
   }
 
-  @Override abstract SortedSet<V> createCollection();
+  
+  @Override
+  abstract SortedSet<V> createCollection();
 
   // Following Javadoc copied from Multimap and SortedSetMultimap.
 
@@ -61,7 +63,9 @@ abstract class AbstractSortedSetMultimap<K, V>
    * key, this method returns a {@link SortedSet}, instead of the
    * {@link Collection} specified in the {@link Multimap} interface.
    */
-  @Override public SortedSet<V> get(@Nullable K key) {
+  
+  @Override
+  public SortedSet<V> get(@Nullable K key) {
     return (SortedSet<V>) super.get(key);
   }
 
@@ -73,7 +77,9 @@ abstract class AbstractSortedSetMultimap<K, V>
    * key, this method returns a {@link SortedSet}, instead of the
    * {@link Collection} specified in the {@link Multimap} interface.
    */
-  @Override public SortedSet<V> removeAll(@Nullable Object key) {
+  
+  @Override
+  public SortedSet<V> removeAll(@Nullable Object key) {
     return (SortedSet<V>) super.removeAll(key);
   }
 
@@ -87,7 +93,9 @@ abstract class AbstractSortedSetMultimap<K, V>
    *
    * <p>Any duplicates in {@code values} will be stored in the multimap once.
    */
-  @Override public SortedSet<V> replaceValues(
+  
+  @Override
+  public SortedSet<V> replaceValues(
       K key, Iterable<? extends V> values) {
     return (SortedSet<V>) super.replaceValues(key, values);
   }
@@ -106,7 +114,9 @@ abstract class AbstractSortedSetMultimap<K, V>
    * <p>Though the method signature doesn't say so explicitly, the returned map
    * has {@link SortedSet} values.
    */
-  @Override public Map<K, Collection<V>> asMap() {
+  
+  @Override
+  public Map<K, Collection<V>> asMap() {
     return super.asMap();
   }
 
@@ -116,7 +126,9 @@ abstract class AbstractSortedSetMultimap<K, V>
    * Consequently, the values do not follow their natural ordering or the
    * ordering of the value comparator.
    */
-  @Override public Collection<V> values() {
+  
+  @Override
+  public Collection<V> values() {
     return super.values();
   }
 

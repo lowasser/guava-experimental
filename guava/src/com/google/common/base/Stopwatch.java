@@ -169,8 +169,10 @@ public final class Stopwatch {
   /**
    * Returns a string representation of the current elapsed time.
    */
+  
+  @Override
   @GwtIncompatible("String.format()")
-  @Override public String toString() {
+  public String toString() {
     return toString(4);
   }
 
